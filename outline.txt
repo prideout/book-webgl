@@ -1,7 +1,8 @@
-Three types of sections:
+Four types of sections:
 Exposition
 Interaction Recipes
 Rendering Recipes
+Application Recipes
 
 ------------
 
@@ -11,14 +12,27 @@ The Life of a Triangle
 Vertex Buffer Objects
 Vertex Attributes
 Typed Arrays
-Rendering Recipe:   ColorGraph - draws an animated wireframe graph of the sinc function with colors
+XMLHttpRequest
+Textures
+Shader Toy
+Framebuffer Objects
+
+\rrecipe{ColorGraph}{Animated wireframe graph of the sinc function}
 %                   demonstrates performance gains with javascript vs glsl
 %                   demonstrates interleaved data and Typed Arrays (colors + uv)
-Interaction Recipe: MouseTumble
+\irecipe{Trackball}{ Classic mouse-driven rotation } % With momentum and quats!
+\irecipe{SelectionBuffer}
+\irecipe{PointSelection}{ Voronoi maps for point-cloud selection }
+           %  Modifies depth like a nailboard according to squared distance
+           %  Writes out gl$_VertexID
+\irecipe{ViewCube}{ Move the camera by clicking on a mini-cube with hotspots }
+\irecipe{QuadManips} { Render "manipulators" to allow users to orient a quad in 3-space }
+\arecipe{BlockPuzzle}
+\arecipe{HouseModeler}
+\arecipe{FunctionGrapher}{Implicit (FS) or parametric (VS)}
 Rendering Recipe:   BlendShapes - morphs between two wireframe shapes
 Rendering Recipe:   BoneSystem  - bends the antennae and arms in a humanoid wireframe
 Rendering Recipe:   ParametricSurface
-XMLHttpRequest
 Rendering Recipe:   VisualizeDepth - 
 Rendering Recipe:   BasicLighting -
 Rendering Recipe:   CelEffect - 
@@ -26,9 +40,6 @@ Rendering Recipe:   Silhouette -
 Rendering Recipe:   EasyReflection -
 Rendering Recipe:   CompositeSolid - Slicing and capping
 Rendering Recipe:   StencilPaths - Using the stencil buffer to draw concave paths
-Textures
-Shader Toy
-Framebuffer Objects
 Rendering Recipe:   DeferredRendering -
 Rendering Recipe:   SSAO - 
 	\recipe{PixelNurbs}{Rendering NURB curves in the fragment shader} % ala GPU Pro article
@@ -106,7 +117,3 @@ Rendering Recipe:   SSAO -
 	\recipe{GlyphAtlas}{Creating and using a texture atlas of SEDT glyphs}
 	\recipe{DistanceEffects}{Antialiasing, outlining, glow, and drop shadows}
 
-	\recipe{Trackball}{ Classic mouse-driven rotation } % With momentum and quats!
-	\recipe{PointSelection}{ Voronoi maps for point-cloud selection }
-           %  Modifies depth like a nailboard according to squared distance
-           %  Writes out gl$_VertexID
