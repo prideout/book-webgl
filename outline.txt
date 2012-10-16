@@ -1,0 +1,52 @@
+Three types of sections:
+Exposition
+Interaction Recipes
+Rendering Recipes
+
+------------
+
+Chapter 1 - Preliminaries
+Vector Algebra with Javascript
+The Canvas Element
+The Life of a Triangle
+
+Chapter 2 - Gobs of Vertex Data
+Vertex Buffer Objects
+Vertex Attributes
+Typed Arrays
+XMLHttpRequest
+
+Rendering Recipe:    ParametricSuface
+Interaction Recipe:  MouseTumble
+
+
+   BlendShapes - morphs between two wireframe shapes
+   BoneSystem  - bends the antennae and arms in a humanoid wireframe
+   ColorGraph - draws an animated wireframe graph of the sinc function with colors
+                javascript vs glsl
+
+Chapter 3 - Depth and Shading
+
+Rendering Recipes
+  VisualizeDepth - 
+  BasicLighting -
+  CelEffect - 
+  Silhouette - 
+
+Cahpter 4 - Stencil
+
+Rendering Recipes
+  EasyReflection -
+  CompositeSolid - Slicing and capping
+  StencilPaths - Using the stencil buffer to draw concave paths
+
+Chapter 4 - Gobs of Pixel Data
+Textures
+Shader Toy
+Framebuffer Objects
+
+Rendering Recipes
+   DeferredRendering -
+   SSAO - 
+
+
