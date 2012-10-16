@@ -14,16 +14,17 @@ Chapter 2 - Gobs of Vertex Data
 Vertex Buffer Objects
 Vertex Attributes
 Typed Arrays
+
+Rendering Recipe:   ColorGraph - draws an animated wireframe graph of the sinc function with colors
+                    demonstrates performance gains with javascript vs glsl
+                    demonstrates interleaved data and Typed Arrays (colors + uv)
+Interaction Recipe: MouseTumble
+Rendering Recipe:   BlendShapes - morphs between two wireframe shapes
+Rendering Recipe:   BoneSystem  - bends the antennae and arms in a humanoid wireframe
+Rendering Recipe:   ParametricSuface
+
 XMLHttpRequest
-
-Rendering Recipe:    ParametricSuface
-Interaction Recipe:  MouseTumble
-
-
-   BlendShapes - morphs between two wireframe shapes
-   BoneSystem  - bends the antennae and arms in a humanoid wireframe
-   ColorGraph - draws an animated wireframe graph of the sinc function with colors
-                javascript vs glsl
+                
 
 Chapter 3 - Depth and Shading
 
