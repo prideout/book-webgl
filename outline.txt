@@ -18,6 +18,41 @@ Loading Binaries with XMLHttpRequest
 Fetching and Displaying Textures
 Framebuffer Objects
 
+\irecipe{Trackball}{ Classic mouse-driven rotation } % With momentum and quats!
+\irecipe{SelectionBuffer}
+\irecipe{PointSelection}{ Voronoi maps for point-cloud selection }
+\irecipe{ViewCube}{ Move the camera by clicking on a mini-cube with hotspots }
+\irecipe{QuadManips}{ Render "manipulators" to allow users to orient a quad in 3-space }
+
+\arecipe{BlockPuzzle}{}
+\arecipe{HouseModeler}{}
+\arecipe{FunctionGrapher}{Implicit (FS) or parametric (VS)}
+\arecipe{SetDresser}{Place models, spotlights, and projection textures into a scene} % might include uberlight and mirrors
+
+\rrecipe{ColorGraph}{Animated wireframe graph of the sinc function}
+\rrecipe{BoneSystem}{ bends a humanoid wireframe; visualizes CMU mocap data }
+\rrecipe{ParametricSurface}
+\rrecipe{BasicLighting}
+\rrecipe{CelEffect}{Cartoon rendering with a two-pass silhouette}
+\rrecipe{StenciledReflection}{Fake reflection using stencil}
+\rrecipe{PixelNurbs}{Rendering NURB curves in the fragment shader} % ala GPU Pro article
+\rrecipe{BumpMapping}{Art-provided normal maps} % external references: procedural bumping
+\rrecipe{CubemapReflection}{Classic, simple use of cubemaps} % refraction too?
+\rrecipe{PointSprites}{Fireworks with source-over and additive blending}
+\rrecipe{GaussianBlur}{Optimal filtering with minimal taps} % perhaps fold in HDR bloom too
+\rrecipe{ShadowMaps}{Old-school PCF shadow mapping} % Uses PCF to soften edges
+\rrecipe{ParallaxMapping}{Bumpy silhouettes}
+\rrecipe{SubsurfaceScattering}{Realistic marble} % similar to my fresnel glass demo
+\rrecipe{NiceFog}{High-quality fog} % http://iquilezles.org/www/articles/fog/fog.htm
+\rrecipe{MotionBlur}{Emphasizing movement with directional blur} % Also refer to the SIGGRAPH 2010 geometric motion blur
+\rrecipe{DistanceBlur}{Depth of field via post-processing} % Real-time Depth-of-Field (ShaderX 5) -- there also seem to be some dx11 demos for this (ATI's ladybug)
+\rrecipe{AmbientOcclusion}{Screen-space ambient occlusion}
+
+
+------------
+
+
+
 \rrecipe{ColorGraph}{Animated wireframe graph of the sinc function}
     % demonstrates performance gains with javascript vs glsl
     % demonstrates interleaved data and Typed Arrays (colors + uv)
@@ -32,14 +67,18 @@ Framebuffer Objects
 \arecipe{BlockPuzzle}{}
 \arecipe{HouseModeler}{}
 \arecipe{FunctionGrapher}{Implicit (FS) or parametric (VS)}
-\arecipe{SetDresser}{Place models, spotlights, and projection textures into a scene} % might include uberlight
+\arecipe{SetDresser}{Place models, spotlights, and projection textures into a scene} % might include uberlight and mirrors
+  % mirrors http://www.terathon.com/lengyel/Lengyel-Oblique.pdf
 
-\rrecipe{BlendShapes}{ morphs between two wireframe shapes
-\rrecipe{BoneSystem}{ bends the antennae and arms in a humanoid wireframe
+
+
+
+
+%    \rrecipe{BlendShapes}{ morphs between two wireframe shapes
+\rrecipe{BoneSystem}{ bends a humanoid wireframe; visualizes CMU mocap data }
 \rrecipe{ParametricSurface}
 \rrecipe{BasicLighting}
-\rrecipe{CelEffect}
-\rrecipe{Silhouette}
+\rrecipe{CelEffect}{Cartoon rendering with a two-pass silhouette}
 \rrecipe{StenciledReflection}{Fake reflection using stencil}
 %    \rrecipe{StencilPaths}{Using the stencil buffer to draw concave paths}
 \rrecipe{PixelNurbs}{Rendering NURB curves in the fragment shader} % ala GPU Pro article
@@ -52,14 +91,14 @@ Framebuffer Objects
 %    \rrecipe{CompositeSolid}{Slicing and capping}
 \rrecipe{BumpMapping}{Art-provided normal maps} % external references: procedural bumping
 \rrecipe{CubemapReflection}{Classic, simple use of cubemaps} % refraction too?
-\rrecipe{RenderCubemap}{Rendering a scene from all six vantage points}
+%    \rrecipe{RenderCubemap}{Rendering a scene from all six vantage points}
 %    \recipe{ProceduralNoise}{}
 \rrecipe{PointSprites}{Fireworks with source-over and additive blending}
 %    \recipe{BlendPrograms}{Ping-pong buffers for programmable blending}
 %    \recipe{AnisotropicLighting}{Satin and brushed metal}
 \rrecipe{GaussianBlur}{Optimal filtering with minimal taps} % perhaps fold in HDR bloom too
 %    \recipe{MorphologicalAntialiasing}{Screen-space smoothing} % GPU Pro
-$        % Practical MLAA on a GPU: http://igm.univ-mlv.fr/~biri/mlaa-gpu/ (nice paper by Venceslas Biri)
+        % Practical MLAA on a GPU: http://igm.univ-mlv.fr/~biri/mlaa-gpu/ (nice paper by Venceslas Biri)
 %    \recipe{BlobShadows}{}
 %    \recipe{ShadowVolumes}{Also known as ``stencil shadows''}
 \rrecipe{ShadowMaps}{Old-school PCF shadow mapping} % Uses PCF to soften edges
@@ -72,9 +111,9 @@ $        % Practical MLAA on a GPU: http://igm.univ-mlv.fr/~biri/mlaa-gpu/ (nice
     % Layered DOF, Gather-based DOF, Diffusion DOF
     % good survey: http://developer.download.nvidia.com/presentations/2010/futuregameon/LouisBavoil_ModernRealTimeRenderingTechniques.pdf
 %    \recipe{JitterFocus}{Depth of field via accumulation}
-\rrecipe{Lightmaps}{Specular/Diffuse/AO maps with multitexturing} % nvidia-mesh-tools can help with this (and xNormal)
+%    \rrecipe{Lightmaps}{Specular/Diffuse/AO maps with multitexturing} % nvidia-mesh-tools can help with this (and xNormal)
 \rrecipe{AmbientOcclusion}{Screen-space ambient occlusion}
-\rrecipe{LightBaker}{Reverse texture mapping; conservative rasterization}
+%    \rrecipe{LightBaker}{Reverse texture mapping; conservative rasterization}
 %    \recipe{DistanceGeneration}{Generating a two-dimensional SEDT}
 %    \recipe{GlyphAtlas}{Creating and using a texture atlas of SEDT glyphs}
 %    \recipe{DistanceEffects}{Antialiasing, outlining, glow, and drop shadows}
