@@ -1,65 +1,89 @@
-Preliminaries
+\section*{Tentative Outline}
 
-\item{Vector Algebra with Javascript}
-\item{The Canvas Element in HTML5}
-\item{Whirlwind tour of GLSL}
-\item{The Life of a Triangle}
+\newcounter{recipei}
+\setcounter{recipei}{0}
+\newcommand{\verbiage}[2] {\item \textbf{\textcolor{commentgreen}{#1}} \footnotesize#2\normalsize}
+\newcommand{\rrecipe}[2] {\item \textbf{\textcolor{commentgreen}{#1}} \footnotesize#2\normalsize}
+\newcommand{\irecipe}[2] {\item \textbf{\textcolor{commentgreen}{#1}} \footnotesize#2\normalsize}
+\newcommand{\arecipe}[2] {\item \textbf{\textcolor{commentgreen}{#1}} \footnotesize#2\normalsize}
+\renewcommand{\labelenumi}{}
+\begin{enumerate}
 
-Vertex Buffers and Projections
-
-\item{Vertex Buffer Objects}{}
+\item Preliminaries
+\begin{enumerate}[resume]
+\verbiage{The Canvas Element and HTML 5}
+\verbiage{The Life of a Triangle}
+\verbiage{Vector Algebra with Javascript}
+\verbiage{Whirlwind tour of GLSL}
+\end{enumerate}
+%
+\item Vertex Buffers and Attributes
+\begin{enumerate}[resume]
+\verbiage{Vertex Buffer Objects}{}
 \rrecipe{ParametricSurface}{}
-\item{Vertex Attributes}{}
-\rrecipe{ColorGraph}{Animated wireframe graph of the sinc function}
-\item{Typed Arrays}
-\item{Loading Binaries with XMLHttpRequest}
+\verbiage{Vertex Attributes}{}
+\rrecipe{ColorGraph}{Animated wireframe graph of the sinc function} % Illustrates performance differences
+\verbiage{Javascript Typed Arrays}
+\verbiage{Loading Binaries with XMLHttpRequest}
 \rrecipe{BuddhaViewer}{}
-
-Lighting and Shading
-
-\rrecipe{BasicLighting}{}
+\end{enumerate}
+%
+\item Rendering Solids
+\begin{enumerate}[resume]
+\verbiage{Dealing with Depth}{Explains the depth buffer and how depth artifacts can arise}
+\verbiage{Lambertian Reflection}{Illustrates a simple ambient-diffuse-specular lighting model}
+\rrecipe{BasicLighting}{Extends the ParametricSurface demo to illustrate lighting and depth}
 \rrecipe{CelEffect}{Cartoon rendering with a two-pass silhouette}
-
-Textures and Texture-Based Effects
-
+\end{enumerate}
+%
+\item Texture-Based Effects
+\begin{enumerate}[resume]
 \rrecipe{BumpMapping}{Art-provided normal maps} % external references: procedural bumping
 \rrecipe{ParallaxMapping}{Improved bump mapping}
 \rrecipe{CubemapReflection}{Classic, simple use of cubemaps} % refraction too?
-
-Animation Techniques
-
-\rrecipe{ParticleSystem}{ Fireworks with source-over and additive blending }
-\rrecipe{BlendShapes}{ morphs between two objects }
-\rrecipe{BoneSystem}{ bends a humanoid wireframe; visualizes CMU mocap data }
-
-Framebuffer Objects and Screen-space Effects
-
+\end{enumerate}
+%
+\item Animation Techniques
+\begin{enumerate}[resume]
+\rrecipe{ParticleSystem}{Fireworks with source-over and additive blending}
+\rrecipe{BlendShapes}{Morphs between two objects}
+\rrecipe{BoneSystem}{Bends a humanoid wireframe; visualizes CMU mocap data}
+\end{enumerate}
+%
+\item Framebuffer Effects
+\begin{enumerate}[resume]
+\verbiage{Stencil Buffer}{ Brief overview of stencil and how it can be used for CSG and shadows }
 \rrecipe{StenciledReflection}{Fake reflection using stencil}
+\verbiage{Framebuffer Objects}{Explains offscreen render targets and 
 \rrecipe{GaussianBlur}{Optimal filtering with minimal taps} % perhaps fold in HDR bloom too
 \rrecipe{ShadowMaps}{Old-school PCF shadow mapping} % Uses PCF to soften edges
 \rrecipe{SubsurfaceScattering}{Transluscent marble} % similar to my fresnel glass demo
-\rrecipe{NiceFog}{High-quality fog} % http://iquilezles.org/www/articles/fog/fog.htm
 \rrecipe{MotionBlur}{Emphasizing movement with directional blur} % Also refer to the SIGGRAPH 2010 geometric motion blur
 \rrecipe{DistanceBlur}{Depth of field via post-processing} % Real-time Depth-of-Field (ShaderX 5) -- there also seem to be some dx11 demos for this (ATI's ladybug)
 \rrecipe{AmbientOcclusion}{Screen-space ambient occlusion}
-
-Interaction Techniques
-
+\end{enumerate}
+%
+\item Interaction Techniques
+\begin{enumerate}[resume]
 \irecipe{Trackball}{ Classic mouse-driven rotation } % With momentum and quats!
 \irecipe{ViewCube}{ Move the camera by clicking on a mini-cube with hotspots }
 \irecipe{Manipulators}{ Interactive handles for positioning objects }
 \irecipe{SelectionBuffer}{ ... }
 \irecipe{PointSelection}{ Voronoi maps for point-cloud selection }
-
-Web Applications
-
+\end{enumerate}
+%
+\item Web Applications
+\begin{enumerate}[resume]
 \arecipe{HouseModeler}{Draw quads that can be extruded into buildings}
 \arecipe{SetDresser}{Place objects and spotlights into a scene} % might include uberlight, projection textures, and mirrors
+\end{enumerate}
 
+\end{enumerate}
 
 
 ------------
 
+\rrecipe{NiceFog}{High-quality fog} % http://iquilezles.org/www/articles/fog/fog.htm
 \arecipe{BlockPuzzle}{Move a cuboid around on grid-based playing field}
 
 
