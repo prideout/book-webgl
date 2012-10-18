@@ -22,26 +22,24 @@ Framebuffer Objects
 \irecipe{SelectionBuffer}
 \irecipe{PointSelection}{ Voronoi maps for point-cloud selection }
 \irecipe{ViewCube}{ Move the camera by clicking on a mini-cube with hotspots }
-\irecipe{QuadManips}{ Render "manipulators" to allow users to orient a quad in 3-space }
+\irecipe{Manipulators}{ Interactive handles for positioning objects }
 
-\arecipe{BlockPuzzle}{}
-\arecipe{HouseModeler}{}
-\arecipe{FunctionGrapher}{Implicit (FS) or parametric (VS)}
-\arecipe{SetDresser}{Place models, spotlights, and projection textures into a scene} % might include uberlight and mirrors
+\arecipe{BlockPuzzle}{Move a cuboid around on grid-based playing field}
+\arecipe{HouseModeler}{Draw quads that can be extruded into buildings}
+\arecipe{SetDresser}{Place objects and spotlights into a scene} % might include uberlight, projection textures, and mirrors
 
 \rrecipe{ColorGraph}{Animated wireframe graph of the sinc function}
 \rrecipe{BoneSystem}{ bends a humanoid wireframe; visualizes CMU mocap data }
-\rrecipe{ParametricSurface}
-\rrecipe{BasicLighting}
+\rrecipe{ParametricSurface}{}
+\rrecipe{BasicLighting}{}
 \rrecipe{CelEffect}{Cartoon rendering with a two-pass silhouette}
 \rrecipe{StenciledReflection}{Fake reflection using stencil}
-\rrecipe{PixelNurbs}{Rendering NURB curves in the fragment shader} % ala GPU Pro article
 \rrecipe{BumpMapping}{Art-provided normal maps} % external references: procedural bumping
+\rrecipe{ParallaxMapping}{Improved bump mapping}
 \rrecipe{CubemapReflection}{Classic, simple use of cubemaps} % refraction too?
 \rrecipe{PointSprites}{Fireworks with source-over and additive blending}
 \rrecipe{GaussianBlur}{Optimal filtering with minimal taps} % perhaps fold in HDR bloom too
 \rrecipe{ShadowMaps}{Old-school PCF shadow mapping} % Uses PCF to soften edges
-\rrecipe{ParallaxMapping}{Bumpy silhouettes}
 \rrecipe{SubsurfaceScattering}{Realistic marble} % similar to my fresnel glass demo
 \rrecipe{NiceFog}{High-quality fog} % http://iquilezles.org/www/articles/fog/fog.htm
 \rrecipe{MotionBlur}{Emphasizing movement with directional blur} % Also refer to the SIGGRAPH 2010 geometric motion blur
