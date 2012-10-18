@@ -1,54 +1,66 @@
-"WebGL Techniques"
+Preliminaries
 
-Four types of sections:
-Exposition
-Interaction Recipes
-Rendering Recipes
-Application Recipes
+\item{Vector Algebra with Javascript}
+\item{The Canvas Element in HTML5}
+\item{Whirlwind tour of GLSL}
+\item{The Life of a Triangle}
 
-------------
+Vertex Buffers and Projections
 
-Vector Algebra with Javascript
-The Canvas Element
-The Life of a Triangle
-  Vertex Buffer Objects
-  Vertex Attributes
-  Typed Arrays
-Loading Binaries with XMLHttpRequest
-Fetching and Displaying Textures
-Framebuffer Objects
-
-\irecipe{Trackball}{ Classic mouse-driven rotation } % With momentum and quats!
-\irecipe{SelectionBuffer}
-\irecipe{PointSelection}{ Voronoi maps for point-cloud selection }
-\irecipe{ViewCube}{ Move the camera by clicking on a mini-cube with hotspots }
-\irecipe{Manipulators}{ Interactive handles for positioning objects }
-
-\arecipe{BlockPuzzle}{Move a cuboid around on grid-based playing field}
-\arecipe{HouseModeler}{Draw quads that can be extruded into buildings}
-\arecipe{SetDresser}{Place objects and spotlights into a scene} % might include uberlight, projection textures, and mirrors
-
-\rrecipe{ColorGraph}{Animated wireframe graph of the sinc function}
-\rrecipe{BoneSystem}{ bends a humanoid wireframe; visualizes CMU mocap data }
+\item{Vertex Buffer Objects}{}
 \rrecipe{ParametricSurface}{}
+\item{Vertex Attributes}{}
+\rrecipe{ColorGraph}{Animated wireframe graph of the sinc function}
+\item{Typed Arrays}
+\item{Loading Binaries with XMLHttpRequest}
+\rrecipe{BuddhaViewer}{}
+
+Lighting and Shading
+
 \rrecipe{BasicLighting}{}
 \rrecipe{CelEffect}{Cartoon rendering with a two-pass silhouette}
-\rrecipe{StenciledReflection}{Fake reflection using stencil}
+
+Textures and Texture-Based Effects
+
 \rrecipe{BumpMapping}{Art-provided normal maps} % external references: procedural bumping
 \rrecipe{ParallaxMapping}{Improved bump mapping}
 \rrecipe{CubemapReflection}{Classic, simple use of cubemaps} % refraction too?
-\rrecipe{PointSprites}{Fireworks with source-over and additive blending}
+
+Animation Techniques
+
+\rrecipe{ParticleSystem}{ Fireworks with source-over and additive blending }
+\rrecipe{BlendShapes}{ morphs between two objects }
+\rrecipe{BoneSystem}{ bends a humanoid wireframe; visualizes CMU mocap data }
+
+Framebuffer Objects and Screen-space Effects
+
+\rrecipe{StenciledReflection}{Fake reflection using stencil}
 \rrecipe{GaussianBlur}{Optimal filtering with minimal taps} % perhaps fold in HDR bloom too
 \rrecipe{ShadowMaps}{Old-school PCF shadow mapping} % Uses PCF to soften edges
-\rrecipe{SubsurfaceScattering}{Realistic marble} % similar to my fresnel glass demo
+\rrecipe{SubsurfaceScattering}{Transluscent marble} % similar to my fresnel glass demo
 \rrecipe{NiceFog}{High-quality fog} % http://iquilezles.org/www/articles/fog/fog.htm
 \rrecipe{MotionBlur}{Emphasizing movement with directional blur} % Also refer to the SIGGRAPH 2010 geometric motion blur
 \rrecipe{DistanceBlur}{Depth of field via post-processing} % Real-time Depth-of-Field (ShaderX 5) -- there also seem to be some dx11 demos for this (ATI's ladybug)
 \rrecipe{AmbientOcclusion}{Screen-space ambient occlusion}
 
+Interaction Techniques
+
+\irecipe{Trackball}{ Classic mouse-driven rotation } % With momentum and quats!
+\irecipe{ViewCube}{ Move the camera by clicking on a mini-cube with hotspots }
+\irecipe{Manipulators}{ Interactive handles for positioning objects }
+\irecipe{SelectionBuffer}{ ... }
+\irecipe{PointSelection}{ Voronoi maps for point-cloud selection }
+
+Web Applications
+
+\arecipe{HouseModeler}{Draw quads that can be extruded into buildings}
+\arecipe{SetDresser}{Place objects and spotlights into a scene} % might include uberlight, projection textures, and mirrors
+
+
 
 ------------
 
+\arecipe{BlockPuzzle}{Move a cuboid around on grid-based playing field}
 
 
 \rrecipe{ColorGraph}{Animated wireframe graph of the sinc function}
