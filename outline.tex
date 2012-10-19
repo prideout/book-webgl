@@ -8,96 +8,108 @@
 \small
 
 \vspace{0.25in}
-\noindent book proposal for Taylor & Francis Group
+\noindent book proposal for Taylor \& Francis Group
 
 \noindent \href{mailto:philiprideout@gmail.com}{philiprideout@gmail.com}
 \normalsize
 
+\renewcommand{\labelenumi}{Chapter \arabic{enumi}. }
+
 \section*{Summary}
-Unique in the market by providing a focus on interactivity, \emph{WebGL Techniques} guides readers through an essential set of rendering and 3D interaction techniques, showcasing a set of small-but-complete web apps (\emph{recipes}) in each section.
+Unique in the market by providing a focus on interactivity, \emph{WebGL Techniques} guides readers through an essential set of rendering techniques and 3D interaction techniques, showcasing a set of small-but-complete web apps (\emph{recipes}) in each chapter.
 
 \section*{About the Author}
 
-Philip Rideout has worked in the field of real-time graphics for over ten years, having played roles at several pioneering graphics companies, including Intergraph, NVIDIA, and Pixar.  He is the sole author of \emph{iPhone 3D Programming} (O'Reilly Media), and a contributing author in \emph{GPU Pro 2} (A K Peters) and \emph{OpenGL Insights} (CRC Press).
+Philip Rideout has worked in the field of real-time graphics for over ten years, having played roles at several pioneering graphics companies, including Intergraph, NVIDIA, and Pixar.  He is the sole author of \emph{iPhone 3D Programming} (O'Reilly Media), and a contributing author of \emph{GPU Pro 2} (A K Peters) and \emph{OpenGL Insights} (CRC Press).
 
 \section*{Tentative Outline}
 
-\newcounter{recipei}
-\setcounter{recipei}{0}
-\newcommand{\verbiage}[2] {\item \textbf{\textcolor{commentgreen}{#1}} \footnotesize#2\normalsize}
-\newcommand{\rrecipe}[2] {\item \textbf{\textcolor{commentgreen}{#1}} \footnotesize#2\normalsize}
-\newcommand{\irecipe}[2] {\item \textbf{\textcolor{commentgreen}{#1}} \footnotesize#2\normalsize}
-\newcommand{\arecipe}[2] {\item \textbf{\textcolor{commentgreen}{#1}} \footnotesize#2\normalsize}
-\renewcommand{\labelenumi}{}
-\begin{enumerate}
+In the following outline, note that some section headings are colored in \textbf{\textcolor{Maroon}{maroon}}; these are the designated \emph{recipes}, which are tutorial-style explanations of complete example programs.
 
+These recipes are examples of \emph{literate programming}, a term coined by Donald Knuth.  His idea was to present complete programs in a book, using ordinary English intermingled with small fragments of code.  Tools can extract the code fragments from the book's source (in this case, \LaTeX), creating complete, ready-to-build projects.
+
+\newcommand{\verbiage}[2] {\item \textbf{#1} \footnotesize#2\normalsize}
+\newcommand{\rrecipe}[2] {\item \textbf{\textcolor{Maroon}{#1}} \footnotesize#2\normalsize}
+\newcommand{\irecipe}[2] {\item \textbf{\textcolor{Maroon}{#1}} \footnotesize#2\normalsize}
+\newcommand{\arecipe}[2] {\item \textbf{\textcolor{Maroon}{#1}} \footnotesize#2\normalsize}
+
+\renewcommand{\labelenumii}{\roman{enumii}. }
+\setcounter{enumi}{0}
+
+\begin{enumerate}
 \item Preliminaries
-\begin{enumerate}[resume]
+\begin{enumerate}
 \verbiage{The Canvas Element and HTML 5}{}
 \verbiage{The Life of a Triangle}{}
 \verbiage{Vector Algebra with Javascript}{}
 \verbiage{Whirlwind tour of GLSL}{}
 \end{enumerate}
-%
+\pagebreak
 \item Vertex Buffers and Attributes
-\begin{enumerate}[resume]
+\begin{enumerate}
 \verbiage{Vertex Buffer Objects}{}
-\rrecipe{ParametricSurface}{}
+\rrecipe{Parametric Surfaces}{Procedural generation of simple geometry}
 \verbiage{Vertex Attributes}{}
-\rrecipe{ColorGraph}{Animated wireframe graph of the sinc function} % Illustrates performance differences
+\rrecipe{Color Graph}{Animated wireframe graph of the sinc function} % Illustrates performance differences
 \verbiage{Javascript Typed Arrays}{}
 \verbiage{Loading Binaries with XMLHttpRequest}{}
-\rrecipe{BuddhaViewer}{}
+\rrecipe{Buddha Viewer}{Download \& render a large mesh}
 \end{enumerate}
 %
 \item Rendering Solids
-\begin{enumerate}[resume]
-\verbiage{Dealing with Depth}{Explains the depth buffer and how depth artifacts can arise}
-\verbiage{Lambertian Reflection}{Illustrates a simple ambient-diffuse-specular lighting model}
-\rrecipe{BasicLighting}{Extends the ParametricSurface demo to illustrate lighting and depth}
-\rrecipe{CelEffect}{Cartoon rendering with a two-pass silhouette}
+\begin{enumerate}
+\verbiage{Dealing with Depth}{} % Explains the depth buffer and how depth artifacts can arise
+\verbiage{Lambertian Reflection}{} % Illustrates a simple ambient-diffuse-specular lighting model
+\rrecipe{Basic Lighting}{Extends ParametricSurface to illustrate lighting}
+\rrecipe{Cel Effect}{Cartoon rendering with a two-pass silhouette}
 \end{enumerate}
 %
-\item Texture-Based Effects
-\begin{enumerate}[resume]
-\rrecipe{BumpMapping}{Art-provided normal maps} % external references: procedural bumping
-\rrecipe{ParallaxMapping}{Improved bump mapping}
-\rrecipe{CubemapReflection}{Classic, simple use of cubemaps} % refraction too?
+\item Blending and Texture-Based Effects
+\begin{enumerate}
+\verbiage{Texture Coordinates and Wrap Modes}{}
+\verbiage{Filtering and Mipmapping}{}
+\verbiage{Alpha Blending}{}
+\rrecipe{Bump Mapping}{Art-provided normal maps} % external references: procedural bumping
+\rrecipe{Parallax Mapping}{Improved bump mapping}
+\rrecipe{Cubemap Reflection}{Classic, simple use of cubemaps} % refraction too?
+\rrecipe{Particle System}{Fireworks with additive blending}
 \end{enumerate}
 %
 \item Animation Techniques
-\begin{enumerate}[resume]
-\rrecipe{ParticleSystem}{Fireworks with source-over and additive blending}
-\rrecipe{BlendShapes}{Morphs between two objects}
-\rrecipe{BoneSystem}{Bends a humanoid wireframe; visualizes CMU mocap data}
+\begin{enumerate}
+\rrecipe{Blend Shapes}{Morphs between two objects}
+\rrecipe{Bone System}{Bends a humanoid wireframe using mocap data}
 \end{enumerate}
 %
 \item Framebuffer Effects
-\begin{enumerate}[resume]
-\verbiage{Stencil Buffer}{ Brief overview of stencil and how it can be used for CSG and shadows }
-\rrecipe{StenciledReflection}{Fake reflection using stencil}
-\verbiage{Framebuffer Objects}{Explains offscreen render targets etc}
-\rrecipe{GaussianBlur}{Optimal filtering with minimal taps} % perhaps fold in HDR bloom too
-\rrecipe{ShadowMaps}{Old-school PCF shadow mapping} % Uses PCF to soften edges
-\rrecipe{SubsurfaceScattering}{Transluscent marble} % similar to my fresnel glass demo
-\rrecipe{MotionBlur}{Emphasizing movement with directional blur} % Also refer to the SIGGRAPH 2010 geometric motion blur
-\rrecipe{DistanceBlur}{Depth of field via post-processing} % Real-time Depth-of-Field (ShaderX 5) -- there also seem to be some dx11 demos for this (ATI's ladybug)
-\rrecipe{AmbientOcclusion}{Screen-space ambient occlusion}
+\begin{enumerate}
+\verbiage{Stencil Buffer}{} % Brief overview of stencil and how it can be used for CSG and shadows
+\rrecipe{Stenciled Reflection}{Fake reflection using stencil}
+\verbiage{Framebuffer Objects}{} % Explains offscreen render targets etc
+\verbiage{Multiple Render Targets}{} % Explains offscreen render targets etc
+\rrecipe{Gaussian Blur}{Optimal filtering with minimal taps} % perhaps fold in HDR bloom too
+\rrecipe{Shadow Maps}{Old-school PCF shadow mapping} % Uses PCF to soften edges
+\rrecipe{Subsurface Scattering}{Transluscent marble} % similar to my fresnel glass demo
+\rrecipe{Motion Blur}{Emphasizing movement with directional blur} % Also refer to the SIGGRAPH 2010 geometric motion blur
+\rrecipe{Distance Blur}{Depth of field via post-processing} % Real-time Depth-of-Field (ShaderX 5) -- there also seem to be some dx11 demos for this (ATI's ladybug)
+\rrecipe{Ambient Occlusion}{Screen-space ambient occlusion}
 \end{enumerate}
 %
 \item Interaction Techniques
-\begin{enumerate}[resume]
+\begin{enumerate}
+\verbiage{Capturing events with jQuery }{}
 \irecipe{Trackball}{ Classic mouse-driven rotation } % With momentum and quats!
-\irecipe{ViewCube}{ Move the camera by clicking on a mini-cube with hotspots }
+\irecipe{View Cube}{ Move the camera by clicking hotspots on a cube }
 \irecipe{Manipulators}{ Interactive handles for positioning objects }
-\irecipe{SelectionBuffer}{ }
-\irecipe{PointSelection}{ Voronoi maps for point-cloud selection }
+\irecipe{Selection Buffer}{ Render object IDs into a FBO }
+\irecipe{Point Selection}{ Voronoi maps for point-cloud selection }
 \end{enumerate}
 %
 \item Web Applications
-\begin{enumerate}[resume]
-\arecipe{HouseModeler}{Draw quads that can be extruded into buildings}
-\arecipe{SetDresser}{Place objects and spotlights into a scene} % might include uberlight, projection textures, and mirrors
+\begin{enumerate}
+\verbiage{RequireJS and MVC Frameworks}{}
+\arecipe{House Modeler}{Draw quads that can be extruded into buildings}
+\arecipe{Set Dresser}{Place objects and spotlights into a scene} % might include uberlight, projection textures, and mirrors
 \end{enumerate}
 
 \end{enumerate}
