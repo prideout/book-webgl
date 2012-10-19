@@ -1,0 +1,170 @@
+\documentclass{book}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{geometry}
+\usepackage{graphics}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{mdwlist}
+\usepackage{enumitem}
+\usepackage{minted}
+\usepackage[avantgarde]{quotchap}
+\definecolor{DarkKhaki}{rgb}{0.741, 0.718, 0.420} 
+\definecolor{chaptergrey}{rgb}{0.741, 0.718, 0.420} 
+\definecolor{commentgreen}{RGB}{68, 136, 85}
+\usepackage{makeidx}
+\usepackage{verbatim}
+\usepackage[raggedright,scriptsize]{subfigure}
+\usepackage{amsmath, amsthm, amssymb}
+
+\hypersetup {
+    colorlinks,
+    urlcolor=blue,
+    citecolor=magenta
+}
+
+\title{WebGL Techniques:\\Building 3D Applications for the Web}
+\date{}
+\author{Philip Rideout}
+
+\geometry {
+  paperwidth=6in,
+  paperheight=9in,
+  bottom=0.5in,
+  top=0.5in,
+  marginparsep=0.1in,
+  marginpar=0.75in
+}
+
+\begin{comment}
+
+Settings > Long Line Settings > 72
+
+   1. \tiny
+   2. \scriptsize
+   3. \footnotesize
+   4. \small
+   5. \normalsize
+   6. \large
+   7. \Large
+   8. \LARGE
+   9. \huge
+  10. \Huge 
+\end{comment}
+
+\usemintedstyle{trac}
+\definecolor{bg}{rgb}{0.95, 0.95, 0.95}
+\newminted{cpp}{gobble=4,bgcolor=bg,texcl,fontsize=\footnotesize}
+\newminted{glsl}{gobble=4,bgcolor=bg,texcl,fontsize=\footnotesize}
+\newcommand{\greenlinks}{\hypersetup{colorlinks,linkcolor=commentgreen}}
+\newcommand{\redlinks}{\hypersetup{colorlinks,linkcolor=red}}
+\newcommand{\recipecodefile}[2] { \textsf{#1 \textcolor{red}{\pageref{#2}}}\\ }
+\newcommand{\recipemediafile}[1] { \textsf{#1}\\ }
+\newcommand{\recipecite}[1] { \textsf{\cite{#1}}\\ }
+
+\newcommand{\newfragment}[2] {
+    \phantomsection
+    \label{#2}
+    \vspace{0.125in}
+    \noindent \texttt{\emph{\textbf{\textcolor{commentgreen}{#1}}} $\equiv$ }
+%    \nopagebreak
+    
+}
+\newcommand{\addfragment}[2] {
+    \phantomsection
+    \label{#2}
+    \vspace{0.125in}
+    \noindent \texttt{\emph{\textbf{\textcolor{commentgreen}{#1}}}  +$\equiv$ }
+%    \nopagebreak
+    
+}
+
+\newcommand{\fragmentref}[2] {\greenlinks \hyperref[#2]{#1} \redlinks >>> \hspace{\fill} \tiny \emph{\pageref{#2} }}
+
+%\newcommand{\inlineref}[2] {\greenlinks\emph{\hyperref[#2]{#1}}\redlinks}
+\newcommand{\inlineref}[2] {\greenlinks\hyperref[#2]{#1}\redlinks}
+
+%\usepackage{booklet}
+%\source{\magstep0}{6in}{9in}
+%\target{\magstep0}{11in}{8.5in}
+%\setpdftargetpages
+%\pagespersignature{120}
+
+\pagestyle{fancy}
+
+%\usepackage[cam,center,letter,noinfo]{crop}
+
+\graphicspath{{../figs/}}
+
+\makeindex
+\begin{document}
+
+\mainmatter
+ \renewcommand{\chaptermark}[1]{\markboth{Chapter \thechapter. #1}{}}
+ \renewcommand{\sectionmark}[1]{\markright{\thesection. #1}}
+
+% Dedication Page
+% \maketitle
+% \emph{for Mom, Dad, and Ken}
+
+\include{proposal}
+
+\def\thesection {Recipe \arabic{section}:}
+\def\thesubsection {\arabic{section}.\arabic{subsection}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Redefine the section command tro be invisible
+
+\makeatletter
+\renewcommand\section{\@startsection {section}{1}{\z@}%
+                                   {0pt}%
+                                   {0pt}%
+                                   {\vphantom}}
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% The "definerecipe" command
+% name, files, imagepath, description
+\newcommand{\definerecipe}[4]
+{
+	\vspace{0.1in}
+	\marginpar { \raggedright \tiny
+		\vspace{0.3in}
+		#2
+	}
+	\section{#1} \ \\
+	\addcontentsline{toc}{section}{#1}
+	\mbox{ \colorbox{bg}{\begin{minipage}{4in}
+	\vspace{0.05in}
+	\raggedright \Large \textbf{\thesection\ #1} \normalsize
+	\vspace{0.05in}
+	\setlength\fboxsep{0pt}
+	\begin{tabular}{ l p{2.15in} }
+	 \vtop{\vspace{0pt}\hbox{\fbox{\includegraphics[width=1.5in]{../media/screenshots/#3}} }} &
+	 \vtop{\vspace{0pt}\parbox{2.15in}{\noindent\small\textsf{#4} } }\\
+	\end{tabular}
+	\vspace{0.05in}
+	\end{minipage} } }
+	\vspace{0.2in}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\include{chapter01}
+%\include{chapter02}
+%\include{chapter03}
+%\include{chapter04}
+%\include{backmatter01}
+%\include{backmatter02}
+
+\backmatter
+ \renewcommand{\chaptermark}[1]{\markboth{#1}{#1}}
+
+\raggedright
+
+%\bibliographystyle{alpha}
+%\bibliography{book}
+%\printindex
+
+\end{document}
