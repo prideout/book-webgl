@@ -16,7 +16,7 @@
 \renewcommand{\labelenumi}{Chapter \arabic{enumi}. }
 
 \section*{Summary}
-Unique in the market by providing a focus on interactivity, \emph{WebGL Techniques} guides readers through an essential set of rendering techniques and 3D interaction techniques, showcasing a set of small-but-complete web apps (\emph{recipes}) in each chapter.
+Unique in the market by providing a focus on interactivity, \emph{WebGL Techniques} guides readers through an essential set of rendering techniques and 3D interaction techniques, showcasing a set of small-but-complete web apps (\emph{recipes}) at the end of each chapter.
 
 \section*{About the Author}
 
@@ -37,41 +37,53 @@ These recipes are examples of \emph{literate programming}, a term coined by Dona
 \setcounter{enumi}{0}
 
 \begin{enumerate}
+
 \item Preliminaries
 \begin{enumerate}
-\verbiage{The Canvas Element and HTML 5}{}
-\verbiage{The Life of a Triangle}{}
+\verbiage{A Brief History of *GL}{Describes WebGL's motivation and ancestry: OpenGL, OpenGL ES, etc}
+\verbiage{Building Giza: Literate Programming}{Explains our coding conventions and the \texttt{Giza} library that is built up over the course of the book}
+\verbiage{The Assembly Line Metaphor}{High-level overview of the WebGL rendering pipeline}
+\verbiage{The Canvas Element}{Explains the \texttt{width} and \texttt{height} attributes, how to handle retina displays}
+\verbiage{Animation Timing}{How to periodically trigger a draw events}
+\rrecipe{Recipe 1: Strobe Light}{The simplest possible WebGL application; animates a solid color with\texttt{clear}}
+\{enumerate}
+
+\item Vertex Shading and Transforms
+\begin{enumerate}
 \verbiage{Vector Algebra with Javascript}{}
-\verbiage{Whirlwind tour of GLSL}{}
-\end{enumerate}
-\pagebreak
-
-\item Vertex Buffers and Attributes
-\begin{enumerate}
-\verbiage{Vertex Buffer Objects}{}
-\rrecipe{Parametric Surfaces}{Procedural generation of simple geometry}
+\verbiage{Life of a Vertex}{Describes model, view, and projection transforms}
+\verbiage{Shading Language Basics}{Writing \texttt{main} for vertex shaders}
+\verbiage{Line Drawing}{Explains the LINES primitive and DrawElements}
 \verbiage{Vertex Attributes}{}
-\rrecipe{Color Graph}{Animated wireframe graph of the sinc function} % Illustrates performance differences
-\verbiage{Javascript Typed Arrays}{The geometry in preceding samples was procedurally generated; we now show how to upload canned content.}
-\verbiage{Loading Binaries with XMLHttpRequest}{}
-\rrecipe{Buddha Viewer}{Download \& render a large mesh}
+\verbiage{Vertex Buffer Objects}{}
+\verbiage{Javascript Typed Arrays}{}
+\rrecipe{Recipe 2: Color Graph}{Animated wireframe graph of the sinc function; illustrates performance differences between Javascript-side computation and shader-side computation}
 \end{enumerate}
 
-\item Rendering Solids
+\item Downloading and Applying Artistic Content
 \begin{enumerate}
-\verbiage{Dealing with Depth}{} % Explains the depth buffer and how depth artifacts can arise
-\verbiage{Lambertian Reflection}{} % Illustrates a simple ambient-diffuse-specular lighting model
-\rrecipe{Basic Lighting}{Extends ParametricSurface to illustrate lighting}
+\verbiage{Texture Coordinates}{Texture coordinates and wrap modes; as an example, shows how to apply a section of the Mona Lisa to a quad.}
+\verbiage{Texture Filtering}{Overview of minification, magnification, and mipmapping; pixel art as an example.}
+                  % space invaders!
+                  % or, http://opengameart.org/content/japanese-buildings-isometric-strategy-game-mockup
+\verbiage{Parametric Surfaces}{When the artist is the computer: procedural generation of simple geometry}
+\verbiage{Loading Mesh Data with XMLHttpRequest}{Implements Giza's download functionality; also mentions \texttt{webgl-loader}}
+\rrecipe{Recipe 3: Planet Mars}{Downloads a sphere mesh and a mars texture} % Maybe even the two moons?
+\end{enumerate}
+
+\item Rendering and Lighting Solid Objects
+\begin{enumerate}
+\verbiage{Face Orientation}{Explains back-face culling in greater-detail (used in the Planet Mars recipe)}
+\verbiage{Dealing with Depth}{Explains the depth buffer, how depth artifacts can arise, etc.}
+\verbiage{Lambertian Reflection}{Illustrates a simple ambient-diffuse-specular lighting model}
+\rrecipe{Recipe 4: ????}{????} % Taj Mahal?
+\end{enumerate}
+
 \rrecipe{Cel Effect}{Cartoon rendering with a two-pass silhouette}
-\end{enumerate}
-
-\item Blending and Texture-Based Effects
-\begin{enumerate}
-\verbiage{Texture Coordinates and Wrap Modes}{}
-\verbiage{Filtering and Mipmapping}{}
 \verbiage{Alpha Blending}{}
+\verbiage{The WebCam}{}
 \rrecipe{Particle System}{Fireworks with additive blending}
-\end{enumerate}
+
 
 \item Framebuffer Effects Part I
 \begin{enumerate}
