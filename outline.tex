@@ -1,11 +1,13 @@
 \thispagestyle{empty}
 \label{Proposal}
 \LARGE
-\noindent WebGL Techniques:
 
-\large
-\noindent Building 3D Applications for the Web
-\small
+\noindent The WebGL Companion
+
+%\noindent WebGL Techniques:
+%\large
+%\noindent Building 3D Applications for the Web
+%\small
 
 \vspace{0.25in}
 \noindent book proposal for Taylor \& Francis Group
@@ -16,7 +18,7 @@
 \renewcommand{\labelenumi}{Chapter \arabic{enumi}. }
 
 \section*{Summary}
-Unique in the market by providing a focus on interactivity, \emph{WebGL Techniques} guides readers through an essential set of rendering techniques and 3D interaction techniques, showcasing a set of small-but-complete web apps (\emph{recipes}) at the end of each chapter.
+Unique in the market by providing a focus on interactivity, \emph{The WebGL Companion} guides readers through an essential set of rendering techniques and 3D interaction techniques, showcasing a set of small-but-complete web apps (\emph{recipes}) at the end of each chapter.
 
 \section*{About the Author}
 
@@ -66,72 +68,72 @@ These recipes are examples of \emph{literate programming}, a term coined by Dona
 \verbiage{Texture Filtering}{Overview of minification, magnification, and mipmapping; uses small pixel art to illustrate the effects of filtering.}
                   % space invaders!
                   % or, http://opengameart.org/content/japanese-buildings-isometric-strategy-game-mockup
-\verbiage{Parametric Surfaces}{When the artist is the computer: procedural generation of simple geometry}
+\verbiage{Parametric Surfaces}{When the artist is the computer: procedural generation of simple geometry} % Generate the geometry with node.js?
 \verbiage{Loading Mesh Data with XMLHttpRequest}{Implements Giza's download functionality; also mentions \texttt{webgl-loader}}
-\rrecipe{Recipe 3: Planet Mars}{Downloads a sphere mesh and a mars texture} % Maybe even the two moons?
+\rrecipe{Recipe 3: Planet Mars}{Downloads a sphere mesh and a mars texture; also demonstrates WEBKIT\_WEBGL\_compressed\_texture\_s3tc} % Maybe even the two moons?
 \end{enumerate}
 
 \item Rendering and Lighting Solid Objects
 \begin{enumerate}
-\verbiage{Face Orientation}{Explains back-face culling in greater-detail (used in the Planet Mars recipe)}
-\verbiage{Dealing with Depth}{Explains the depth buffer, how depth artifacts can arise, etc.}
+\verbiage{Face Orientation}{Explains polygon winding, \texttt{GL\_CULL\_FACE} (used in the Planet Mars recipe) and \texttt{gl\_FrontFacing}}
+\verbiage{Dealing with Depth}{Explains the depth buffer, how depth artifacts can arise, etc.} % Perhaps drill a hole in the mars geometry as an example
 \verbiage{Lambertian Reflection}{Illustrates a simple ambient-diffuse-specular lighting model}
-\rrecipe{Recipe 4: ????}{????} % Taj Mahal?
+\rrecipe{Recipe 4: Cel Shading}{Applying standard lighting, then ``snapping'' the color gradient to a few colors for cartoon rendering} % also possibly add a two-pass silhouette
 \end{enumerate}
 
-\item Framebuffer Effects Part I
+\item Framebuffer Effects
 \begin{enumerate}
-\verbiage{Alpha Blending}{}
+\verbiage{Alpha Blending}{Explains the different blend modes; also discusses \texttt{discard} (which, strictly speaking, is not blending)}
 \verbiage{Framebuffer Objects}{How to create offscreen render targets}
-\verbiage{Floating Point Textures}{Explains unclamped colors and how they can be used for general-purpose computation. Shows how additive blending can be used to achieve a ``thickness'' effect.}
+\verbiage{Floating Point Textures}{Explains unclamped colors (OES\_texture\_float) and how they can be used for general-purpose computation.}
+\verbiage{Subsurface Scattering}{Rendering transluscent marble with floating point textures} % similar to my fresnel glass demo
 \verbiage{Gaussian Blur}{Optimal filtering with minimal taps}
-\verbiage{Stencil Buffer}{Brief overview of stencil and how it can be used for CSG and shadows} 
-\rrecipe{Recipe 5: A Room with a View}{The interior of a moghul palace; illustrates stenciled fake reflection, a depth-based glass effect and a jaali screen backdrop with HDR Bloom}
+\verbiage{Stencil Buffer}{Brief overview of stencil and how it can be used for CSG and shadows -- almost mentions WEBKIT\_WEBGL\_depth\_texture} 
+\rrecipe{Recipe 5: Mughal Window}{Illustrates stenciled fake reflection, a depth-based glass effect and a jaali screen backdrop with HDR Bloom}
 \end{enumerate}
 
-\item Framebuffer Effects Part II
+\item ?????????????????????????
 \begin{enumerate}
 \rrecipe{Cubemap Reflection}{Classic, simple use of cubemaps} % refraction too?
-\rrecipe{Bump Mapping}{Art-provided normal maps} % external references: procedural bumping
+\rrecipe{Bump Mapping}{Tangent space and normal mapping} % external references: procedural bumping
 \rrecipe{Parallax Mapping}{Improved bump mapping}
 \rrecipe{Shadow Maps}{Old-school PCF shadow mapping} % Uses PCF to soften edges
-\rrecipe{Subsurface Scattering}{Transluscent marble} % similar to my fresnel glass demo
 \rrecipe{Motion Blur}{Emphasizing movement with directional blur} % Also refer to the SIGGRAPH 2010 geometric motion blur
-\rrecipe{Distance Blur}{Depth of field via post-processing} % Real-time Depth-of-Field (ShaderX 5) -- there also seem to be some dx11 demos for this (ATI's ladybug)
+\rrecipe{Distance Blur}{Depth of field via post-processing; also mentions a jitter-based technique} % Real-time Depth-of-Field (ShaderX 5) -- there also seem to be some dx11 demos for this (ATI's ladybug)
 \rrecipe{Ambient Occlusion}{Screen-space ambient occlusion}
+\..................
 \end{enumerate}
 
-\item Animation Techniques
+\item Interaction Techniques Part I
 \begin{enumerate}
-\rrecipe{Blend Shapes}{Morphs between two objects}
-\rrecipe{Bone System}{Bends a humanoid wireframe using mocap data}
+\verbiage{Trackball Rotation}{ Classic mouse-driven rotation } % With momentum and quats!
+\verbiage{Selection Buffer}{ Render object IDs into a FBO }
+\verbiage{Inverse Kinematics}{ Shows how to animate an articulated skeleton (this is a high-level overview only, since this can be math-heavy) }
+\verbiage{Vertex Skinning}{ Render soft joints by blending multiple vertex transformations }
+\rrecipe{Dancing Manikin}{Interact with a humanoid figure by dragging the parts} % Also has a dance mode! % Rag doll physics!
 \end{enumerate}
 
-\item Interaction Techniques
+\item Interaction Techniques Part II
 \begin{enumerate}
-\verbiage{Capturing events with jQuery }{}
-\irecipe{Trackball}{ Classic mouse-driven rotation } % With momentum and quats!
-\irecipe{View Cube}{ Move the camera by clicking hotspots on a cube }
-\irecipe{Manipulators}{ Interactive handles for positioning objects }
-\irecipe{Selection Buffer}{ Render object IDs into a FBO }
-\irecipe{Point Selection}{ Voronoi maps for point-cloud selection }
+\verbiage{View Cube}{ Move the camera by clicking hotspots on a cube }
+\verbiage{Manipulators}{ Interactive handles for positioning objects }
+\rrecipe{Set Dresser}{Place objects and spotlights into a scene} % might include uberlight, projection textures, and mirrors
 \end{enumerate}
 
-\item Web Applications
+\item Related Libraries
 \begin{enumerate}
-\verbiage{RequireJS and MVC Frameworks}{}
-\arecipe{House Modeler}{Draw quads that can be extruded into buildings}
-\arecipe{Set Dresser}{Place objects and spotlights into a scene} % might include uberlight, projection textures, and mirrors
+\verbiage{three.js}{By far the most popular 3D JavaScript library; higher level than giza.  Unlike giza, three.js provides support for non-WebGL rendering as well (eg, canvas or SVG rendering)}
+\verbiage{glMatrix}{Fast vector math}
+\verbiage{danser.js}{Create music-based animation}
+\verbiage{tween.js}{Robert Penner's animation equations}
 \end{enumerate}
 
-Other Libraries
-https://code.google.com/p/webgl-loader/
-ThreeJS
-osgjs
-dancer.js
-
-giza.js --- my library!
-I'll use grunt.js
-
+%\verbiage{Capturing events with jQuery }{}
+%\verbiage{Point Selection}{ Voronoi maps for point-cloud selection }
+%I'll use grunt.js
+%\verbiage{RequireJS and MVC Frameworks}{}
+%\arecipe{House Modeler}{Draw quads that can be extruded into buildings}
+%\rrecipe{Blend Shapes}{Morphs between two objects}
+% Tunnel Demo?
 
 \end{enumerate}

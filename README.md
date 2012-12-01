@@ -6,20 +6,14 @@ book-webgl
 Mention color at the top of the outline
 Description for ALL subsections:
 Title. Brief. Detailed.  Notes.
-Create an "Other Libraries" section
-{Security}
 Flesh out with some stuff from my WebGL cookbook spreadsheet
-Add a tunnel section
-{Cel Effect}{Cartoon rendering with a two-pass silhouette}
+
+{Heat Shimmer}
+{Security}
 {The WebCam}{} % http://dev.opera.com/static/articles/2012/webgl-postprocessing/webgl-pp/texImage2D.html
 {Particle System}{Fireworks with additive blending}
-{Anisotropic}
-OES_texture_float (google) (registry)
-OES_standard_derivatives (google) (registry)
-WEBKIT_EXT_texture_filter_anisotropic (google) (registry)
-WEBKIT_WEBGL_lose_context (google) (registry)
-WEBKIT_WEBGL_compressed_texture_s3tc (google) (registry)
-WEBKIT_WEBGL_depth_texture (google) (registry)
+{Anisotropic Filtering}{WEBKIT\_EXT\_texture\_filter\_anisotropic}
+{Derivatives Extension}{Shows how fragment shaders can smooth the edges of procedural patterns using OES\_standard\_derivatives}
 
 -------
 
