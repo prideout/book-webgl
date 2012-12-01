@@ -63,7 +63,7 @@ These recipes are examples of \emph{literate programming}, a term coined by Dona
 \item Downloading and Applying Artistic Content
 \begin{enumerate}
 \verbiage{Texture Coordinates}{Texture coordinates and wrap modes; as an example, shows how to apply a section of the Mona Lisa to a quad.}
-\verbiage{Texture Filtering}{Overview of minification, magnification, and mipmapping; pixel art as an example.}
+\verbiage{Texture Filtering}{Overview of minification, magnification, and mipmapping; uses small pixel art to illustrate the effects of filtering.}
                   % space invaders!
                   % or, http://opengameart.org/content/japanese-buildings-isometric-strategy-game-mockup
 \verbiage{Parametric Surfaces}{When the artist is the computer: procedural generation of simple geometry}
@@ -79,37 +79,32 @@ These recipes are examples of \emph{literate programming}, a term coined by Dona
 \rrecipe{Recipe 4: ????}{????} % Taj Mahal?
 \end{enumerate}
 
-\rrecipe{Cel Effect}{Cartoon rendering with a two-pass silhouette}
-\verbiage{Alpha Blending}{}
-\verbiage{The WebCam}{}
-\rrecipe{Particle System}{Fireworks with additive blending}
-
-
 \item Framebuffer Effects Part I
 \begin{enumerate}
-\verbiage{Framebuffer Objects}{Explains offscreen render targets etc}
-\rrecipe{Gaussian Blur}{Optimal filtering with minimal taps} % perhaps fold in HDR bloom too
-\rrecipe{HDR Bloom}{Extends the previous sample} % perhaps fold in HDR bloom too
+\verbiage{Alpha Blending}{}
+\verbiage{Framebuffer Objects}{How to create offscreen render targets}
+\verbiage{Floating Point Textures}{Explains unclamped colors and how they can be used for general-purpose computation. Shows how additive blending can be used to achieve a ``thickness'' effect.}
+\verbiage{Gaussian Blur}{Optimal filtering with minimal taps}
 \verbiage{Stencil Buffer}{Brief overview of stencil and how it can be used for CSG and shadows} 
-\rrecipe{Stenciled Reflection}{Fake reflection using stencil}
+\rrecipe{Recipe 5: A Room with a View}{The interior of a moghul palace; illustrates stenciled fake reflection, a depth-based glass effect and a jaali screen backdrop with HDR Bloom}
+\end{enumerate}
+
+\item Framebuffer Effects Part II
+\begin{enumerate}
+\rrecipe{Cubemap Reflection}{Classic, simple use of cubemaps} % refraction too?
+\rrecipe{Bump Mapping}{Art-provided normal maps} % external references: procedural bumping
+\rrecipe{Parallax Mapping}{Improved bump mapping}
+\rrecipe{Shadow Maps}{Old-school PCF shadow mapping} % Uses PCF to soften edges
+\rrecipe{Subsurface Scattering}{Transluscent marble} % similar to my fresnel glass demo
+\rrecipe{Motion Blur}{Emphasizing movement with directional blur} % Also refer to the SIGGRAPH 2010 geometric motion blur
+\rrecipe{Distance Blur}{Depth of field via post-processing} % Real-time Depth-of-Field (ShaderX 5) -- there also seem to be some dx11 demos for this (ATI's ladybug)
+\rrecipe{Ambient Occlusion}{Screen-space ambient occlusion}
 \end{enumerate}
 
 \item Animation Techniques
 \begin{enumerate}
 \rrecipe{Blend Shapes}{Morphs between two objects}
 \rrecipe{Bone System}{Bends a humanoid wireframe using mocap data}
-\end{enumerate}
-
-\item Framebuffer Effects Part II
-\begin{enumerate}
-\rrecipe{Bump Mapping}{Art-provided normal maps} % external references: procedural bumping
-\rrecipe{Parallax Mapping}{Improved bump mapping}
-\rrecipe{Cubemap Reflection}{Classic, simple use of cubemaps} % refraction too?
-\rrecipe{Shadow Maps}{Old-school PCF shadow mapping} % Uses PCF to soften edges
-\rrecipe{Subsurface Scattering}{Transluscent marble} % similar to my fresnel glass demo
-\rrecipe{Motion Blur}{Emphasizing movement with directional blur} % Also refer to the SIGGRAPH 2010 geometric motion blur
-\rrecipe{Distance Blur}{Depth of field via post-processing} % Real-time Depth-of-Field (ShaderX 5) -- there also seem to be some dx11 demos for this (ATI's ladybug)
-\rrecipe{Ambient Occlusion}{Screen-space ambient occlusion}
 \end{enumerate}
 
 \item Interaction Techniques
