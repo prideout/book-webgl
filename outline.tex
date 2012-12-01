@@ -45,17 +45,18 @@ These recipes are examples of \emph{literate programming}, a term coined by Dona
 \verbiage{Whirlwind tour of GLSL}{}
 \end{enumerate}
 \pagebreak
+
 \item Vertex Buffers and Attributes
 \begin{enumerate}
 \verbiage{Vertex Buffer Objects}{}
 \rrecipe{Parametric Surfaces}{Procedural generation of simple geometry}
 \verbiage{Vertex Attributes}{}
 \rrecipe{Color Graph}{Animated wireframe graph of the sinc function} % Illustrates performance differences
-\verbiage{Javascript Typed Arrays}{}
+\verbiage{Javascript Typed Arrays}{The geometry in preceding samples was procedurally generated; we now show how to upload canned content.}
 \verbiage{Loading Binaries with XMLHttpRequest}{}
 \rrecipe{Buddha Viewer}{Download \& render a large mesh}
 \end{enumerate}
-%
+
 \item Rendering Solids
 \begin{enumerate}
 \verbiage{Dealing with Depth}{} % Explains the depth buffer and how depth artifacts can arise
@@ -63,38 +64,42 @@ These recipes are examples of \emph{literate programming}, a term coined by Dona
 \rrecipe{Basic Lighting}{Extends ParametricSurface to illustrate lighting}
 \rrecipe{Cel Effect}{Cartoon rendering with a two-pass silhouette}
 \end{enumerate}
-%
+
 \item Blending and Texture-Based Effects
 \begin{enumerate}
 \verbiage{Texture Coordinates and Wrap Modes}{}
 \verbiage{Filtering and Mipmapping}{}
 \verbiage{Alpha Blending}{}
-\rrecipe{Bump Mapping}{Art-provided normal maps} % external references: procedural bumping
-\rrecipe{Parallax Mapping}{Improved bump mapping}
-\rrecipe{Cubemap Reflection}{Classic, simple use of cubemaps} % refraction too?
 \rrecipe{Particle System}{Fireworks with additive blending}
 \end{enumerate}
-%
+
+\item Framebuffer Effects Part I
+\begin{enumerate}
+\verbiage{Framebuffer Objects}{Explains offscreen render targets etc}
+\rrecipe{Gaussian Blur}{Optimal filtering with minimal taps} % perhaps fold in HDR bloom too
+\rrecipe{HDR Bloom}{Extends the previous sample} % perhaps fold in HDR bloom too
+\verbiage{Stencil Buffer}{Brief overview of stencil and how it can be used for CSG and shadows} 
+\rrecipe{Stenciled Reflection}{Fake reflection using stencil}
+\end{enumerate}
+
 \item Animation Techniques
 \begin{enumerate}
 \rrecipe{Blend Shapes}{Morphs between two objects}
 \rrecipe{Bone System}{Bends a humanoid wireframe using mocap data}
 \end{enumerate}
-%
-\item Framebuffer Effects
+
+\item Framebuffer Effects Part II
 \begin{enumerate}
-\verbiage{Stencil Buffer}{} % Brief overview of stencil and how it can be used for CSG and shadows
-\rrecipe{Stenciled Reflection}{Fake reflection using stencil}
-\verbiage{Framebuffer Objects}{} % Explains offscreen render targets etc
-\verbiage{Multiple Render Targets}{} % Explains offscreen render targets etc
-\rrecipe{Gaussian Blur}{Optimal filtering with minimal taps} % perhaps fold in HDR bloom too
+\rrecipe{Bump Mapping}{Art-provided normal maps} % external references: procedural bumping
+\rrecipe{Parallax Mapping}{Improved bump mapping}
+\rrecipe{Cubemap Reflection}{Classic, simple use of cubemaps} % refraction too?
 \rrecipe{Shadow Maps}{Old-school PCF shadow mapping} % Uses PCF to soften edges
 \rrecipe{Subsurface Scattering}{Transluscent marble} % similar to my fresnel glass demo
 \rrecipe{Motion Blur}{Emphasizing movement with directional blur} % Also refer to the SIGGRAPH 2010 geometric motion blur
 \rrecipe{Distance Blur}{Depth of field via post-processing} % Real-time Depth-of-Field (ShaderX 5) -- there also seem to be some dx11 demos for this (ATI's ladybug)
 \rrecipe{Ambient Occlusion}{Screen-space ambient occlusion}
 \end{enumerate}
-%
+
 \item Interaction Techniques
 \begin{enumerate}
 \verbiage{Capturing events with jQuery }{}
@@ -104,12 +109,22 @@ These recipes are examples of \emph{literate programming}, a term coined by Dona
 \irecipe{Selection Buffer}{ Render object IDs into a FBO }
 \irecipe{Point Selection}{ Voronoi maps for point-cloud selection }
 \end{enumerate}
-%
+
 \item Web Applications
 \begin{enumerate}
-\verbiage{RequireJS and MVC Frameworks}{} % grunt.js and dancer.js too!
+\verbiage{RequireJS and MVC Frameworks}{}
 \arecipe{House Modeler}{Draw quads that can be extruded into buildings}
 \arecipe{Set Dresser}{Place objects and spotlights into a scene} % might include uberlight, projection textures, and mirrors
 \end{enumerate}
+
+Other Libraries
+https://code.google.com/p/webgl-loader/
+ThreeJS
+osgjs
+dancer.js
+
+giza.js --- my library!
+I'll use grunt.js
+
 
 \end{enumerate}
