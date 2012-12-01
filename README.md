@@ -14,6 +14,8 @@ Add a tunnel section
 
 I'm not happy with the weird color scheme and randomness of verbose vs samples
 Mona's idea: How about every chapter has a sample that leverages everything from the chapter?
+   The code snippets in all sections of the chapter (except the last) often (but not always) define functions in the giza library;
+   The LAST section of the chapter walks through a particular demo of the giza library
 
 "The WebGL Companion"
 
