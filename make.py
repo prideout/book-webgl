@@ -10,7 +10,9 @@ cmds = [
     'pdflatex -jobname=outline-trimmed trim.tex'
 ]
 
-shutil.rmtree(build_folder)
+try: shutil.rmtree(build_folder)
+except: pass
+
 os.mkdir(build_folder)
 
 for f in tex_files.split():
