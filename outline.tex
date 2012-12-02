@@ -16,17 +16,17 @@
 \normalsize
 
 \section*{Summary}
-\emph{The WebGL Companion} guides readers through an essential set of rendering techniques and 3D interaction techniques, showcasing a set of small-but-complete web apps (\emph{recipes}) at the end of each chapter, with diagrams and screenshots printed in full color.  This book is not only the authoritative book on WebGL, it also serves as documentation for the \emph{giza} library, developed over the course of the book.
+\emph{The WebGL Companion} guides readers through an essential set of rendering techniques and 3D interaction techniques, showcasing a set of small-but-complete web apps at the end of each chapter, with diagrams and screenshots printed in full color.  This is not only the authoritative book on WebGL, it's also documentation for the upcoming \emph{giza} graphics library, developed over the course of the book.
 
 \section*{About the Author}
 
 Philip Rideout has worked in the field of real-time graphics for over ten years, having played roles at several pioneering graphics companies, including Intergraph, NVIDIA, and Pixar.  He is the sole author of \emph{iPhone 3D Programming} (O'Reilly Media), and a contributing author of \emph{GPU Pro 2} (A K Peters) and \emph{OpenGL Insights} (CRC Press).
 
-\section*{Tentative Outline}
+\section*{Table of Contents}
 
 \definecolor{mygreen}{rgb}{0.1,0.5,0.2}
 
-In the following outline, some section headings are colored \textbf{\textcolor{mygreen}{green}}; these are tutorial-style samples that demonstrate the techniques discussed in the chapter.
+In the following outline, some section headings are colored \textbf{\textcolor{mygreen}{green}}; these are tutorial-style \emph{recipes} that demonstrate the techniques discussed in the chapter.
 
 \definecolor{mygray}{rgb}{0.5,0.5,0.5}
 \definecolor{myblue}{rgb}{0.1,0.4,0.6}
@@ -42,35 +42,35 @@ In the following outline, some section headings are colored \textbf{\textcolor{m
 \section{A Brief History of *GL}
 \summary{Gives an account of WebGL's ancestry (OpenGL, OpenGL ES), motivation, and rapid growth.  Also briefly mentions impediments at the time of writing, such as security concerns and IE support.}
 \section{Building Giza: Literate Programming}
-\summary{Describes our coding convention and the \texttt{giza} library that is developed over the course of the book.}
+\summary{Describes our coding conventions and the \texttt{giza} library that is developed over the course of the book.}
 \section{The Assembly Line Metaphor}
 \summary{High-level overview of the WebGL rendering pipeline.}
 \section{The Canvas Element}
-\summary{Explains the \texttt{width} and \texttt{height} attributes, how to handle retina displays.}
+\summary{Explains the \texttt{width} and \texttt{height} attributes and how to handle retina displays.}
 \section{Animation Timing}
-\summary{How to periodically trigger a draw events.}
+\summary{How to periodically trigger draw events.}
 \rrecipe{Recipe 1: Strobe Light}
 \summary{The simplest possible WebGL application; animates a solid color with \texttt{clear}.}
 
 \chapter{Vertex Shading and Transforms}
-\section{Vector Algebra with Javascript}
+\section{Vector Algebra with JavaScript}
 \summary{This sections walks through giza's implementation of vector and matrix classes.  Rotation, translation, and scale are given a very brief treatment.}
 \section{Life of a Vertex}
 \summary{Describes model, view, and projection transforms.}
 \section{Shading Language Basics}
-\summary{Explains uniforms, attributes, and varyings.  Walks through trivial \texttt{main} functiosn for vertex and fragment shaders.}
+\summary{Explains uniforms, attributes, and varyings.  Walks through trivial \texttt{main} functions for vertex and fragment shaders.}
 \section{Line Drawing}
-\summary{Explains the \textbf{LINES} primitive and \textbf{drawElements}.}
-\section{Typed Arrays, Vertex Attributes and VBO's}
-\summary{Shows how hetergeneous data (eg, colors and positions) can be interleaved and submitted to WebGL.}
+\summary{Explains the \texttt{LINES} primitive and \texttt{drawElements}.}
+\section{Typed Arrays, Vertex Attributes and VBOs}
+\summary{Shows how heterogeneous data (e.g., colors and positions) can be interleaved and submitted to WebGL.}
 \rrecipe{Recipe 2: Color Graph}
-\summary{Animated wireframe graph of the sinc function; illustrates performance differences between Javascript-side computation and shader-side computation.}
+\summary{Animated wireframe graph of the sinc function; illustrates performance differences between JavaScript-side computation and shader-side computation.}
 
 \chapter{Downloading and Applying Artistic Content}
 \section{Texture Coordinates}
 \summary{Quick overview of texture coordinates and wrap modes.  For an example, shows how to apply a section of the Mona Lisa to a quad.}
 \section{Texture Filtering}
-\summary{Overview of minification, magnification, and mipmapping; uses small pixel art to illustrate the effects of filtering.} % space invaders! % or, http://opengameart.org/content/japanese-buildings-isometric-strategy-game-mockup
+\summary{Explanation of minification, magnification, and mipmapping; uses small pixel art to illustrate the effects of filtering.} % space invaders! % or, http://opengameart.org/content/japanese-buildings-isometric-strategy-game-mockup
 \section{Parametric Surfaces}
 \summary{Procedural generation of simple geometry.} % Generate the geometry with node.js?
 \section{Loading Mesh Data with XMLHttpRequest}
@@ -80,11 +80,11 @@ In the following outline, some section headings are colored \textbf{\textcolor{m
 
 \chapter{Rendering and Lighting Solid Objects}
 \section{Face Orientation}
-\summary{Explains polygon winding, \texttt{GL\_CULL\_FACE} (used in the Planet Mars recipe) and \texttt{gl\_FrontFacing}}
+\summary{Explains polygon winding, \texttt{CULL\_FACE} (used in the Planet Mars recipe) and \texttt{gl\_FrontFacing}}
 \section{Dealing with Depth}
 \summary{Explains the depth buffer and how depth artifacts can arise.} % Perhaps drill a hole in the mars geometry as an example
 \section{Surface Normals}
-\summary{Extends the ``Parametric Surfaces`` sample to compute surface normals.}
+\summary{Extends the ``Parametric Surfaces'' sample to compute surface normals.}
 \section{Lambertian Reflection}
 \summary{Illustrates a simple ambient-diffuse-specular lighting model.}
 \rrecipe{Recipe 4: Cel Shading}
@@ -98,17 +98,17 @@ In the following outline, some section headings are colored \textbf{\textcolor{m
 \section{Floating Point Textures}
 \summary{Explains unclamped colors (OES\_texture\_float) and how they can be used for general-purpose computation.}
 \section{Subsurface Scattering}
-\summary{Rendering transluscent marble with floating point textures.} % similar to my fresnel glass demo
+\summary{Rendering translucent marble with floating point textures.} % similar to my Fresnel glass demo
 \section{Gaussian Blur}
 \summary{Optimal filtering with minimal taps.}
 \section{Stencil Buffer}
-\summary{Brief overview of stencil and how it can be used for CSG and shadows -- almost mentions \texttt{WEBGL\_depth\_texture}} 
+\summary{Brief overview of stencil and how it can be used for CSG and shadows -- also mentions \texttt{WEBGL\_depth\_texture}} 
 \rrecipe{Recipe 5: Mughal Window}
 \summary{Illustrates stenciled fake reflection, a depth-based glass effect and a jaali screen backdrop with HDR bloom.}
 
 \chapter{Framebuffer Effects, Part II}
 \section{Distance Blur}
-\summary{Depth of field via post-processing; also mentions a jitter-based technique.} % Real-time Depth-of-Field (ShaderX 5) -- there also seem to be some dx11 demos for this (ATI's ladybug)
+\summary{Depth of field via post-processing; also mentions a jitter-based technique.} % Real-time Depth-of-Field (ShaderX 5) -- there also seem to be some dx11 demos for this (ATIs ladybug)
 \section{Ambient Occlusion}
 \summary{Screen-space ambient occlusion.}
 \section{Shadow Maps}
@@ -124,14 +124,14 @@ In the following outline, some section headings are colored \textbf{\textcolor{m
 \section{Derivatives Extension}
 \summary{Shows how fragment shaders can smooth the edges of procedural patterns using \texttt{OES\_standard\_derivatives.}}
 \rrecipe{Recipe 7: Tube Sparks}
-\summary{Flies the viewer through a tube with stripe patterns and embers falling to the floor.  Embers are animated in the vertex shader and rendered with additive blending.}
+\summary{Flies the viewer through a tube with stripe patterns.  Point sprites are used to render spinning spark patterns inside the tube.} % Additive blending
 
 \chapter{Texture Tricks, Part II}
 \section{Reflection and Refraction with Cubemaps}
 \summary{Classic, simple use of cubemaps.} % refraction too?
 \section{Normal Mapping}
 \summary{Bumps and dimples in tangent space.} % external references: procedural bumping
-\section{Using the WebCam}
+\section{Using the Webcam}
 \summary{Capturing video in real time and using it as a WebGL texture.} % http://dev.opera.com/static/articles/2012/webgl-postprocessing/webgl-pp/texImage2D.html
 \section{Anisotropic Filtering}
 \summary{High-quality rendering of nearly edge-on geometry using \\\texttt{EXT\_texture\_filter\_anisotropic}.}
@@ -140,29 +140,31 @@ In the following outline, some section headings are colored \textbf{\textcolor{m
 
 \chapter{Interaction Techniques, Part I}
 \section{Trackball Rotation}
-\summary{ Classic mouse-driven rotation. } % With momentum and quats!
+\summary{Classic mouse-driven rotation.} % With momentum and quats!
 \section{Selection Buffer}
-\summary{ Render object IDs into a FBO. }
+\summary{Render object IDs into a FBO.}
 \section{Inverse Kinematics}
-\summary{ Shows how to animate an articulated skeleton. This is a high-level overview only, since giza's IK implementation is quite math-heavy. }
+\summary{Shows how to animate an articulated skeleton. This is a high-level overview only, since giza's IK implementation is quite math-heavy.}
 \section{Vertex Skinning}
-\summary{ Render soft joints by blending multiple vertex transformations. }
+\summary{Render soft joints by blending multiple vertex transformations.}
 \rrecipe{Recipe 9: Dancing Manikin}
-\summary{Users can interact with a stick figure by dragging its hands and feet.} % Also has a dance mode! % Rag doll physics!
+\summary{Allows users to interact with a stick figure by dragging its hands and feet.} % Also has a dance mode! % Rag doll physics!
 
 \chapter{Interaction Techniques, Part II}
 \section{View Cube}
-\summary{ Move the camera by clicking hotspots on a cube. }
+\summary{Move the camera by clicking hotspots on a cube.}
 \section{Manipulators}
-\summary{ Interactive handles for positioning objects. }
+\summary{Interactive handles for positioning objects.}
 \section{\"{U}berlight}
-\summary{ Spotlight effects with superellipsoid shapes. }
+\summary{Spotlight effects with superellipsoid shapes.}
 \rrecipe{Recipe 10: Stage Dressing}
-\summary{Users can place objects and spotlights into a scene.} % might include uberlight, projection textures, and mirrors
+\summary{Allows users to translate, rotate, and resize objects in a scene.} % might include uberlight, projection textures, and mirrors
 
 \chapter{Beyond Giza: Related Libraries}
 \section{three.js}
 \summary{By far the most popular 3D JavaScript library.  It's higher level than giza, making it easy to create simple demos.  It also provides support for non-WebGL rendering (eg, canvas or SVG rendering).}
+\section{dat-gui}
+\summary{Overlay interface for tweaking variables.}
 \section{glMatrix}
 \summary{Fast vector math from Brandon Jones.}
 \section{danser.js}
