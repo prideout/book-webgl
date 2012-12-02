@@ -18,7 +18,7 @@
 \renewcommand{\labelenumi}{Chapter \arabic{enumi}. }
 
 \section*{Summary}
-Unique in the market by providing a focus on interactivity, \emph{The WebGL Companion} guides readers through an essential set of rendering techniques and 3D interaction techniques, showcasing a set of small-but-complete web apps (\emph{recipes}) at the end of each chapter.
+Unique in the market by providing a focus on interactivity, \emph{The WebGL Companion} guides readers through an essential set of rendering techniques and 3D interaction techniques, showcasing a set of small-but-complete web apps (\emph{recipes}) at the end of each chapter, with diagrams and screenshots printed in full color.  This book is not only the authoritative book on WebGL, it also serves as documentation for the \emph{giza} library, developed over the course of the book.
 
 \section*{About the Author}
 
@@ -42,7 +42,7 @@ These recipes are examples of \emph{literate programming}, a term coined by Dona
 
 \item Preliminaries
 \begin{enumerate}
-\verbiage{A Brief History of *GL}{Describes WebGL's motivation and ancestry: OpenGL, OpenGL ES, etc}
+\verbiage{A Brief History of *GL}{Describes WebGL's motivation, ancestry (OpenGL, OpenGL ES), and rapid growth.  Also briefly mentions impediments at the time of writing (security concerns and IE support).}
 \verbiage{Building Giza: Literate Programming}{Explains our coding conventions and the \texttt{Giza} library that is built up over the course of the book}
 \verbiage{The Assembly Line Metaphor}{High-level overview of the WebGL rendering pipeline}
 \verbiage{The Canvas Element}{Explains the \texttt{width} and \texttt{height} attributes, how to handle retina displays}
@@ -81,7 +81,7 @@ These recipes are examples of \emph{literate programming}, a term coined by Dona
 \rrecipe{Recipe 4: Cel Shading}{Applying standard lighting, then ``snapping'' the color gradient to a few colors for cartoon rendering} % also possibly add a two-pass silhouette
 \end{enumerate}
 
-\item Framebuffer Effects
+\item Framebuffer Effects, Part I
 \begin{enumerate}
 \verbiage{Alpha Blending}{Explains the different blend modes; also discusses \texttt{discard} (which, strictly speaking, is not blending)}
 \verbiage{Framebuffer Objects}{How to create offscreen render targets}
@@ -92,35 +92,48 @@ These recipes are examples of \emph{literate programming}, a term coined by Dona
 \rrecipe{Recipe 5: Mughal Window}{Illustrates stenciled fake reflection, a depth-based glass effect and a jaali screen backdrop with HDR Bloom}
 \end{enumerate}
 
-\item ?????????????????????????
+\item Framebuffer Effects, Part II
 \begin{enumerate}
-\rrecipe{Cubemap Reflection}{Classic, simple use of cubemaps} % refraction too?
-\rrecipe{Bump Mapping}{Tangent space and normal mapping} % external references: procedural bumping
-\rrecipe{Parallax Mapping}{Improved bump mapping}
-\rrecipe{Shadow Maps}{Old-school PCF shadow mapping} % Uses PCF to soften edges
-\rrecipe{Motion Blur}{Emphasizing movement with directional blur} % Also refer to the SIGGRAPH 2010 geometric motion blur
-\rrecipe{Distance Blur}{Depth of field via post-processing; also mentions a jitter-based technique} % Real-time Depth-of-Field (ShaderX 5) -- there also seem to be some dx11 demos for this (ATI's ladybug)
-\rrecipe{Ambient Occlusion}{Screen-space ambient occlusion}
-\..................
+\verbiage{Distance Blur}{Depth of field via post-processing; also mentions a jitter-based technique} % Real-time Depth-of-Field (ShaderX 5) -- there also seem to be some dx11 demos for this (ATI's ladybug)
+\verbiage{Ambient Occlusion}{Screen-space ambient occlusion}
+\verbiage{Shadow Maps}{Old-school PCF shadow mapping} % Uses PCF to soften edges
+\verbiage{Heat Shimmer}{Using the fragment shader to create a ``heat wave'' effect}
+\rrecipe{Recipe 6: Desert Scene}{Rotates the camera around a static desert scene that uses all the techniques discussed in this chapter}
 \end{enumerate}
 
-\item Interaction Techniques Part I
+\item Texture Tricks, Part I
+\begin{enumerate}
+\verbiage{Point Sprites}{Show how to use point sprites and set their size dynamically}
+\verbiage{Derivatives Extension}{Shows how fragment shaders can smooth the edges of procedural patterns using OES\_standard\_derivatives}
+\rrecipe{Recipe 7: Tube Sparks}{Fly through a tube with a stripe pattern, with embers falling onto the floor; animate fireworks in the vertex shader, rendered with additive blending}
+\end{enumerate}
+
+\item Texture Tricks, Part II
+\begin{enumerate}
+\verbiage{Reflection and Refraction with Cubemaps}{Classic, simple use of cubemaps} % refraction too?
+\verbiage{Normal Mapping}{Bumps and dimples in tangent space} % external references: procedural bumping
+\verbiage{Using the WebCam}{Capturing video in real time and using it as a WebGL texture} % http://dev.opera.com/static/articles/2012/webgl-postprocessing/webgl-pp/texImage2D.html
+\verbiage{Anisotropic Filtering}{High-quality rendering of nearly edge-on geometry using WEBKIT\_EXT\_texture\_filter\_anisotropic}
+\rrecipe{Recipe 8: Movie Theatre}{Displays a dimpled glass ball that refracts the webcam image}
+\end{enumerate}
+
+\item Interaction Techniques, Part I
 \begin{enumerate}
 \verbiage{Trackball Rotation}{ Classic mouse-driven rotation } % With momentum and quats!
 \verbiage{Selection Buffer}{ Render object IDs into a FBO }
 \verbiage{Inverse Kinematics}{ Shows how to animate an articulated skeleton (this is a high-level overview only, since this can be math-heavy) }
 \verbiage{Vertex Skinning}{ Render soft joints by blending multiple vertex transformations }
-\rrecipe{Dancing Manikin}{Interact with a humanoid figure by dragging the parts} % Also has a dance mode! % Rag doll physics!
+\rrecipe{Recipe 9: Dancing Manikin}{Interact with a humanoid figure by dragging the parts} % Also has a dance mode! % Rag doll physics!
 \end{enumerate}
 
-\item Interaction Techniques Part II
+\item Interaction Techniques, Part II
 \begin{enumerate}
 \verbiage{View Cube}{ Move the camera by clicking hotspots on a cube }
 \verbiage{Manipulators}{ Interactive handles for positioning objects }
-\rrecipe{Set Dresser}{Place objects and spotlights into a scene} % might include uberlight, projection textures, and mirrors
+\rrecipe{Recipe 10: Set Dresser}{Place objects and spotlights into a scene} % might include uberlight, projection textures, and mirrors
 \end{enumerate}
 
-\item Related Libraries
+\item Beyond Giza: Related Libraries
 \begin{enumerate}
 \verbiage{three.js}{By far the most popular 3D JavaScript library; higher level than giza.  Unlike giza, three.js provides support for non-WebGL rendering as well (eg, canvas or SVG rendering)}
 \verbiage{glMatrix}{Fast vector math}
@@ -128,6 +141,8 @@ These recipes are examples of \emph{literate programming}, a term coined by Dona
 \verbiage{tween.js}{Robert Penner's animation equations}
 \end{enumerate}
 
+%\verbiage{Parallax Mapping}{Improved bump mapping}
+%\rrecipe{Motion Blur}{Emphasizing movement with directional blur} % Also refer to the SIGGRAPH 2010 geometric motion blur
 %\verbiage{Capturing events with jQuery }{}
 %\verbiage{Point Selection}{ Voronoi maps for point-cloud selection }
 %I'll use grunt.js
