@@ -1,12 +1,25 @@
 #!/usr/bin/env python
 
-import os, sys
+import os, sys, shutil
 
-if os.system('pdflatex -shell-escape book.tex'):
-    sys.exit(1)
+build_folder = '_build'
+tex_files = 'book trim outline'
+cmds = [
+    'pdflatex -shell-escape book.tex',
+    'pdflatex -shell-escape book.tex',
+    'pdflatex -jobname=outline-trimmed trim.tex'
+]
 
-if os.system('pdflatex -shell-escape book.tex'):
-    sys.exit(1)
+shutil.rmtree(build_folder)
+os.mkdir(build_folder)
 
-if os.system('pdflatex -jobname=outline-trimmed trim.tex'):
-    sys.exit(1)
+for f in tex_files.split():
+    shutil.copy(f + '.tex', build_folder)
+
+os.chdir(build_folder)
+
+for cmd in cmds:
+    if os.system(cmd):
+        sys.exit(1)
+
+print "Success!"
