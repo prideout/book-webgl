@@ -27,7 +27,6 @@
 
 \hyphenation{WebGL}
 
-%\title{WebGL Techniques:\\Building 3D Applications for the Web}
 \title{The WebGL Companion}
 \date{}
 \author{Philip Rideout}
@@ -105,28 +104,23 @@ Settings > Long Line Settings > 72
 \begin{document}
 
 \mainmatter
- \renewcommand{\chaptermark}[1]{\markboth{Chapter \thechapter. #1}{}}
- \renewcommand{\sectionmark}[1]{\markright{\thesection. #1}}
+% \renewcommand{\chaptermark}[1]{\markboth{Chapter \thechapter. #1}{}}
+% \renewcommand{\sectionmark}[1]{\markright{\thesection. #1}}
 
 % Dedication Page
-% \maketitle
-% \emph{for Mom, Dad, and Ken}
+\maketitle
+\emph{for Mom, Dad, and Ken}
 
-\include{outline}
+\definecolor{mygreen}{rgb}{0.1,0.5,0.2}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{myblue}{rgb}{0.1,0.4,0.6}
+\newcommand{\rrecipe}[1] {\section{\textcolor{mygreen}{#1} } }
+\hypersetup{colorlinks,linkcolor=black}
+\newcommand{\summary}[1]{\addtocontents{toc}{\setlength{\leftskip}{15pt} \noindent  \footnotesize\textcolor{mygray}{#1}\normalsize\protect\par}}
 
-\def\thesection {Recipe \arabic{section}:}
-\def\thesubsection {\arabic{section}.\arabic{subsection}}
-\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
+\let\cleardoublepage\clearpage
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Redefine the section command tro be invisible
-
-\makeatletter
-\renewcommand\section{\@startsection {section}{1}{\z@}%
-                                   {0pt}%
-                                   {0pt}%
-                                   {\vphantom}}
-\makeatother
+\tableofcontents
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % The "definerecipe" command
@@ -155,20 +149,20 @@ Settings > Long Line Settings > 72
 }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%\include{chapter01}
-%\include{chapter02}
+\include{chapter01}
+\include{chapter02}
 %\include{chapter03}
 %\include{chapter04}
 %\include{backmatter01}
 %\include{backmatter02}
 
-%\backmatter
-% \renewcommand{\chaptermark}[1]{\markboth{#1}{#1}}
+\backmatter
+\renewcommand{\chaptermark}[1]{\markboth{#1}{#1}}
 
-%\raggedright
+\raggedright
 
 %\bibliographystyle{alpha}
 %\bibliography{book}
-%\printindex
+\printindex
 
 \end{document}
