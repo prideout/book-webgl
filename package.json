@@ -2,7 +2,7 @@
   "name": "server",
   "subdomain": "giza",
   "scripts": {
-    "start": "server/server.js"
+    "start": "server.js"
   },
   "version": "0.0.0",
   "engines": {
