@@ -1,11 +1,14 @@
 {
-  "name": "server",
-  "subdomain": "giza",
-  "scripts": {
-    "start": "server.js"
+  "name": "giza-server",
+  "author": {
+    "name": "Philip Rideout",
   },
   "version": "0.0.0",
-  "engines": {
-    "node": "0.8.x"
-  }
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "3.0.x",
+    "jade": ">= 0.27.0"
+  },
 }
