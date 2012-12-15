@@ -1,7 +1,7 @@
 {
   "name": "giza-server",
   "author": {
-    "name": "Philip Rideout",
+    "name": "Philip Rideout"
   },
   "version": "0.0.0",
   "scripts": {
@@ -10,5 +10,5 @@
   "dependencies": {
     "express": "3.0.x",
     "jade": ">= 0.27.0"
-  },
+  }
 }
