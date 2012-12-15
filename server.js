@@ -11,7 +11,7 @@ http.createServer(function (req, res) {
     res.writeHead(200, {'Content-Type': 'text/html'});
     
     // write some content to the browser that your user will see
-    res.write('<h1>hello world, i know nodejitsu.</h1>');
+    res.write('<h1>hello webgl, i know nodejitsu.</h1>');
 
     // close the response
     res.end();
