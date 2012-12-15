@@ -1,5 +1,6 @@
 {
   "name": "giza-server",
+  "subdomain": "giza",
   "author": {
     "name": "Philip Rideout"
   },
