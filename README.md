@@ -1,17 +1,25 @@
 # master
 
-a build system that uses jslint and minification
+- /recipes/CircleTest.js
+- /recipes/CircleTest.html
 
-- /latex
 - /recipes/StrobeLight.js
 - /recipes/StrobeLight.html
-- /recipes/ColorGraph.js
-- /recipes/ColorGraph.html (contains shaders)
-- /recipes/css/style.css
-- /recipes/media
-- /giza
 
-Look at polygon.js
+- /recipes/FresnelBuddha.js
+- /recipes/FresnelBuddha.html
+
+- /recipes/PolygonTess.js
+- /recipes/PolygonTess.html
+
+- /recipes/ColorGraph.js
+- /recipes/ColorGraph.html
+
+- a build system that uses jslint and minification
+  > maybe this would just slow me down...
+  > perhaps I should wait to do this, and do it at the same time
+    that I write some rst docs
+    http://vimalkumar.in/sphinx-themes/solar/html/index.html
 
 # server
 
