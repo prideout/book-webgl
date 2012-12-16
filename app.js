@@ -51,7 +51,7 @@ passport.deserializeUser(function(id, done) {
 
 passport.use(new LocalStrategy(
     function(uname, pswd, done) {
-        if (pswd === "conger") {
+        if (pswd === "foyle") {
             return done(null, 'anonymous');
         }
         return done(null, false, { message: 'Invalid password' });

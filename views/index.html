@@ -3,19 +3,20 @@
   <head>
     <title>Express</title>
     <link href="http://fonts.googleapis.com/css?family=Cagliostro" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:600" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="/stylesheets/style.css">
   </head>
   <body>
     <p>Welcome to <b>giza</b>
     </p>
-    <form name="input" action="login" method="post">
+    <form name="input" action="login" autocomplete="off" method="post">
       <input type="hidden" name="username" value="anon">
       What's the secret word?<br/>
-      <input type="text" name="password" autofocus="autofocus">
-      <input type="submit" value="Log In">
+      <input name="password" autofocus="autofocus"> <!-- type="password"  -->
+      <input type="submit" value="Go" style="visibility:hidden">
     </form>
     <p class="date">
-      12/16/2012 05:18
+      12/16/2012 09:30
     </p>
   </body>
 </html>

@@ -8,16 +8,22 @@ a {
 }
 
 form {
-    color: #07f;
+    color: #077;
     font-size: 48px;
 }
 
 input {
-    font: 40px 'Cagliostro', sans-serif;
+    font: 40px "Open Sans", sans-serif;
     border: 1px solid #006;
+    padding: 5px;
+}
+
+input:focus {
+    background: #f0f0f0;
+    outline-width: 0;
 }
 
 .date {
-    font: 8px "Lucida Grande", Helvetica, Arial, sans-serif;
+    font: 8px "Open Sans", sans-serif;
     color: #333;
 }
