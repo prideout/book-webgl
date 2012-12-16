@@ -1,7 +1,10 @@
 {
   "name": "giza-server",
   "subdomain": "giza",
-  "domains": ["prideout.net", "giza.prideout.net"],
+  "domains": [
+      "prideout.net",
+      "www.prideout.net",
+      "giza.prideout.net"],
   "author": {
       "name": "Philip Rideout"
   },
