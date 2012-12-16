@@ -1,4 +1,4 @@
-# TODO
+# master
 
 - /latex
 - /recipes/StrobeLight.js
@@ -10,6 +10,14 @@
 - /giza
 
 Look at polygon.js
+
+# server
+
+- Doesn't work at the prideout.net or nodejitsu.com domains.
+- Use a "view" for the buddha route to enable caching
+- 1280 aspect ratio and retina friendliness
+- transfer Buddha to the master branch under /recipes
+- write Python script the does a 'git checkout' for particular files from master?
 
 # Notes
 
