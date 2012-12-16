@@ -35,4 +35,32 @@ var GIZA = GIZA || { REVISION : '0' };
 
 }() );
 
+GIZA.flatten = function(array) {
+    var element, flattened, _i, _len;
+    flattened = [];
+    for (_i = 0, _len = array.length; _i < _len; _i++) {
+      element = array[_i];
+      if (element instanceof Array) {
+        flattened = flattened.concat(flatten(element));
+      } else if (element instanceof vec2) {
+        flattened = flattened.concat([element.x, element.y]);
+      } else {
+        flattened.push(element);
+      }
+    }
+    return flattened;
+};
+
+
 GIZA.TwoPi = 6.28;
+
+String.prototype.supplant = function (o) {
+  return this.replace(
+      /{([^{}]*)}/g,
+    function (a, b) {
+      var r = o[b];
+      return typeof r === 'string' ||
+        typeof r === 'number' ? r : a;
+    }
+  );
+};
