@@ -13,7 +13,8 @@ var app = express();
 app.configure(function(){
     app.set('port', 8080);
     app.set('views', __dirname + '/views');
-    app.set('view engine', 'jade');
+    app.set('view engine', 'html');
+    app.engine('html', require('ejs').renderFile);
     app.use(express.favicon());
     app.use(express.logger('dev'));
     app.use(express.bodyParser());
