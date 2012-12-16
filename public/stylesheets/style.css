@@ -1,6 +1,6 @@
 body {
     padding: 50px;
-    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    font: 14px 'Cagliostro', sans-serif;
 }
 
 a {
@@ -8,11 +8,16 @@ a {
 }
 
 form {
-    color: #66a;
-    font-size: 24px;
+    color: #07f;
+    font-size: 48px;
 }
 
 input {
-    font-size: 24px;
+    font: 40px 'Cagliostro', sans-serif;
     border: 1px solid #006;
+}
+
+.date {
+    font: 8px "Lucida Grande", Helvetica, Arial, sans-serif;
+    color: #333;
 }
