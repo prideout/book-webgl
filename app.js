@@ -17,8 +17,10 @@ app.configure(function(){
     app.engine('html', require('ejs').renderFile);
     app.use(express.favicon());
     app.use(express.logger('dev'));
+    app.use(express.cookieParser());
     app.use(express.bodyParser());
     app.use(express.methodOverride());
+    app.use(express.session({ secret: 'carmen sandiego' }));
     app.use(passport.initialize());
     app.use(passport.session());
     app.use(app.router);
@@ -35,16 +37,18 @@ app.configure('production', function(){
 
 app.get('/', routes.index);
 
-var authenticated = false;
-
 var previousRoute = '/buddha';
 
 passport.serializeUser(function(user, done) {
-  done(null, user);
+    var id = 1;
+    done(null, id);
 });
 
 passport.deserializeUser(function(id, done) {
-  done(null, id);
+    done(null, {
+        id: 1,
+        username: 'anonymous'
+    });
 });
 
 passport.use(new LocalStrategy(
@@ -59,28 +63,28 @@ passport.use(new LocalStrategy(
 app.post('/login',
          passport.authenticate('local', { failureRedirect: '/' }),
          function(request, response) {
-             authenticated = true;
              response.redirect(previousRoute);
          });
 
-app.get('/buddha*', function(request, response) {
-    if (!authenticated) {
-        previousRoute = '/buddha';
-        response.redirect('/');
+app.get('/buddha*', ensureAuthenticated, function(request, response) {
+    var head = request.url.indexOf('/buddha');
+    var tail;
+    if (request.url === '/buddha') {
+        tail = 'index.html'
     } else {
-        var head = request.url.indexOf('/buddha');
-        var tail;
-        if (request.url === '/buddha') {
-            tail = 'index.html'
-        } else {
-            tail = request.url.substring(head + '/buddha'.length);
-        }
-        var stream = fs.createReadStream(__dirname + '/buddha/' + tail);
-        stream.pipe(response);
+        tail = request.url.substring(head + '/buddha'.length);
     }
+    var stream = fs.createReadStream(__dirname + '/buddha/' + tail);
+    stream.pipe(response);
 });
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port %d in %s mode", app.get('port'), app.settings.env);
 });
 
+function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect('/')
+}
