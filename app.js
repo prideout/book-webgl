@@ -37,8 +37,6 @@ app.configure('production', function(){
 
 app.get('/', routes.index);
 
-var previousRoute = '/buddha';
-
 passport.serializeUser(function(user, done) {
     var id = 1;
     done(null, id);
@@ -53,7 +51,7 @@ passport.deserializeUser(function(id, done) {
 
 passport.use(new LocalStrategy(
     function(uname, pswd, done) {
-        if (pswd === "grasshopper") {
+        if (pswd === "conger") {
             return done(null, 'anonymous');
         }
         return done(null, false, { message: 'Invalid password' });
@@ -63,23 +61,19 @@ passport.use(new LocalStrategy(
 app.post('/login',
          passport.authenticate('local', { failureRedirect: '/' }),
          function(request, response) {
-             response.redirect(previousRoute);
+             response.redirect('/buddha');
          });
 
-app.get('/buddha*', ensureAuthenticated, function(request, response) {
-    var head = request.url.indexOf('/buddha');
-    var tail;
-    if (request.url === '/buddha') {
-        tail = 'index.html'
-    } else {
-        tail = request.url.substring(head + '/buddha'.length);
-    }
-    var stream = fs.createReadStream(__dirname + '/buddha/' + tail);
-    stream.pipe(response);
+app.get('/buddha', ensureAuthenticated, function(request, response) {
+    response.sendfile(
+        'buddha/index.html',
+        {root: __dirname, maxAge: null});
 });
 
-http.createServer(app).listen(app.get('port'), function(){
-  console.log("Express server listening on port %d in %s mode", app.get('port'), app.settings.env);
+app.get('/buddha/:file', ensureAuthenticated, function(request, response) {
+    response.sendfile(
+        'buddha/' + request.params.file,
+        {root: __dirname, maxAge: null});
 });
 
 function ensureAuthenticated(req, res, next) {
@@ -88,3 +82,7 @@ function ensureAuthenticated(req, res, next) {
     }
     res.redirect('/')
 }
+
+http.createServer(app).listen(app.get('port'), function(){
+  console.log("Express server listening on port %d in %s mode", app.get('port'), app.settings.env);
+});
