@@ -32,3 +32,6 @@ http://webcamtoy.com/
 Why you should let google host jquery for you:
 https://developers.google.com/speed/libraries/
 http://encosia.com/3-reasons-why-you-should-let-google-host-jquery-for-you/
+
+protocol-less
+http://encosia.com/cripple-the-google-cdns-caching-with-a-single-character/

@@ -1,4 +1,29 @@
 var GIZA = GIZA || { REVISION : '0' };
+var gl;
+
+GIZA.check = function(msg) {
+  if (gl.getError() !== gl.NO_ERROR) {
+    console.error(msg);
+  }
+};
+
+GIZA.TwoPi = 6.28;
+
+GIZA.flatten = function(array) {
+    var element, flattened, _i, _len;
+    flattened = [];
+    for (_i = 0, _len = array.length; _i < _len; _i++) {
+      element = array[_i];
+      if (element instanceof Array) {
+        flattened = flattened.concat(flatten(element));
+      } else if (element instanceof vec2) {
+        flattened = flattened.concat([element.x, element.y]);
+      } else {
+        flattened.push(element);
+      }
+    }
+    return flattened;
+};
 
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 // http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
@@ -34,25 +59,6 @@ var GIZA = GIZA || { REVISION : '0' };
 	window.cancelAnimationFrame = window.cancelAnimationFrame || function ( id ) { window.clearTimeout( id ) };
 
 }() );
-
-GIZA.flatten = function(array) {
-    var element, flattened, _i, _len;
-    flattened = [];
-    for (_i = 0, _len = array.length; _i < _len; _i++) {
-      element = array[_i];
-      if (element instanceof Array) {
-        flattened = flattened.concat(flatten(element));
-      } else if (element instanceof vec2) {
-        flattened = flattened.concat([element.x, element.y]);
-      } else {
-        flattened.push(element);
-      }
-    }
-    return flattened;
-};
-
-
-GIZA.TwoPi = 6.28;
 
 String.prototype.supplant = function (o) {
   return this.replace(
