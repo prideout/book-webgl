@@ -3,14 +3,16 @@
   "subdomain": "giza",
   "domains": ["prideout.net"],
   "author": {
-    "name": "Philip Rideout"
+      "name": "Philip Rideout"
   },
   "version": "0.0.0",
   "scripts": {
-    "start": "node app.js"
+      "start": "node app.js"
   },
   "dependencies": {
-    "express": "3.0.x",
-    "jade": ">= 0.27.0"
+      "express": "3.0.x",
+      "jade": ">= 0.27.0",
+      "passport": "0.1.x",
+      "passport-local": "0.1.x"
   }
 }
