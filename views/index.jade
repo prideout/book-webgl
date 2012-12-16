@@ -1,5 +1,11 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title} from prideout! Sat
+  h1 = title
+  p Welcome to <b>giza</b>
+
+  form(name="input", action="login", method="post")
+    | secret:
+    input(type="text", name="password", autofocus="autofocus")
+    input(type="hidden", name="username", value="anon")
+    input(type="submit", value="Submit")

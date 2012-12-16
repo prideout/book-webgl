@@ -1,0 +1,294 @@
+<html>
+<head>
+<title>FresnelGlass Recipe</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"/>
+<script type="text/javascript" src="buddha/glMatrix-min.js"></script>
+
+<script id="downloader" type="javascript/worker">
+    function download(url)
+    {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url, false);
+        xhr.overrideMimeType("text/plain; charset=x-user-defined");
+        var hasResponseType = "responseType" in xhr;
+        if (hasResponseType) xhr.responseType = "arraybuffer";
+        xhr.send(null);
+        if (xhr.status != 200) alert('Problem downloading ' + url);
+        return hasResponseType ? xhr.response : xhr.mozResponseArrayBuffer;
+    }
+    self.onmessage = function(e) {
+        var positionArray = download("buddha/BuddhaPositions.bin");
+        var normalsArray = download("buddha/BuddhaNormals.bin");
+        var indexArray = download("buddha/BuddhaTriangles.bin");
+        var retval = {
+            'positions' : positionArray,
+            'normals' : normalsArray,
+            'indices' : indexArray
+        };
+        self.postMessage(retval);
+    };
+</script>
+
+<script id="VS-Scene" type="x-shader/x-vertex">
+    attribute vec4 Position;
+    attribute vec3 Normal;
+    uniform mat4 Modelview;
+    uniform mat4 Projection;
+    uniform mat3 NormalMatrix;
+    varying vec3 vPosition;
+    varying vec3 vNormal;
+    void main(void)
+    {
+        vPosition = (Modelview * Position).xyz;
+        vNormal = NormalMatrix * Normal;
+        gl_Position = Projection * Modelview * Position;
+    }
+</script>
+
+<script id="FS-Depth" type="x-shader/x-fragment">
+    varying highp vec3 vNormal;
+    varying highp vec3 vPosition;
+    void main()
+    {
+        highp vec3 N = normalize(vNormal);
+        highp vec3 P = vPosition;
+        highp vec3 I = normalize(P);
+        highp float cosTheta = abs(dot(I, N));
+        highp float fresnel = pow(1.0 - cosTheta, 3.0);
+        highp float depth = gl_FrontFacing ? gl_FragCoord.z : -gl_FragCoord.z;
+        gl_FragColor = vec4(depth, fresnel, 0, 0);
+    }
+</script>
+
+<script id="VS-Quad" type="x-shader/x-vertex">
+    attribute vec4 Position;
+    void main(void)
+    {
+        gl_Position = Position;
+    }
+</script>
+
+<script id="FS-Absorption" type="x-shader/x-fragment">
+    uniform sampler2D Sampler;
+    uniform highp vec2 Size;
+    uniform highp vec3 DiffuseMaterial;
+    void main()
+    {
+        highp vec2 texCoord = gl_FragCoord.xy / Size;
+        highp float thickness = abs(texture2D(Sampler, texCoord).r);
+        if (thickness <= 0.0) discard;
+        highp float sigma = 150.0;
+        highp float fresnel = 1.0 - 0.5 * texture2D(Sampler, texCoord).g;
+        highp float intensity = fresnel * exp(-sigma * thickness);
+        gl_FragColor = vec4(intensity * DiffuseMaterial, 1);
+    }
+</script>
+
+<!-- SHADER COMPILER -->
+<script type="text/javascript">
+    function getShader(gl, id)
+    {
+        var shaderScript = document.getElementById(id);
+        var shader;
+        if (shaderScript.type == "x-shader/x-fragment")
+            shader = gl.createShader(gl.FRAGMENT_SHADER);
+        else if (shaderScript.type == "x-shader/x-vertex")
+            shader = gl.createShader(gl.VERTEX_SHADER);
+        else
+            alert("Don't know how to compile: " + shaderScript.type);
+        gl.shaderSource(shader, shaderScript.textContent);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+            alert("Trouble compiling " + id + ":\n" + gl.getShaderInfoLog(shader));
+            return null;
+        }
+        return shader;
+    }
+</script>
+
+
+<!-- APPLICATION LOGIC -->
+<script type="text/javascript">
+
+    var gl;
+    var positionBuffer, normalsBuffer, indexBuffer;
+    var quadBuffer;
+    var depthProgram, absorptionProgram;
+    var depthTexture, depthFbo;
+    var theta = 0;
+    var projection = mat4.create();
+    var modelview = mat4.create();
+    var normalMatrix = mat3.create();
+
+    function createQuad(l, b, r, t)
+    {
+        var positions = [ l, b, l, t, r, t, r, t, r, b, l, b ];
+        var positionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+        return positionBuffer;
+    }
+    
+    function render()
+    {
+        var c = document.getElementById("mycanvas");
+        var w = c.clientWidth;
+        var h = c.clientHeight;
+
+        // Compute transormation matrices and viewing parameters:
+        projection = mat4.perspective(45, w / h, 0.1, 100.0);
+        var view = mat4.lookAt([0,-4,0], [0,0,0], [0,0,1]);
+        var model = mat4.create();
+        mat4.identity(model);
+        mat4.rotateZ(model, theta);
+        mat4.multiply(view, model, modelview);
+        normalMatrix = mat4.toMat3(modelview);
+        theta += 0.02;
+        
+        // Draw Buddha into the depth buffer:
+        gl.useProgram(depthProgram);
+        gl.uniformMatrix4fv(depthProgram.projectionUniform, false, projection);
+        gl.uniformMatrix4fv(depthProgram.modelviewUniform, false, modelview);
+        gl.uniformMatrix3fv(depthProgram.normalMatrixUniform, false, normalMatrix);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, depthFbo);
+        gl.viewport(0, 0, 2*w, 2*h);
+        gl.clearColor(0, 0, 0, 0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.ONE, gl.ONE);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+        gl.enableVertexAttribArray(depthProgram.normalAttribute);
+        gl.enableVertexAttribArray(depthProgram.positionAttribute);
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+        gl.vertexAttribPointer(depthProgram.positionAttribute, 3, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, normalsBuffer);
+        gl.vertexAttribPointer(depthProgram.normalAttribute, 3, gl.FLOAT, false, 0, 0); 
+        gl.drawElements(gl.TRIANGLES, indexBuffer.count, gl.UNSIGNED_SHORT, 0);
+        gl.disableVertexAttribArray(depthProgram.normalAttribute);
+        gl.disableVertexAttribArray(depthProgram.positionAttribute);
+        gl.disable(gl.BLEND);
+
+        // Draw the image-processing quad:
+        gl.useProgram(absorptionProgram);
+        gl.uniform2f(absorptionProgram.sizeUniform, w, h);
+        gl.uniform3f(absorptionProgram.diffuseMaterial, 0.0, 0.75, 0.75);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.viewport(0, 0, w, h);
+        gl.clearColor(0.9375, 0.9375, 0.9375, 1.0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.bindTexture(gl.TEXTURE_2D, depthTexture);
+        gl.bindBuffer(gl.ARRAY_BUFFER, quadBuffer);
+        gl.vertexAttribPointer(absorptionProgram.positionAttribute, 2, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(absorptionProgram.positionAttribute);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+        gl.disableVertexAttribArray(absorptionProgram.positionAttribute);
+        gl.bindTexture(gl.TEXTURE_2D, null);
+    }
+
+    function initialize()
+    {
+        var canvas = document.getElementById("mycanvas");
+        gl = canvas.getContext("experimental-webgl");
+        if (!gl.getExtension("OES_texture_float"))
+            alert("Your browser does not support floating-point textures.");
+
+        // Create double-size FBO for depth and fresnel factor
+        var texWidth = canvas.clientWidth * 2;
+        var texHeight = canvas.clientHeight * 2;
+        depthTexture = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, depthTexture);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, texWidth, texHeight, 0, gl.RGBA, gl.FLOAT, null);
+        if (gl.NO_ERROR != gl.getError()) alert("Bad texture creation");
+        depthFbo = gl.createFramebuffer();
+        gl.bindFramebuffer(gl.FRAMEBUFFER, depthFbo);
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, depthTexture, 0);
+        if (gl.FRAMEBUFFER_COMPLETE != gl.checkFramebufferStatus(gl.FRAMEBUFFER)) alert("Incomplete FBO");
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.bindTexture(gl.TEXTURE_2D, null);
+
+        quadBuffer = createQuad(-1, -1, 1, 1);
+
+        /*
+        var bb = new BlobBuilder();
+        bb.append(document.querySelector('#downloader').textContent);
+        var worker = new Worker(window.URL.createObjectURL(bb.getBlob()));
+        */
+
+        var worker = new Worker('buddha/downloader.js');
+
+        worker.onmessage = function(e) {
+            var positionArray  = e.data['positions'];
+            var normalsArray = e.data['normals'];
+            var indexArray = e.data['indices'];
+
+            // Create VBO for positions
+            positionBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positionArray), gl.STATIC_DRAW);
+
+            // Create VBO for normals
+            normalsBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, normalsBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normalsArray), gl.STATIC_DRAW);
+
+            // Create VBO for indices
+            indexBuffer = gl.createBuffer();
+            indexBuffer.count = indexArray.byteLength / Uint16Array.BYTES_PER_ELEMENT;
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+            gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indexArray), gl.STATIC_DRAW);
+
+            setInterval(render, 15);
+        };
+        worker.postMessage("Buddha");
+
+        // Create depth program
+        var vertexShader = getShader(gl, "VS-Scene");
+        var fragmentShader = getShader(gl, "FS-Depth");
+        depthProgram = gl.createProgram();
+        gl.attachShader(depthProgram, vertexShader);
+        gl.attachShader(depthProgram, fragmentShader);
+        gl.linkProgram(depthProgram);
+        if (!gl.getProgramParameter(depthProgram, gl.LINK_STATUS)) alert("Could not link shaders");
+        gl.useProgram(depthProgram);
+        depthProgram.positionAttribute = gl.getAttribLocation(depthProgram, "Position");
+        depthProgram.normalAttribute = gl.getAttribLocation(depthProgram, "Normal");
+        depthProgram.projectionUniform = gl.getUniformLocation(depthProgram, "Projection");
+        depthProgram.modelviewUniform = gl.getUniformLocation(depthProgram, "Modelview");
+        depthProgram.normalMatrixUniform = gl.getUniformLocation(depthProgram, "NormalMatrix");
+
+        // Create absorption program
+        var vertexShader2 = getShader(gl, "VS-Quad");
+        var fragmentShader2 = getShader(gl, "FS-Absorption");
+        absorptionProgram = gl.createProgram();
+        gl.attachShader(absorptionProgram, vertexShader2);
+        gl.attachShader(absorptionProgram, fragmentShader2);
+        gl.linkProgram(absorptionProgram);
+        if (!gl.getProgramParameter(absorptionProgram, gl.LINK_STATUS)) alert("Could not link shaders");
+        gl.useProgram(absorptionProgram);
+        absorptionProgram.positionAttribute = gl.getAttribLocation(absorptionProgram, "Position");
+        absorptionProgram.sizeUniform = gl.getUniformLocation(absorptionProgram, "Size");
+        absorptionProgram.diffuseMaterial = gl.getUniformLocation(absorptionProgram, "DiffuseMaterial");
+
+        gl.disable(gl.CULL_FACE);
+        gl.disable(gl.DEPTH_TEST);
+
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
+
+    }
+</script>
+</head>
+
+
+<!-- WEB PAGE BODY -->
+<body onload="initialize();" style="background-color: #eee" >
+    <canvas id="mycanvas"
+            style="position: fixed; top: 50%; left: 50%;
+                   margin-top: -512px; margin-left: -256; width: 512px; height: 1024px;">
+    </canvas>
+</body>
+</html>
