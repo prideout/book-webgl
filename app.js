@@ -61,18 +61,30 @@ passport.use(new LocalStrategy(
 app.post('/login',
          passport.authenticate('local', { failureRedirect: '/' }),
          function(request, response) {
-             response.redirect('/buddha');
+             response.redirect('/recipes');
          });
 
-app.get('/buddha', ensureAuthenticated, function(request, response) {
+app.get('/recipes', ensureAuthenticated, function(request, response) {
     response.sendfile(
-        'buddha/index.html',
+        'recipes/index.html',
         {root: __dirname, maxAge: null});
 });
 
-app.get('/buddha/:file', ensureAuthenticated, function(request, response) {
+app.get('/recipes/:file', ensureAuthenticated, function(request, response) {
     response.sendfile(
-        'buddha/' + request.params.file,
+        'recipes/' + request.params.file,
+        {root: __dirname, maxAge: null});
+});
+
+app.get('/recipes/:folder/:file', ensureAuthenticated, function(request, response) {
+    response.sendfile(
+        'recipes/' + request.params.folder + '/' + request.params.file,
+        {root: __dirname, maxAge: null});
+});
+
+app.get('/giza/:file', ensureAuthenticated, function(request, response) {
+    response.sendfile(
+        'giza/' + request.params.file,
         {root: __dirname, maxAge: null});
 });
 
