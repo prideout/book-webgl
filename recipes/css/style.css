@@ -5,13 +5,22 @@ body {
     font-family: 'Candal', sans-serif;
 }
 
-#canvasParent {
-    height:400px;
-    background:#eee;
+canvas {
     border-color:#000;
     border-style:solid;
     border-width:2px;
-    margin-bottom: 10px;
+}
+
+#home-button {
+    width:64px;
+    -webkit-transition: width 0.1s;
+    -moz-transition: width 0.1s;
+    -o-transition: width 0.1s;
+    transition: width 0.1s;
+}
+
+#home-button:hover {
+    width:72px;
 }
 
 .error {
