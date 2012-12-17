@@ -1,31 +1,18 @@
 # master
 
-- /recipes/CircleTest.js
-- /recipes/CircleTest.html
+- Cleanup in CircleTest
+- StrobeLight
+- FresnelBuddha
 
-- /recipes/StrobeLight.js
-- /recipes/StrobeLight.html
+# server 
 
-- /recipes/FresnelBuddha.js
-- /recipes/FresnelBuddha.html
-
-- /recipes/PolygonTess.js
-- /recipes/PolygonTess.html
-
-- /recipes/ColorGraph.js
-- /recipes/ColorGraph.html
-
+- copy /recipes to the server branch using 'git checkout master recipes/foo.html' etc
+- write Python script the does a 'git checkout' for everything in /recipes
 - a build system that uses jslint and minification
   > maybe this would just slow me down...
   > perhaps I should wait to do this, and do it at the same time
     that I write some rst docs
     http://vimalkumar.in/sphinx-themes/solar/html/index.html
-
-# server
-
-- 1280 aspect ratio and retina friendliness
-- transfer Buddha to the master branch under /recipes
-- write Python script the does a 'git checkout' for particular files from master?
 
 # Notes
 
