@@ -30,5 +30,25 @@
 
     <script src="CircleTest.js"></script>
 
+    <script id="simplevs" type="x-shader/x-vertex">
+      attribute vec4 Position;
+      uniform mat4 modelview;
+      uniform mat4 projection;
+      void main()
+      {
+          vec4 p = Position;
+          gl_Position = projection * modelview * p;
+      }
+    </script>
+
+    <script id="simplefs" type="x-shader/x-fragment">
+      precision highp float;
+      uniform vec4 color;
+      void main()
+      {
+          gl_FragColor = color;
+      }
+    </script>
+
   </body>
 </html>

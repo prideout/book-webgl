@@ -15,7 +15,7 @@ GIZA.flatten = function(array) {
     for (_i = 0, _len = array.length; _i < _len; _i++) {
       element = array[_i];
       if (element instanceof Array) {
-        flattened = flattened.concat(flatten(element));
+        flattened = flattened.concat(GIZA.flatten(element));
       } else if (element instanceof vec2) {
         flattened = flattened.concat([element.x, element.y]);
       } else {

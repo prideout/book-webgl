@@ -4,15 +4,15 @@ GIZA.compilePrograms = function(shaders) {
   programs = {};
   for (name in shaders) {
     shd = shaders[name];
-    programs[name] = compileProgram(shd.vs, shd.fs, shd.attribs);
+    programs[name] = GIZA.compileProgram(shd.vs, shd.fs, shd.attribs);
   }
   return programs;
 };
 
 GIZA.compileProgram = function(vNames, fNames, attribs) {
   var fShader, key, numUniforms, program, status, u, uniforms, vShader, value, _i, _len;
-  vShader = compileShader(vNames, gl.VERTEX_SHADER);
-  fShader = compileShader(fNames, gl.FRAGMENT_SHADER);
+  vShader = GIZA.compileShader(vNames, gl.VERTEX_SHADER);
+  fShader = GIZA.compileShader(fNames, gl.FRAGMENT_SHADER);
   program = gl.createProgram();
   gl.attachShader(program, vShader);
   gl.attachShader(program, fShader);
