@@ -1,7 +1,5 @@
 # master
 
-- Cleanup in CircleTest
-- StrobeLight
 - FresnelBuddha
 
 # server 

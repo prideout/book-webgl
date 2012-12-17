@@ -1,27 +1,15 @@
 $(document).ready(function() {
 
-  var pixelRatio = window.devicePixelRatio || 1;
+  GIZA.init();
 
-  (function () {
+  var draw = function(currentTime) {
+    var x = 0.5 + 0.5 * Math.sin(currentTime / 100);
+    x = 0.25 + x * 0.5;
+    gl.clearColor(x, x, 0, 1);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    window.requestAnimationFrame(draw, GIZA.canvas);
+  };
 
-    var width = parseInt( $('canvas').css('width'));
-    var height = parseInt( $('canvas').css('height'));
-
-    // TODO cleaner way of doing this?
-    var c = $('canvas').get(0);
-    c.width = width * pixelRatio;
-    c.height = height * pixelRatio;
-    gl = c.getContext('experimental-webgl', {antialias: true});
-
-  }());
-
-  if (!gl) {
-    var msg = "Alas, your browser does not support WebGL."
-    var html = "<p class='error'>" + msg + "</p>";
-    $('canvas').replaceWith(html);
-    return;
-  }
-
-  // requestAnimationFrame();
+  draw(0);
 
 });

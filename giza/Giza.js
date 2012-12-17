@@ -7,7 +7,30 @@ GIZA.check = function(msg) {
   }
 };
 
-GIZA.TwoPi = 6.28;
+GIZA.init = function() {
+  var pixelScale = window.devicePixelRatio || 1;
+  var width = parseInt( $('canvas').css('width'));
+  var height = parseInt( $('canvas').css('height'));
+  var aspect = width / height;
+
+  var canvas = $('canvas')[0];
+  canvas.width = width * pixelScale;
+  canvas.height = height * pixelScale;
+  gl = canvas.getContext(
+    'experimental-webgl',
+    {antialias: true});
+
+  if (!gl) {
+    var msg = "Alas, your browser does not support WebGL."
+    var html = "<p class='error'>" + msg + "</p>";
+    $('canvas').replaceWith(html);
+    return;
+  }
+
+  GIZA.pixelScale = pixelScale;
+  GIZA.canvas = canvas;
+  GIZA.aspect = aspect;
+}
 
 GIZA.flatten = function(array) {
     var element, flattened, _i, _len;

@@ -27,3 +27,30 @@ canvas {
     margin: 5px;
     color: #a11;
 }
+
+ul {
+    list-style-type: none;
+}
+
+a, a:visited, a:hover {
+    text-decoration: none;
+    color: #11a;
+}
+
+a:hover {
+    color: #55f;
+}
+
+a.big {
+    font: 32px 'Candal', sans-serif;
+}
+
+a.small {
+    margin-left: 15px;
+    color: #662;
+}
+
+a.small:hover {
+    margin-left: 15px;
+    color: #730;
+}
