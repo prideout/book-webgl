@@ -52,12 +52,16 @@ $(document).ready(function() {
     outlineBuffer = gl.createBuffer();
     triangleBuffer = gl.createBuffer();
 
-    var c = [{x:520,y:440},{x:315,y:100},{x:90,y:440}];
-    var h = [{x:300,y:290},{x:330,y:290},{x:315,y:380}];
-    vec2ify = function(o) { return new vec2(o.x, o.y); }
+    var c = [{x:570,y:336},{x:365,y:30},{x:140,y:336}];
+    var h = [{x:350,y:201},{x:380,y:201},{x:365,y:282}];
 
+    vec2ify = function(o) { return new vec2(o.x, o.y); }
     contourPts = c.map(vec2ify);
     holePts = h.map(vec2ify);
+
+    // Diagnostics
+    console.info("outer =", JSON.stringify(contourPts));
+    console.info("inner =", JSON.stringify(holePts));
 
     // Outer hull
     outerPointCount = contourPts.length;
@@ -72,6 +76,9 @@ $(document).ready(function() {
     var triangles = GIZA.tessellate(
       contourPts,
       [holePts]);
+
+    // Diagnostics
+    console.info("result =", JSON.stringify(triangles, null, 4));
 
     // Filled triangles
     triangleCount = triangles.length;
@@ -109,8 +116,8 @@ $(document).ready(function() {
     var mv = new mat4();
     var proj = new mat4();
     proj.makeOrthographic(
-      0, GIZA.canvas.width,
-      0, GIZA.canvas.height,
+      0, GIZA.pixelScale * GIZA.canvas.width,
+      0, GIZA.pixelScale * GIZA.canvas.height,
       0, 1);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, coordsBuffer);

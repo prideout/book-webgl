@@ -1,8 +1,14 @@
 # master
 
-- PolygonTess
-- FresnelBuddha
-- Firefox testing?
+- PolygonTess degenerate triangle
+- Parametric Surface
+- ColorGraph
+- ch 1 & 2 tangling (please, no fresnel buddha or king tut stuff yet)
+
+# giza design
+
+- Should giza make ANY webgl calls?
+- Should the recipes make ANY jquery calls?
 
 # server 
 
