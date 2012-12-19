@@ -1,12 +1,10 @@
 # master
 
-- FresnelBuddha
 - PolygonTess
+- FresnelBuddha
 
 # server 
 
-- copy /recipes to the server branch using 'git checkout master recipes/foo.html' etc
-- write Python script the does a 'git checkout' for everything in /recipes
 - a build system that uses jslint and minification
   > maybe this would just slow me down...
   > perhaps I should wait to do this, and do it at the same time
