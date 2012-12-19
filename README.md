@@ -2,6 +2,7 @@
 
 - PolygonTess
 - FresnelBuddha
+- Firefox testing?
 
 # server 
 

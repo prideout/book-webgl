@@ -33,8 +33,8 @@ $(document).ready(function() {
   var holePts = [];
   var ready = false;
   var spriteTexture;
-  var coordsBuffer, outlineBuffer, indexBuffer;
-  var pointCount;
+  var coordsBuffer, outlineBuffer, triangleBuffer;
+  var pointCount, outerPointCount, triangleCount;
 
   GIZA.loadTexture('media/PointSprite.png', function(i) {
       spriteTexture = i;
@@ -43,9 +43,14 @@ $(document).ready(function() {
 
   var init = function() {
 
+    gl.clearColor(0.9, 0.9, 0.9, 1.0);
+    gl.lineWidth(1.5 * GIZA.pixelScale);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
     coordsBuffer = gl.createBuffer();
     outlineBuffer = gl.createBuffer();
-    indexBuffer = gl.createBuffer();
+    triangleBuffer = gl.createBuffer();
 
     var c = [{x:520,y:440},{x:315,y:100},{x:90,y:440}];
     var h = [{x:300,y:290},{x:330,y:290},{x:315,y:380}];
@@ -54,6 +59,8 @@ $(document).ready(function() {
     contourPts = c.map(vec2ify);
     holePts = h.map(vec2ify);
 
+    // Outer hull
+    outerPointCount = contourPts.length;
     pointCount = contourPts.length + holePts.length;
     var coordsArray = GIZA.flatten(contourPts.concat(holePts));
     var typedArray = new Float32Array(coordsArray);
@@ -61,10 +68,33 @@ $(document).ready(function() {
     gl.bufferData(gl.ARRAY_BUFFER, typedArray, gl.STATIC_DRAW);
     GIZA.check('Error when trying to create points VBO');
 
-    var triangles = POLYGON.tessellate(
+    // Run ear clipping
+    var triangles = GIZA.tessellate(
       contourPts,
       [holePts]);
 
+    // Filled triangles
+    triangleCount = triangles.length;
+    typedArray = new Uint16Array(GIZA.flatten(triangles));
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, triangleBuffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, typedArray, gl.STATIC_DRAW);
+    GIZA.check('Error when trying to create triangle VBO');
+
+    // Triangle outlines
+    var outlines = [];
+    for (var i = 0; i < triangles.length; i++) {
+      var tri = triangles[i];
+      outlines.push(tri[0]);
+      outlines.push(tri[1]);
+      outlines.push(tri[1]);
+      outlines.push(tri[2]);
+      outlines.push(tri[2]);
+      outlines.push(tri[0]);
+    }
+    typedArray = new Uint16Array(outlines);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, outlineBuffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, typedArray, gl.STATIC_DRAW);
+    GIZA.check('Error when trying to create skeleton VBO');
   }
 
   var draw = function(currentTime) {
@@ -75,8 +105,6 @@ $(document).ready(function() {
     }
 
     gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.disable(gl.BLEND);
-    gl.disable(gl.DEPTH_TEST);
 
     var mv = new mat4();
     var proj = new mat4();
@@ -89,13 +117,41 @@ $(document).ready(function() {
     gl.enableVertexAttribArray(attribs.POSITION);
     gl.vertexAttribPointer(attribs.POSITION, 2, gl.FLOAT, false, 8, 0);
 
-    var program = programs.dot;
+    // Draw the filled triangles
+    var program = programs.contour;
+    gl.useProgram(program);
+    gl.uniformMatrix4fv(program.modelview, false, mv.elements);
+    gl.uniformMatrix4fv(program.projection, false, proj.elements);
+    gl.uniform4f(program.color, 0.25, 0.25, 0, 0.5);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, triangleBuffer);
+    gl.drawElements(gl.TRIANGLES, 3 * triangleCount, gl.UNSIGNED_SHORT, 0);
+
+    // Draw the triangle borders to visualize the tessellation
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, outlineBuffer);
+    gl.drawElements(gl.LINES, 6 * triangleCount, gl.UNSIGNED_SHORT, 0);
+
+    // Draw the outer contour
+    program = programs.contour;
+    gl.useProgram(program);
+    gl.uniformMatrix4fv(program.modelview, false, mv.elements);
+    gl.uniformMatrix4fv(program.projection, false, proj.elements);
+    gl.uniform4f(program.color, 0, 0.4, 0.8, 1);
+    gl.drawArrays(gl.LINE_LOOP, 0, outerPointCount);
+
+    // Draw the hole outline if it exists
+    var innerPointCount = pointCount - outerPointCount;
+    if (innerPointCount > 0) {
+      gl.uniform4f(program.color, 0.8, 0.4, 0, 1);
+      gl.drawArrays(gl.LINE_LOOP, outerPointCount, innerPointCount);
+    }
+
+    // Finally draw the dots
+    program = programs.dot;
     gl.useProgram(program);
     gl.uniformMatrix4fv(program.modelview, false, mv.elements);
     gl.uniformMatrix4fv(program.projection, false, proj.elements);
     gl.uniform1f(program.pointSize, 6 * GIZA.pixelScale);
     gl.bindTexture(gl.TEXTURE_2D, spriteTexture);
-
     gl.uniform4f(program.color, 0, 0.25, 0.5, 1);
     gl.drawArrays(gl.POINTS, 0, pointCount);
 
