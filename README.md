@@ -1,5 +1,8 @@
 # master
 
+  Patch to ThreeJs:
+- giza/Vector/lookAt is wrong (doesn't translate by eye)
+
 https://github.com/prideout/iphone-3d-programming/tree/master/ModelViewer.SimpleWireframe
 
 - ParametricSurf (please, wireframe only)
