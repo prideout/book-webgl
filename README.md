@@ -28,6 +28,13 @@
 
 # Notes
 
+We need to add a section somewhere for lost context stuff
+http://blog.xeolabs.com/handling-a-lost-webgl-context-in-scenejs
++ I think there's an extension
+
+For chapter 11:
+http://jster.net/blog/webgl-3d-engines-and-tools#.UNKaGonjk5s
+
 Possibly add webgl-texture-utils to Chapter 11
 https://github.com/alteredq/webgl-texture-utils
 
