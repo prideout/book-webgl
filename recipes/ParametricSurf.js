@@ -28,7 +28,7 @@ $(document).ready(function() {
 
     var coordsArray, wireframeArray, typedArray;
 
-    gl.clearColor(0.9, 0.9, 0.9, 1.0);
+    gl.clearColor(0.7, 0.8, 0.9, 1.0);
     gl.lineWidth(1.5 * GIZA.pixelScale);
 
     coordsArray = [
@@ -56,14 +56,19 @@ $(document).ready(function() {
   var draw = function(currentTime) {
     
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.disable(gl.DEPTH_TEST);
+    gl.disable(gl.BLEND);
     
-    var mv = new mat4();
-    var proj = new mat4();
-    proj.makePerspective(
-      45,
+    var mv = (new mat4).lookAt(
+        new vec3(0,0,0),  // eye
+        new vec3(0,0,10), // target
+        new vec3(0,1,0)); // up
+
+    var proj = (new mat4).makePerspective(
+      40,      // fov in degrees
       GIZA.aspect,
-      3, 50);
-    
+      3, 100); // near and far
+
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.wireframe)
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.coords);
     gl.enableVertexAttribArray(attribs.POSITION);
@@ -74,7 +79,7 @@ $(document).ready(function() {
     gl.uniformMatrix4fv(program.modelview, false, mv.elements);
     gl.uniformMatrix4fv(program.projection, false, proj.elements);
     gl.uniform4f(program.color, 0, 0.4, 0.8, 1);
-    gl.drawElements(gl.LINES, buffers.wireframe.lineCount, gl.UNSIGNED_SHORT, 0)
+    gl.drawElements(gl.LINES, 2 * buffers.wireframe.lineCount, gl.UNSIGNED_SHORT, 0)
     
     gl.disableVertexAttribArray(attribs.POSITION);
 

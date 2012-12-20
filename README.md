@@ -1,16 +1,19 @@
 # master
 
 - ParametricSurf (please, wireframe only)
--   Sphere on left, Torus on right
--   Move eval into a worker?
--   Move portions of it to giza/Surface
+  - Sphere on left, Torus on right
+  - Move eval into a worker?
+  - Move portions of it to giza/Surface
 - ColorGraph
 - ch 1 & 2 tangling (please, no fresnel buddha or king tut stuff yet)
 
 # later
 
 - Add lighting to ParametricSurf
-- PolygonTess degenerate triangle
+- PolygonTess
+  - degenerate triangle
+  - Add an Ankh. (wikipedia page has a nice SVG)
+  - Move eval into a worker?
 - pycollada -> King Tut
 
 # giza design
