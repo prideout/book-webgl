@@ -1,9 +1,17 @@
 # master
 
-- PolygonTess degenerate triangle
-- Parametric Surface
+- ParametricSurf (please, wireframe only)
+-   Sphere on left, Torus on right
+-   Move eval into a worker?
+-   Move portions of it to giza/Surface
 - ColorGraph
 - ch 1 & 2 tangling (please, no fresnel buddha or king tut stuff yet)
+
+# later
+
+- Add lighting to ParametricSurf
+- PolygonTess degenerate triangle
+- pycollada -> King Tut
 
 # giza design
 

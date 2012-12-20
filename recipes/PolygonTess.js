@@ -31,14 +31,17 @@ $(document).ready(function() {
 
   var contourPts = [];
   var holePts = [];
-  var ready = false;
   var spriteTexture;
-  var coordsBuffer, outlineBuffer, triangleBuffer;
+  var buffers = {
+    coords: gl.createBuffer(),
+    lines: gl.createBuffer(),
+    triangles: gl.createBuffer()
+  };
   var pointCount, outerPointCount, triangleCount;
 
   GIZA.loadTexture('media/PointSprite.png', function(i) {
-      spriteTexture = i;
-      ready = true;
+    spriteTexture = i;
+    draw(0);
   });
 
   var init = function() {
@@ -47,10 +50,6 @@ $(document).ready(function() {
     gl.lineWidth(1.5 * GIZA.pixelScale);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-
-    coordsBuffer = gl.createBuffer();
-    outlineBuffer = gl.createBuffer();
-    triangleBuffer = gl.createBuffer();
 
     var c = [{x:570,y:336},{x:365,y:30},{x:140,y:336}];
     var h = [{x:350,y:201},{x:380,y:201},{x:365,y:282}];
@@ -68,7 +67,7 @@ $(document).ready(function() {
     pointCount = contourPts.length + holePts.length;
     var coordsArray = GIZA.flatten(contourPts.concat(holePts));
     var typedArray = new Float32Array(coordsArray);
-    gl.bindBuffer(gl.ARRAY_BUFFER, coordsBuffer);
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffers.coords);
     gl.bufferData(gl.ARRAY_BUFFER, typedArray, gl.STATIC_DRAW);
     GIZA.check('Error when trying to create points VBO');
 
@@ -83,7 +82,7 @@ $(document).ready(function() {
     // Filled triangles
     triangleCount = triangles.length;
     typedArray = new Uint16Array(GIZA.flatten(triangles));
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, triangleBuffer);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.triangles);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, typedArray, gl.STATIC_DRAW);
     GIZA.check('Error when trying to create triangle VBO');
 
@@ -99,28 +98,23 @@ $(document).ready(function() {
       outlines.push(tri[0]);
     }
     typedArray = new Uint16Array(outlines);
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, outlineBuffer);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.lines);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, typedArray, gl.STATIC_DRAW);
     GIZA.check('Error when trying to create skeleton VBO');
   }
 
   var draw = function(currentTime) {
 
-    if (!ready) {
-      window.requestAnimationFrame(draw, GIZA.canvas);
-      return;
-    }
-
     gl.clear(gl.COLOR_BUFFER_BIT);
 
     var mv = new mat4();
     var proj = new mat4();
     proj.makeOrthographic(
-      0, GIZA.pixelScale * GIZA.canvas.width,
-      0, GIZA.pixelScale * GIZA.canvas.height,
+      0, GIZA.canvas.width / GIZA.pixelScale,
+      0, GIZA.canvas.height / GIZA.pixelScale,
       0, 1);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, coordsBuffer);
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffers.coords);
     gl.enableVertexAttribArray(attribs.POSITION);
     gl.vertexAttribPointer(attribs.POSITION, 2, gl.FLOAT, false, 8, 0);
 
@@ -130,11 +124,11 @@ $(document).ready(function() {
     gl.uniformMatrix4fv(program.modelview, false, mv.elements);
     gl.uniformMatrix4fv(program.projection, false, proj.elements);
     gl.uniform4f(program.color, 0.25, 0.25, 0, 0.5);
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, triangleBuffer);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.triangles);
     gl.drawElements(gl.TRIANGLES, 3 * triangleCount, gl.UNSIGNED_SHORT, 0);
 
     // Draw the triangle borders to visualize the tessellation
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, outlineBuffer);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.lines);
     gl.drawElements(gl.LINES, 6 * triangleCount, gl.UNSIGNED_SHORT, 0);
 
     // Draw the outer contour
@@ -169,6 +163,5 @@ $(document).ready(function() {
   }
 
   init();
-  draw(0);
 
 });
