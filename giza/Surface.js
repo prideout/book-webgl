@@ -19,7 +19,7 @@ GIZA.equations.torus = function(minor, major) {
         return new vec3(
             (major + minor * Math.cos(v)) * Math.cos(u),
             (major + minor * Math.cos(v)) * Math.sin(u),
-            minor * sin(v)
+            minor * Math.sin(v)
         );
     };
 };
