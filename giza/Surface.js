@@ -95,16 +95,16 @@ GIZA.surface = function(equation, rows, cols, flags) {
             var lineIndex = 0;
             var pointsPerRow = cols+1;
             var pointsPerCol = rows+1;
-            for (var row = 0; row < rows; row++) {
-                for (var col = 0; col < colLines; col++, lineIndex += 2) {
-                    lineArray[lineIndex] = row * pointsPerRow + col;
-                    lineArray[lineIndex+1] = lineArray[lineIndex] + pointsPerRow;
-                }
-            }
             for (var row = 0; row < rowLines; row++) {
                 for (var col = 0; col < cols; col++, lineIndex += 2) {
                     lineArray[lineIndex] = row * pointsPerRow + col;
                     lineArray[lineIndex+1] = lineArray[lineIndex] + 1;
+                }
+            }
+            for (var row = 0; row < rows; row++) {
+                for (var col = 0; col < colLines; col++, lineIndex += 2) {
+                    lineArray[lineIndex] = row * pointsPerRow + col;
+                    lineArray[lineIndex+1] = lineArray[lineIndex] + pointsPerRow;
                 }
             }
             return lineArray;

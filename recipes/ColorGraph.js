@@ -68,7 +68,7 @@ $(document).ready(function() {
     gl.uniformMatrix4fv(program.projection, false, proj.elements);
 
     var theta = currentTime / 1000;
-    mv.rotateZ(theta);
+    gl.uniform1f(program.time, Math.cos(2 * theta));
 
     gl.uniformMatrix4fv(program.modelview, false, mv.elements);
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.sincCoords);

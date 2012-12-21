@@ -40,9 +40,13 @@
       attribute vec4 Position;
       uniform mat4 modelview;
       uniform mat4 projection;
+      varying vec4 vPosition;
+      uniform float time;
       void main(void)
       {
           vec4 p = Position;
+          p.z *= time;
+          vPosition = p;
           gl_Position = projection * modelview * p;
       }
     </script>
@@ -51,9 +55,11 @@
       precision highp float;
       precision highp vec3;
       uniform vec4 color;
+      varying vec4 vPosition;
       void main()
       {
           gl_FragColor = color;
+          gl_FragColor.b = abs(vPosition.z);
       }
     </script>
 
