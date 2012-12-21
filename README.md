@@ -1,8 +1,8 @@
 # master
 
-- Move all WebGL and jquery calls out of giza
+- Move jquery out of GIZA.init
 
-- ColorGraph
+- Fork ColorGraph from ParametricSurf -- note it needs to be a dense mesh
 
 - ch 1 & 2 tangling (please, no fresnel buddha or king tut stuff yet)
   ^-- really need to hammer out the vector math stuff

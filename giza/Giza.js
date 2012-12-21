@@ -1,12 +1,6 @@
 var GIZA = GIZA || { REVISION : '0' };
 var gl;
 
-GIZA.check = function(msg) {
-  if (gl.getError() !== gl.NO_ERROR) {
-    console.error(msg);
-  }
-};
-
 GIZA.init = function() {
   var pixelScale = window.devicePixelRatio || 1;
   var width = parseInt( $('canvas').css('width'));
@@ -31,24 +25,6 @@ GIZA.init = function() {
   GIZA.canvas = canvas;
   GIZA.aspect = aspect;
 }
-
-
-GIZA.loadTexture = function (filename, onLoaded) {
-    var tex;
-    tex = gl.createTexture();
-    tex.image = new Image();
-    tex.image.onload = function() {
-      gl.bindTexture(gl.TEXTURE_2D, tex);
-      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, tex.image);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-      gl.bindTexture(gl.TEXTURE_2D, null);
-      GIZA.check('Error when loading texture');
-      return onLoaded(tex);
-    };
-    return tex.image.src = filename;
-};
 
 GIZA.flatten = function(array) {
     var element, flattened, _i, _len;

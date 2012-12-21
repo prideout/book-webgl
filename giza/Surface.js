@@ -12,6 +12,19 @@ GIZA.equations.sphere = function(radius) {
     };
 };
 
+GIZA.equations.sinc = function(maxu, maxv, height) {
+    return function(u, v) {
+        var u2 = 50 * (u - 0.5);
+        var v2 = 50 * (v - 0.5);
+        var d = Math.sqrt(u2 * u2 + v2 * v2);
+        return new vec3(
+            -maxu + maxu * 2 * u,
+            -maxv + maxv * 2 * v,
+            height * Math.sin(d) / d
+        );
+    };
+};
+
 GIZA.equations.torus = function(minor, major) {
     return function(u, v) {
         u = 2.0 * Math.PI * u;
@@ -25,15 +38,17 @@ GIZA.equations.torus = function(minor, major) {
 };
 
 GIZA.surfaceFlags = {
-    "POSITIONS": 0,
-    "WRAP_COLS": 1,
-    "WRAP_ROWS": 2
+    POSITIONS: 0,
+    WRAP_COLS: 1,
+    WRAP_ROWS: 2
 };
 
 GIZA.surface = function(equation, rows, cols, flags) {
 
     var f = GIZA.surfaceFlags;
-    flags = flags || (f.POSITIONS | f.WRAP_COLS | f.WRAP_ROWS);
+    if (flags == null) {
+        flags = f.POSITIONS | f.WRAP_COLS | f.WRAP_ROWS;
+    }
 
     // rows and cols refer to the number of quads or "cells" in the mesh.
     //
@@ -43,8 +58,8 @@ GIZA.surface = function(equation, rows, cols, flags) {
     // WRAP_COLS and WRAP_ROWS exist purely to prevent overdraw of
     // wireframe lines along the seam.
 
-    var wrapCols = true;
-    var wrapRows = true;
+    var wrapCols = flags & GIZA.surfaceFlags.WRAP_COLS;
+    var wrapRows = flags & GIZA.surfaceFlags.WRAP_ROWS;
 
     var pointCount = (rows + 1) * (cols + 1);
     var triangleCount = 2 * rows * cols;
