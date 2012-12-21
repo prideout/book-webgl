@@ -48,12 +48,18 @@ $(document).ready(function() {
   var draw = function(currentTime) {
 
     gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.viewport(0, 0, GIZA.canvas.width, GIZA.canvas.height);
     
     var mv = new mat4();
     var proj = new mat4();
+
+    var MinWidth = 1500;
+    var s = MinWidth / GIZA.canvas.width;
+    s = (s < 1.0) ? 1.0 : s;
+
     proj.makeOrthographic(
-        -GIZA.aspect, +GIZA.aspect, // left right
-        -1, +1, // bottom top
+        -s * GIZA.aspect, s * GIZA.aspect, // left right
+        -s, +s, // bottom top
         0, 1);  // near far
 
     gl.bindBuffer(gl.ARRAY_BUFFER, lineBuffer);

@@ -24,6 +24,14 @@ GIZA.init = function() {
   GIZA.pixelScale = pixelScale;
   GIZA.canvas = canvas;
   GIZA.aspect = aspect;
+
+  $(window).resize(function() {
+    width = parseInt( $('canvas').css('width'));
+    height = parseInt( $('canvas').css('height'));
+    GIZA.aspect = width / height;
+    canvas.width = width * pixelScale;
+    canvas.height = height * pixelScale;
+  });
 }
 
 GIZA.flatten = function(array) {

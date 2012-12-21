@@ -1,6 +1,6 @@
 # master
 
-- Add colors to ColorGraph
+- Add colors to ColorGraph and a "fast path".
 
 - Move jquery out of GIZA.init
 
@@ -8,6 +8,8 @@
   ^-- really need to hammer out the vector math stuff
 
 # later
+
+- Screenshots
 
 - GIZA.Turtle for implementing Ankh:
 
