@@ -27,27 +27,22 @@ $(document).ready(function() {
   var init = function() {
 
     //gl.clearColor(0.61, 0.527, .397, 1.0);
-    gl.clearColor(1, 1, 1, 0);
+    gl.clearColor(1, 1, 1, 1);
     gl.lineWidth(1.5 * GIZA.pixelScale);
     gl.disable(gl.DEPTH_TEST);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-    var coordsArray, wireframeArray, typedArray, equation;
-    var flatten = function(v) { return [v.x, v.y, v.z]; }
-
-    equation = GIZA.equations.sinc(10, 10, 2);
+    var equation = GIZA.equations.sinc(10, 10, 2);
     var sinc = GIZA.surface(equation, 150, 150, 0);
-    coordsArray = GIZA.flatten(sinc.points().map(flatten));
-    typedArray = new Float32Array(coordsArray);
+
+    typedArray = sinc.points();
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.sincCoords);
     gl.bufferData(gl.ARRAY_BUFFER, typedArray, gl.STATIC_DRAW);
 
-    wireframeArray = sinc.lines()
-    buffers.wireframe.lineCount = wireframeArray.length;
-    typedArray = new Uint16Array(GIZA.flatten(wireframeArray));
+    buffers.wireframe.lineCount = sinc.lineCount();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.wireframe);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, typedArray, gl.STATIC_DRAW);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, sinc.lines(), gl.STATIC_DRAW);
 
     GIZA.check('Error when trying to create VBOs');
   }
@@ -78,8 +73,8 @@ $(document).ready(function() {
     gl.uniformMatrix4fv(program.modelview, false, mv.elements);
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.sincCoords);
     gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 12, 0);
-    gl.uniform4f(program.color, 0, 0, 0, 0.7);
-    gl.drawElements(gl.LINES, 2 * buffers.wireframe.lineCount, gl.UNSIGNED_SHORT, 0)
+    gl.uniform4f(program.color, 0, 0, 0, 0.5);
+    gl.drawElements(gl.LINES, buffers.wireframe.lineCount, gl.UNSIGNED_SHORT, 0)
 
     gl.disableVertexAttribArray(attribs.POSITION);
     GIZA.check('Error during draw cycle');

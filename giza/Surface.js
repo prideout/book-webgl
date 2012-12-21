@@ -69,40 +69,45 @@ GIZA.surface = function(equation, rows, cols, flags) {
     var lineCount = (colLines * rows) + (rowLines * cols);
 
     return {
+        "pointCount": function () { return pointCount; },
+        "lineCount": function () { return lineCount; },
         "points": function () {
+            var coordArray = new Float32Array(pointCount * 3);
+            var coordIndex = 0;
             var du = 1.0 / cols;
             var dv = 1.0 / rows;
             var v = 0;
-            var points = [];
             for (var row = 0; row < rows + 1; row++) {
                 var u = 0;
                 for (var col = 0; col < cols + 1; col++) {
-                    points.push(equation(u, v));
+                    var p = equation(u, v);
+                    coordArray[coordIndex++] = p.x;
+                    coordArray[coordIndex++] = p.y;
+                    coordArray[coordIndex++] = p.z;
                     u = (col == cols) ? 1.0 : (u + du);
                 }
                 v = (row == rows) ? 1.0 : (v + dv);
             }
-            return points;
+            return coordArray;
         },
         "lines": function () {
-            var lines = [];
+            var lineArray = new Uint16Array(lineCount * 2);
+            var lineIndex = 0;
             var pointsPerRow = cols+1;
             var pointsPerCol = rows+1;
             for (var row = 0; row < rows; row++) {
-                for (var col = 0; col < colLines; col++) {
-                    var a = row * pointsPerRow + col;
-                    var b = a + pointsPerRow;
-                    lines.push([a,b]);
+                for (var col = 0; col < colLines; col++, lineIndex += 2) {
+                    lineArray[lineIndex] = row * pointsPerRow + col;
+                    lineArray[lineIndex+1] = lineArray[lineIndex] + pointsPerRow;
                 }
             }
             for (var row = 0; row < rowLines; row++) {
-                for (var col = 0; col < cols; col++) {
-                    var a = row * pointsPerRow + col;
-                    var b = a + 1;
-                    lines.push([a,b]);
+                for (var col = 0; col < cols; col++, lineIndex += 2) {
+                    lineArray[lineIndex] = row * pointsPerRow + col;
+                    lineArray[lineIndex+1] = lineArray[lineIndex] + 1;
                 }
             }
-            return lines;
+            return lineArray;
         },
         "triangles": function () {
             var triangles = [];

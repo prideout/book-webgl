@@ -1,22 +1,26 @@
 # master
 
-- Add "fast path" to ColorGraph
-
 - ResizeTest looks bad with Firefox
 
 - Add colors to ColorGraph
 
-- $(document).ready is the only usage of jquery...
-  grep '\$' *.js
+- $(document).ready is the only usage of jquery:  grep '\$' *.js
+  I also think giza/WebGL should move into a DEMO layer (out of giza)
 
 - ch 1 & 2 tangling (please, no fresnel buddha or king tut stuff yet)
-  ^-- really need to hammer out the vector math stuff
+  ^-- really need to hammer out the vector math stuff!
 
 # later
 
 - Screenshots
 
 - GIZA.Turtle for implementing Ankh:
+
+https://github.com/bseth99/pathjs
+http://bseth99.github.com/pathjs/demo/path-generators.html
+https://github.com/phoboslab/Ejecta/blob/master/Source/Ejecta/EJCanvas/EJPath.mm
+http://www.antigrain.com/research/adaptive_bezier/index.html
+http://code.google.com/p/explorercanvas/source/browse/trunk/excanvas.js
 
     ctx.moveTo(145.81951,11.151985);
     ctx.bezierCurveTo(95.611047,11.151985,64.330726,57.81599,65.04964,114.16208);
