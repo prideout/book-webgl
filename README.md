@@ -1,8 +1,8 @@
 # master
 
-- Move jquery out of GIZA.init
+- Add colors to ColorGraph
 
-- Fork ColorGraph from ParametricSurf -- note it needs to be a dense mesh
+- Move jquery out of GIZA.init
 
 - ch 1 & 2 tangling (please, no fresnel buddha or king tut stuff yet)
   ^-- really need to hammer out the vector math stuff
@@ -52,6 +52,8 @@
     http://vimalkumar.in/sphinx-themes/solar/html/index.html
 
 # Notes
+
+Alpha compositing with canvas.  A of ClearColor matters!!
 
 We need to add a section somewhere for lost context stuff
 http://blog.xeolabs.com/handling-a-lost-webgl-context-in-scenejs

@@ -34,16 +34,14 @@ $(document).ready(function() {
     var flatten = function(v) { return [v.x, v.y, v.z]; }
 
     equation = GIZA.equations.torus(.25, 1);
-    var torus = GIZA.surface(equation, 32, 32, 0);
+    var torus = GIZA.surface(equation, 32, 32);
     coordsArray = GIZA.flatten(torus.points().map(flatten));
     typedArray = new Float32Array(coordsArray);
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.torusCoords);
     gl.bufferData(gl.ARRAY_BUFFER, typedArray, gl.STATIC_DRAW);
 
-    //equation = GIZA.equations.sphere(1.25);
-    //var sphere = GIZA.surface(equation, 32, 32);
-    equation = GIZA.equations.sinc(1.25, 1.25, 2);
-    var sphere = GIZA.surface(equation, 32, 32, 0);
+    equation = GIZA.equations.sphere(1.25);
+    var sphere = GIZA.surface(equation, 32, 32);
     coordsArray = GIZA.flatten(sphere.points().map(flatten));
     typedArray = new Float32Array(coordsArray);
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.sphereCoords);
