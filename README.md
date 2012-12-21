@@ -2,9 +2,7 @@
 
 - ResizeTest looks bad with Firefox
 
-- sinc's "50" should be passed in.  add a "plane" equation with similar params, and make sinc leverage it.
-
-- 2 ColorGraph buttons for JS vs GLSL (defaults to GLSL)
+- Honor the JS & GLSL buttons
 
 - $(document).ready is the only usage of jquery:  grep '\$' *.js
   I also think giza/WebGL should move into a DEMO layer (out of giza)

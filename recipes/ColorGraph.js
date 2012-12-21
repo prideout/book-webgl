@@ -1,5 +1,7 @@
 $(document).ready(function() {
 
+  $("#radio").buttonset();
+
   GIZA.init();
 
   var attribs = {
@@ -33,7 +35,7 @@ $(document).ready(function() {
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-    var equation = GIZA.equations.sinc(10, 10, 2);
+    var equation = GIZA.equations.sinc(50, 20, 2);
     var sinc = GIZA.surface(equation, 150, 150, 0);
 
     typedArray = sinc.points();

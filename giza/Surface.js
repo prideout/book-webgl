@@ -12,16 +12,25 @@ GIZA.equations.sphere = function(radius) {
     };
 };
 
-GIZA.equations.sinc = function(maxu, maxv, height) {
+GIZA.equations.plane = function(width) {
     return function(u, v) {
-        var u2 = 50 * (u - 0.5);
-        var v2 = 50 * (v - 0.5);
-        var d = Math.sqrt(u2 * u2 + v2 * v2);
         return new vec3(
-            -maxu + maxu * 2 * u,
-            -maxv + maxv * 2 * v,
-            height * Math.sin(d) / d
+            -width/2 + width * u,
+            -width/2 + width * v,
+            0
         );
+    };
+};
+
+GIZA.equations.sinc = function(interval, width, height) {
+    var plane = GIZA.equations.plane(width);
+    return function(u, v) {
+        var p = plane(u, v);
+        var x = p.x * interval / width;
+        var y = p.y * interval / width;
+        var r = Math.sqrt(x*x + y*y);
+        p.z = height * Math.sin(r) / r;
+        return p;
     };
 };
 
