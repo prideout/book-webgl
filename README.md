@@ -2,9 +2,12 @@
 
 - Add "fast path" to ColorGraph
 
+- ResizeTest looks bad with Firefox
+
 - Add colors to ColorGraph
 
-- Move jquery out of GIZA.init
+- $(document).ready is the only usage of jquery...
+  grep '\$' *.js
 
 - ch 1 & 2 tangling (please, no fresnel buddha or king tut stuff yet)
   ^-- really need to hammer out the vector math stuff

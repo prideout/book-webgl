@@ -1,13 +1,20 @@
 var GIZA = GIZA || { REVISION : '0' };
 var gl;
 
-GIZA.init = function() {
+GIZA.init = function(canvasElement) {
+
+  var canvas;
+  if (canvasElement == null) {
+    canvas = document.getElementsByTagName('canvas')[0];
+  }
+
   var pixelScale = window.devicePixelRatio || 1;
-  var width = parseInt( $('canvas').css('width'));
-  var height = parseInt( $('canvas').css('height'));
+  var style = window.getComputedStyle(canvas);
+  var width = parseInt( style.width );
+  var height = parseInt( style.height );
+
   var aspect = width / height;
 
-  var canvas = $('canvas')[0];
   canvas.width = width * pixelScale;
   canvas.height = height * pixelScale;
   gl = canvas.getContext(
@@ -15,9 +22,10 @@ GIZA.init = function() {
     {antialias: true});
 
   if (!gl) {
-    var msg = "Alas, your browser does not support WebGL."
-    var html = "<p class='error'>" + msg + "</p>";
-    $('canvas').replaceWith(html);
+    var msg = document.createElement('p');
+    msg.classList.add('error');
+    msg.innerHTML = "Alas, your browser does not support WebGL.";
+    canvas.parentNode.replaceChild(msg, canvas);
     return;
   }
 
@@ -25,13 +33,14 @@ GIZA.init = function() {
   GIZA.canvas = canvas;
   GIZA.aspect = aspect;
 
-  $(window).resize(function() {
-    width = parseInt( $('canvas').css('width'));
-    height = parseInt( $('canvas').css('height'));
+  window.onresize = function() {
+    style = window.getComputedStyle(canvas);
+    width = parseInt( style.width );
+    height = parseInt( style.height );
     GIZA.aspect = width / height;
     canvas.width = width * pixelScale;
     canvas.height = height * pixelScale;
-  });
+  };
 }
 
 GIZA.flatten = function(array) {
