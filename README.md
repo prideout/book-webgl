@@ -1,6 +1,8 @@
 # master
 
-- Add colors to ColorGraph and a "fast path".
+- Add "fast path" to ColorGraph
+
+- Add colors to ColorGraph
 
 - Move jquery out of GIZA.init
 

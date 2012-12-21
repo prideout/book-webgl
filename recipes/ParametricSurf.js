@@ -27,8 +27,10 @@ $(document).ready(function() {
 
   var init = function() {
 
-    gl.clearColor(0.61, 0.527, .397, 1.0);
-    gl.lineWidth(1.25 * GIZA.pixelScale);
+    gl.clearColor(1, 1, 1, 1);
+    gl.lineWidth(1.5 * GIZA.pixelScale);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
     var coordsArray, wireframeArray, typedArray, equation;
     var flatten = function(v) { return [v.x, v.y, v.z]; }
@@ -84,9 +86,9 @@ $(document).ready(function() {
     gl.uniformMatrix4fv(program.modelview, false, mv.elements);
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.sphereCoords);
     gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 12, 0);
-    gl.uniform4f(program.color, 0.5, 0, 0, 1);
+    gl.uniform4f(program.color, 0.5, 0, 0, 0.75);
     gl.drawElements(gl.LINES, buffers.wireframe.lineCount, gl.UNSIGNED_SHORT, 0)
-    gl.uniform4f(program.color, 0, 0, 0, 1);
+    gl.uniform4f(program.color, 0.61, 0.527, .397, 0.75);
     gl.drawElements(gl.LINES, buffers.wireframe.lineCount, gl.UNSIGNED_SHORT, buffers.wireframe.lineCount*2)
     
     mv = previous;
@@ -96,9 +98,9 @@ $(document).ready(function() {
     gl.uniformMatrix4fv(program.modelview, false, mv.elements);
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.torusCoords);
     gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 12, 0);
-    gl.uniform4f(program.color, 0.5, 0, 0, 1);
+    gl.uniform4f(program.color, 0.5, 0, 0, 0.75);
     gl.drawElements(gl.LINES, buffers.wireframe.lineCount, gl.UNSIGNED_SHORT, 0)
-    gl.uniform4f(program.color, 0, 0, 0, 1);
+    gl.uniform4f(program.color, 0.61, 0.527, .397, 0.75);
     gl.drawElements(gl.LINES, buffers.wireframe.lineCount, gl.UNSIGNED_SHORT, buffers.wireframe.lineCount*2)
 
     gl.disableVertexAttribArray(attribs.POSITION);
