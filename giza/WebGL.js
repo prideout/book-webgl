@@ -2,7 +2,9 @@
 GIZA.check = function(msg) {
   if (gl.getError() !== gl.NO_ERROR) {
     console.error(msg);
+    return false;
   }
+  return true;
 };
 
 GIZA.loadTexture = function (filename, onLoaded) {

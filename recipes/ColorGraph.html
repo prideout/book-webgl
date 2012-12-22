@@ -17,7 +17,7 @@
     <div id="radio" style="margin-bottom:10px">
 	<input type="radio" id="glsl" name="radio" checked="checked"/><label for="glsl">glsl</label>
 	<input type="radio" id="js" name="radio"/><label for="js">js</label>
-        <span style="margin-left:10px;color:#700"> <<  Click js to see the performance difference!</span>
+        <span style="margin-left:10px;color:#700"> <<  Click to see the performance difference</span>
     </div>
 
     <!-- 16:9 aspect ratio; consistent with 1080p -->
@@ -42,30 +42,47 @@
 
     <script src="./ColorGraph.js"></script>
 
-    <script id="solidvs" type="x-shader/x-vertex">
+    <script id="simple-vs" type="x-shader/x-vertex">
       attribute vec4 Position;
       uniform mat4 modelview;
       uniform mat4 projection;
-      varying vec4 vPosition;
-      uniform float time;
       void main(void)
       {
           vec4 p = Position;
-          p.z *= time;
-          vPosition = p;
           gl_Position = projection * modelview * p;
       }
     </script>
 
-    <script id="solidfs" type="x-shader/x-fragment">
+    <script id="sinc-vs" type="x-shader/x-vertex">
+      attribute vec4 Position;
+      uniform mat4 modelview;
+      uniform mat4 projection;
+
+      uniform float interval; // 50
+      uniform float width;    // 20
+      uniform float height;   // 2
+
+      void main(void)
+      {
+          vec4 p = Position;
+
+          float x = p.x * interval / width;
+          float y = p.y * interval / width;
+          float r = sqrt(x*x + y*y);
+          if (r <= 0.0001) p.z = height; else
+          p.z = height * sin(r) / r;
+
+          gl_Position = projection * modelview * p;
+      }
+    </script>
+
+    <script id="solid-color" type="x-shader/x-fragment">
       precision highp float;
       precision highp vec3;
       uniform vec4 color;
-      varying vec4 vPosition;
       void main()
       {
           gl_FragColor = color;
-          gl_FragColor.b = abs(vPosition.z);
       }
     </script>
 

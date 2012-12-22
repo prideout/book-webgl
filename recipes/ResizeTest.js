@@ -33,6 +33,8 @@ $(document).ready(function() {
       theta += dtheta;
     }
 
+    // Note that it is MUCH more efficient to preallocate, and
+    // populate directly.
     var typedArray = new Float32Array(GIZA.flatten(coords));
 
     gl.bindBuffer(gl.ARRAY_BUFFER, lineBuffer);
@@ -53,8 +55,8 @@ $(document).ready(function() {
     var mv = new mat4();
     var proj = new mat4();
 
-    var MinWidth = 1500;
-    var s = MinWidth / GIZA.canvas.width;
+    var MinWidth = 700;
+    var s = (MinWidth / GIZA.canvas.width) * GIZA.pixelScale;
     s = (s < 1.0) ? 1.0 : s;
 
     proj.makeOrthographic(

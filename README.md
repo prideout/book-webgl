@@ -1,11 +1,12 @@
 # master
 
-- ResizeTest looks bad with Firefox
+- I think there's a bug where the tess levels can affect interval.
 
-- Honor the JS & GLSL buttons
+- Add colors back.
 
-- $(document).ready is the only usage of jquery:  grep '\$' *.js
-  I also think giza/WebGL should move into a DEMO layer (out of giza)
+- Frame rate counter in the HTML.
+
+- I think giza/WebGL should move into a DEMO layer (out of giza)
 
 - ch 1 & 2 tangling (please, no fresnel buddha or king tut stuff yet)
   ^-- really need to hammer out the vector math stuff!

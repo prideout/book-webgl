@@ -1,46 +1,61 @@
 $(document).ready(function() {
 
-  $("#radio").buttonset();
+  // The mode variable is either "glsl" or "js".  It specifies if
+  // evaluation of the sinc function occurs on the CPU or on the GPU.
+  var mode = $("input:checked")[0].id;
+
+  $("#radio").buttonset().change(function (e) {
+    mode = $("input:checked")[0].id;
+  });
 
   GIZA.init();
 
   var attribs = {
     POSITION: 0,
-    NORMAL: 1,
+    COLOR: 1
   };
 
-  var shaders = {};
-
-  shaders.solid = {
-    vs: ['solidvs'],
-    fs: ['solidfs'],
-    attribs: {
-      Position: attribs.POSITION
+  var programs = GIZA.compilePrograms({
+    simple: {
+      vs: ['simple-vs'],
+      fs: ['solid-color'],
+      attribs: {
+        Position: attribs.POSITION
+      }
+    },
+    sinc: {
+      vs: ['sinc-vs'],
+      fs: ['solid-color'],
+      attribs: {
+        Position: attribs.POSITION
+      }
     }
-  };
-
-  var programs = GIZA.compilePrograms(shaders);
+  });
 
   var buffers = {
     sincCoords: gl.createBuffer(),
     wireframe: gl.createBuffer()
   };
 
+  var interval = 50;
+  var width = 20;
+  var maxHeight = 2;
+  var rowTess = 100;
+  var colTess = 500;
+
+  var sinc = GIZA.surface(
+    GIZA.equations.sinc(interval, width, maxHeight),
+    rowTess, colTess, 0);
+
   var init = function() {
 
-    //gl.clearColor(0.61, 0.527, .397, 1.0);
     gl.clearColor(1, 1, 1, 1);
-    gl.lineWidth(1.5 * GIZA.pixelScale);
     gl.disable(gl.DEPTH_TEST);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-    var equation = GIZA.equations.sinc(50, 20, 2);
-    var sinc = GIZA.surface(equation, 150, 150, 0);
-
-    typedArray = sinc.points();
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.sincCoords);
-    gl.bufferData(gl.ARRAY_BUFFER, typedArray, gl.STATIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, sinc.points(), gl.STATIC_DRAW);
 
     buffers.wireframe.lineCount = sinc.lineCount();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.wireframe);
@@ -59,28 +74,44 @@ $(document).ready(function() {
         new vec3(0,0,1)); // up
 
     var proj = (new mat4).makePerspective(
-      30,       // fov in degrees
+      30,        // fov in degrees
       GIZA.aspect,
       3, 200);   // near and far
 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.wireframe)
     gl.enableVertexAttribArray(attribs.POSITION);
-    program = programs.solid;
-    gl.useProgram(program);
-    gl.uniformMatrix4fv(program.projection, false, proj.elements);
 
-    var theta = currentTime / 1000;
-    gl.uniform1f(program.time, Math.cos(2 * theta));
+    var sincHeight = maxHeight * Math.cos(currentTime / 500);
+    sinc = GIZA.surface(
+      GIZA.equations.sinc(interval, width, sincHeight),
+      rowTess, colTess, 0);
 
-    gl.uniformMatrix4fv(program.modelview, false, mv.elements);
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.sincCoords);
+
+    var program;
+    if (mode == "glsl") {
+      program = programs.sinc;
+      gl.useProgram(program);
+      gl.uniform1f(program.interval, interval);
+      gl.uniform1f(program.width, width);
+      gl.uniform1f(program.height, sincHeight);
+    } else {
+      program = programs.simple;
+      gl.useProgram(program);
+      gl.bufferData(gl.ARRAY_BUFFER, sinc.points(), gl.STATIC_DRAW);
+    }
+
     gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 12, 0);
-    gl.uniform4f(program.color, 0, 0, 0, 0.5);
-    gl.drawElements(gl.LINES, buffers.wireframe.lineCount, gl.UNSIGNED_SHORT, 0)
+    gl.uniformMatrix4fv(program.projection, false, proj.elements);
+    gl.uniformMatrix4fv(program.modelview, false, mv.elements);
+    gl.uniform4f(program.color, 0, 0.1, 0.25, 0.5);
+
+    gl.drawElements(gl.LINES, 2*buffers.wireframe.lineCount, gl.UNSIGNED_SHORT, 0)
 
     gl.disableVertexAttribArray(attribs.POSITION);
-    GIZA.check('Error during draw cycle');
-    window.requestAnimationFrame(draw, GIZA.canvas);
+    if (GIZA.check('Error during draw cycle')) {
+      window.requestAnimationFrame(draw, GIZA.canvas);
+    }
   }
 
   init();
