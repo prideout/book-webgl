@@ -51,8 +51,10 @@ $(document).ready(function() {
 
   var init = function() {
 
-    gl.clearColor(1, 1, 1, 1);
+    gl.clearColor(0.2,0.2,0.2,1);
     gl.disable(gl.DEPTH_TEST);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.sincCoords);
     gl.bufferData(gl.ARRAY_BUFFER, sinc.points(), gl.STATIC_DRAW);
@@ -72,6 +74,8 @@ $(document).ready(function() {
         new vec3(0,10,2), // eye
         new vec3(0,0,0),  // target
         new vec3(0,0,1)); // up
+
+    mv.rotateZ(currentTime / 1000);
 
     var proj = (new mat4).makePerspective(
       30,        // fov in degrees
@@ -101,20 +105,21 @@ $(document).ready(function() {
       gl.useProgram(program);
 
       var rawBuffer = sinc.points().buffer;
-      var byteOffset = 0;
+      var coordView = new Float32Array(rawBuffer)
+      var colorView = new Uint8Array(rawBuffer, 12);
+
+      var coordIndex = 0;
+      var colorIndex = 0;
       for (var i = 0; i < sinc.pointCount(); i++) {
-        var coordView = new Float32Array(rawBuffer, byteOffset, 3)
-        var colorView = new Uint8Array(rawBuffer, 12  + byteOffset, 4);
-
-        var v = 255 * Math.abs(coordView[2] * 4);
+        var z = coordView[coordIndex+2];
+        var v = 255 * Math.abs(z * 4);
         v = Math.min(v, 255);
-
-        colorView[0] = 0;
-        colorView[1] = v / 2;
-        colorView[2] = v;
-        colorView[3] = 255;
-
-        byteOffset += 16;
+        colorView[colorIndex+0] = v;     // red
+        colorView[colorIndex+1] = 128;   // grn
+        colorView[colorIndex+2] = 255-v; // blu
+        colorView[colorIndex+3] = 96;    // alp
+        colorIndex += 16;
+        coordIndex += 4;
       }
 
       gl.bufferData(gl.ARRAY_BUFFER, rawBuffer, gl.STATIC_DRAW);
