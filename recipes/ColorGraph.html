@@ -44,26 +44,29 @@
 
     <script id="simple-vs" type="x-shader/x-vertex">
       attribute vec4 Position;
+      attribute vec4 Color;
       uniform mat4 modelview;
       uniform mat4 projection;
+      varying vec4 vColor;
       void main(void)
       {
           vec4 p = Position;
+          vColor = Color;
           gl_Position = projection * modelview * p;
       }
     </script>
 
     <script id="sinc-vs" type="x-shader/x-vertex">
       attribute vec4 Position;
+      varying vec4 vColor;
       uniform mat4 modelview;
       uniform mat4 projection;
-
-      uniform float interval; // 50
-      uniform float width;    // 20
-      uniform float height;   // 2
-
+      uniform float interval;
+      uniform float width;
+      uniform float height;
       void main(void)
       {
+          vColor = vec4(1, 0, 0, 1);
           vec4 p = Position;
 
           float x = p.x * interval / width;
@@ -79,10 +82,10 @@
     <script id="solid-color" type="x-shader/x-fragment">
       precision highp float;
       precision highp vec3;
-      uniform vec4 color;
+      varying vec4 vColor;
       void main()
       {
-          gl_FragColor = color;
+          gl_FragColor = vColor;
       }
     </script>
 

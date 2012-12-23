@@ -47,9 +47,10 @@ GIZA.equations.torus = function(minor, major) {
 };
 
 GIZA.surfaceFlags = {
-    POSITIONS: 0,
-    WRAP_COLS: 1,
-    WRAP_ROWS: 2
+    POSITIONS: 1,
+    COLORS: 2,
+    WRAP_COLS: 4,
+    WRAP_ROWS: 8
 };
 
 GIZA.surface = function(equation, rows, cols, flags) {
@@ -69,6 +70,7 @@ GIZA.surface = function(equation, rows, cols, flags) {
 
     var wrapCols = flags & GIZA.surfaceFlags.WRAP_COLS;
     var wrapRows = flags & GIZA.surfaceFlags.WRAP_ROWS;
+    var padding  = flags & GIZA.surfaceFlags.COLORS;
 
     var pointCount = (rows + 1) * (cols + 1);
     var triangleCount = 2 * rows * cols;
@@ -76,12 +78,16 @@ GIZA.surface = function(equation, rows, cols, flags) {
     var colLines = wrapCols ? cols : (cols+1);
     var rowLines = wrapRows ? rows : (rows+1);
     var lineCount = (colLines * rows) + (rowLines * cols);
+    var bytesPerPoint = 4 * (padding ? 4 : 3);
 
     return {
         "pointCount": function () { return pointCount; },
         "lineCount": function () { return lineCount; },
         "points": function () {
-            var coordArray = new Float32Array(pointCount * 3);
+            if (pointCount > 65535) {
+              console.error("Too many points for 16-bit indices");
+            }
+            var coordArray = new Float32Array(pointCount * bytesPerPoint / 4);
             var coordIndex = 0;
             var du = 1.0 / cols;
             var dv = 1.0 / rows;
@@ -93,6 +99,9 @@ GIZA.surface = function(equation, rows, cols, flags) {
                     coordArray[coordIndex++] = p.x;
                     coordArray[coordIndex++] = p.y;
                     coordArray[coordIndex++] = p.z;
+                    if (padding) {
+                      coordIndex++;
+                    }
                     u = (col == cols) ? 1.0 : (u + du);
                 }
                 v = (row == rows) ? 1.0 : (v + dv);

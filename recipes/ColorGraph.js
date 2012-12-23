@@ -20,7 +20,8 @@ $(document).ready(function() {
       vs: ['simple-vs'],
       fs: ['solid-color'],
       attribs: {
-        Position: attribs.POSITION
+        Position: attribs.POSITION,
+        Color: attribs.COLOR
       }
     },
     sinc: {
@@ -42,17 +43,16 @@ $(document).ready(function() {
   var maxHeight = 2;
   var rowTess = 100;
   var colTess = 500;
+  var surfFlags = GIZA.surfaceFlags.POSITIONS | GIZA.surfaceFlags.COLORS;
 
   var sinc = GIZA.surface(
     GIZA.equations.sinc(interval, width, maxHeight),
-    rowTess, colTess, 0);
+    rowTess, colTess, surfFlags);
 
   var init = function() {
 
     gl.clearColor(1, 1, 1, 1);
     gl.disable(gl.DEPTH_TEST);
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.sincCoords);
     gl.bufferData(gl.ARRAY_BUFFER, sinc.points(), gl.STATIC_DRAW);
@@ -80,11 +80,12 @@ $(document).ready(function() {
 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.wireframe)
     gl.enableVertexAttribArray(attribs.POSITION);
+    gl.enableVertexAttribArray(attribs.COLOR);
 
     var sincHeight = maxHeight * Math.cos(currentTime / 500);
     sinc = GIZA.surface(
       GIZA.equations.sinc(interval, width, sincHeight),
-      rowTess, colTess, 0);
+      rowTess, colTess, surfFlags);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.sincCoords);
 
@@ -98,17 +99,43 @@ $(document).ready(function() {
     } else {
       program = programs.simple;
       gl.useProgram(program);
-      gl.bufferData(gl.ARRAY_BUFFER, sinc.points(), gl.STATIC_DRAW);
+
+      var rawBuffer = sinc.points().buffer;
+      var byteOffset = 0;
+      for (var i = 0; i < sinc.pointCount(); i++) {
+        var coordView = new Float32Array(rawBuffer, byteOffset, 3)
+        var colorView = new Uint8Array(rawBuffer, 12  + byteOffset, 4);
+
+        var v = 255 * Math.abs(coordView[2] * 4);
+        v = Math.min(v, 255);
+
+        colorView[0] = 0;
+        colorView[1] = v / 2;
+        colorView[2] = v;
+        colorView[3] = 255;
+
+        byteOffset += 16;
+      }
+
+      gl.bufferData(gl.ARRAY_BUFFER, rawBuffer, gl.STATIC_DRAW);
     }
 
-    gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 12, 0);
+    var stride = (surfFlags & GIZA.surfaceFlags.COLORS) ? 16 : 12;
+    gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, stride, 0);
+    gl.vertexAttribPointer(attribs.COLOR, 4, gl.UNSIGNED_BYTE, true, stride, 12);
+
     gl.uniformMatrix4fv(program.projection, false, proj.elements);
     gl.uniformMatrix4fv(program.modelview, false, mv.elements);
-    gl.uniform4f(program.color, 0, 0.1, 0.25, 0.5);
 
-    gl.drawElements(gl.LINES, 2*buffers.wireframe.lineCount, gl.UNSIGNED_SHORT, 0)
+    gl.drawElements(
+      gl.LINES, // drawing primitive
+      2 * buffers.wireframe.lineCount, // number of indices
+      gl.UNSIGNED_SHORT, // index data type
+      0) // offset in bytes
 
     gl.disableVertexAttribArray(attribs.POSITION);
+    gl.disableVertexAttribArray(attribs.COLOR);
+
     if (GIZA.check('Error during draw cycle')) {
       window.requestAnimationFrame(draw, GIZA.canvas);
     }

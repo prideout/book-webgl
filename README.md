@@ -1,10 +1,8 @@
 # master
 
-- I think there's a bug where the tess levels can affect interval.
+- Copy color computation from JS to GLSL.
 
-- Add colors back.
-
-- Frame rate counter in the HTML.
+- Frame rate counter in the HTML; disable vsync?
 
 - I think giza/WebGL should move into a DEMO layer (out of giza)
 
@@ -69,7 +67,7 @@ Alpha compositing with canvas.  A of ClearColor matters!!
 
 We need to add a section somewhere for lost context stuff
 http://blog.xeolabs.com/handling-a-lost-webgl-context-in-scenejs
-+ I think there's an extension
+WEBKIT_WEBGL_lose_context
 
 For chapter 11:
 http://jster.net/blog/webgl-3d-engines-and-tools#.UNKaGonjk5s
