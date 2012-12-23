@@ -1,5 +1,7 @@
 # master
 
+- Test nodejs server locally before debugging nodejitsu
+
 - ch 1 & 2 tangling (please, no fresnel buddha or king tut stuff yet)
   ^-- really need to hammer out the vector math stuff!
   
