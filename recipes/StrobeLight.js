@@ -1,4 +1,4 @@
-$(document).ready(function() {
+var main = function() {
 
   GIZA.init();
 
@@ -12,4 +12,4 @@ $(document).ready(function() {
 
   draw(0);
 
-});
+};

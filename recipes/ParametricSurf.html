@@ -1,47 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>PolygonTess</title>
+    <title>ParametricSurf</title>
     <meta charset="utf-8">
     <meta name="author" content="Philip Rideout">
     <link href="../recipes/css/style.css" rel="stylesheet">
     <script src="http://cdnjs.cloudflare.com/ajax/libs/headjs/0.99/head.load.min.js" type="text/javascript"></script>
   </head>
   <body>
-    <h1>Polygon Tessellation</h1>
+    <h1>Parametric Surface</h1>
     <div class="tagline">
-      Concave polygons and holes can be tricky.
+      Simple geometry can easily be generated rather than downloaded.
     </div>
     <canvas style="width:640;height:360px">
     </canvas>
     <div id="button-bar">
     </div>
-
-    <script id="dotvs" type="x-shader/x-vertex">
-      attribute vec4 Position;
-      uniform mat4 modelview;
-      uniform mat4 projection;
-      uniform float pointSize;
-      void main(void)
-      {
-          vec4 p = Position;
-          gl_Position = projection * modelview * p;
-          gl_PointSize = pointSize;
-      }
-    </script>
-
-    <script id="dotfs" type="x-shader/x-fragment">
-      precision highp float;
-      precision highp vec3;
-      uniform vec4 color;
-      uniform sampler2D tex;
-      void main()
-      {
-          gl_FragColor = color * texture2D(tex, gl_PointCoord);
-      }
-    </script>
-
-    <script id="contourvs" type="x-shader/x-vertex">
+    
+    <script id="solidvs" type="x-shader/x-vertex">
       attribute vec4 Position;
       uniform mat4 modelview;
       uniform mat4 projection;
@@ -52,7 +28,7 @@
       }
     </script>
 
-    <script id="contourfs" type="x-shader/x-fragment">
+    <script id="solidfs" type="x-shader/x-fragment">
       precision highp float;
       precision highp vec3;
       uniform vec4 color;

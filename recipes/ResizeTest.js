@@ -1,4 +1,4 @@
-$(document).ready(function() {
+var main = function() {
 
   GIZA.init();
 
@@ -16,7 +16,7 @@ $(document).ready(function() {
     }
   };
 
-  var programs = GIZA.compilePrograms(shaders);
+  var programs = DEMO.compilePrograms(shaders);
   var numPoints = 64;
   var lineBuffer = gl.createBuffer();
 
@@ -33,13 +33,15 @@ $(document).ready(function() {
       theta += dtheta;
     }
 
+    // Note that it is MUCH more efficient to preallocate, and
+    // populate directly.
     var typedArray = new Float32Array(GIZA.flatten(coords));
 
     gl.bindBuffer(gl.ARRAY_BUFFER, lineBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, typedArray, gl.STATIC_DRAW);
-    GIZA.check('Error when trying to create VBO');
+    DEMO.check('Error when trying to create VBO');
 
-    gl.clearColor(0.9, 0.9, 0.9, 1.0);
+    gl.clearColor(0.61, 0.527, .397, 1.0);
     gl.lineWidth(1.5 * GIZA.pixelScale);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
@@ -48,12 +50,18 @@ $(document).ready(function() {
   var draw = function(currentTime) {
 
     gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.viewport(0, 0, GIZA.canvas.width, GIZA.canvas.height);
     
     var mv = new mat4();
     var proj = new mat4();
+
+    var MinWidth = 700;
+    var s = (MinWidth / GIZA.canvas.width) * GIZA.pixelScale;
+    s = (s < 1.0) ? 1.0 : s;
+
     proj.makeOrthographic(
-        -GIZA.aspect, +GIZA.aspect, // left right
-        -1, +1, // bottom top
+        -s * GIZA.aspect, s * GIZA.aspect, // left right
+        -s, +s, // bottom top
         0, 1);  // near far
 
     gl.bindBuffer(gl.ARRAY_BUFFER, lineBuffer);
@@ -89,4 +97,4 @@ $(document).ready(function() {
   init();
   draw(0);
 
-});
+};

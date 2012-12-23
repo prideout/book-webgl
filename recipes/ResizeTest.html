@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Circle Test</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Philip Rideout">
+    <link href="../recipes/css/style.css" rel="stylesheet">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/headjs/0.99/head.load.min.js" type="text/javascript"></script>
+  </head>
+  <body>
+    <h1>Resize Test</h1>
+    <div class="tagline">
+      Try widening your window to check the aspect ratio.
+    </div>
+    <canvas style="width:100%;height:360px">
+    </canvas>
+    <div id="button-bar">
+    </div>
+
+    <script id="simplevs" type="x-shader/x-vertex">
+      attribute vec4 Position;
+      uniform mat4 modelview;
+      uniform mat4 projection;
+      void main()
+      {
+          vec4 p = Position;
+          gl_Position = projection * modelview * p;
+      }
+    </script>
+
+    <script id="simplefs" type="x-shader/x-fragment">
+      precision highp float;
+      uniform vec4 color;
+      void main()
+      {
+          gl_FragColor = color;
+      }
+    </script>
+
+    <script>head.js("common.js");</script>
+  </body>
+</html>

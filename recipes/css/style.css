@@ -1,3 +1,5 @@
+@import url(http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css);
+@import url(http://fonts.googleapis.com/css?family=Candal);
 
 body {
     background: #f3f3f3;
@@ -37,6 +39,15 @@ a, a:visited, a:hover {
     color: #11a;
 }
 
+#button-bar > a {
+    background: #ccc;
+    padding: 5px;
+}
+
+#button-bar {
+    margin-top:10px;
+}
+
 a:hover {
     color: #55f;
 }
@@ -53,4 +64,9 @@ a.small {
 a.small:hover {
     margin-left: 15px;
     color: #730;
+}
+
+.tagline {
+    color:#700;
+    margin-bottom:10px;
 }
