@@ -1,4 +1,4 @@
-$(document).ready(function() {
+var main = function() {
 
   GIZA.init();
 
@@ -17,7 +17,7 @@ $(document).ready(function() {
     }
   };
 
-  var programs = GIZA.compilePrograms(shaders);
+  var programs = DEMO.compilePrograms(shaders);
 
   var buffers = {
     sphereCoords: gl.createBuffer(),
@@ -48,7 +48,7 @@ $(document).ready(function() {
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.wireframe);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, sphere.lines(), gl.STATIC_DRAW);
 
-    GIZA.check('Error when trying to create VBOs');
+    DEMO.check('Error when trying to create VBOs');
   }
 
   var draw = function(currentTime) {
@@ -56,9 +56,9 @@ $(document).ready(function() {
     gl.clear(gl.COLOR_BUFFER_BIT);
     
     var mv = (new mat4).lookAt(
-        new vec3(0,0,20), // eye
-        new vec3(0,0,0),  // target
-        new vec3(0,1,0)); // up
+      new vec3(0,0,20), // eye
+      new vec3(0,0,0),  // target
+      new vec3(0,1,0)); // up
 
     var proj = (new mat4).makePerspective(
       10,       // fov in degrees
@@ -97,11 +97,11 @@ $(document).ready(function() {
     gl.drawElements(gl.LINES, buffers.wireframe.lineCount, gl.UNSIGNED_SHORT, buffers.wireframe.lineCount*2)
 
     gl.disableVertexAttribArray(attribs.POSITION);
-    GIZA.check('Error during draw cycle');
+    DEMO.check('Error during draw cycle');
     window.requestAnimationFrame(draw, GIZA.canvas);
   }
 
   init();
   draw(0);
 
-});
+};

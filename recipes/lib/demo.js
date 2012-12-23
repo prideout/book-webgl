@@ -1,5 +1,6 @@
+DEMO = {}
 
-GIZA.check = function(msg) {
+DEMO.check = function(msg) {
   if (gl.getError() !== gl.NO_ERROR) {
     console.error(msg);
     return false;
@@ -7,7 +8,7 @@ GIZA.check = function(msg) {
   return true;
 };
 
-GIZA.loadTexture = function (filename, onLoaded) {
+DEMO.loadTexture = function (filename, onLoaded) {
     var tex;
     tex = gl.createTexture();
     tex.image = new Image();
@@ -18,26 +19,26 @@ GIZA.loadTexture = function (filename, onLoaded) {
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
       gl.bindTexture(gl.TEXTURE_2D, null);
-      GIZA.check('Error when loading texture');
+      DEMO.check('Error when loading texture');
       return onLoaded(tex);
     };
     return tex.image.src = filename;
 };
 
-GIZA.compilePrograms = function(shaders) {
+DEMO.compilePrograms = function(shaders) {
   var name, programs, shd;
   programs = {};
   for (name in shaders) {
     shd = shaders[name];
-    programs[name] = GIZA.compileProgram(shd.vs, shd.fs, shd.attribs);
+    programs[name] = DEMO.compileProgram(shd.vs, shd.fs, shd.attribs);
   }
   return programs;
 };
 
-GIZA.compileProgram = function(vNames, fNames, attribs) {
+DEMO.compileProgram = function(vNames, fNames, attribs) {
   var fShader, key, numUniforms, program, status, u, uniforms, vShader, value, _i, _len;
-  vShader = GIZA.compileShader(vNames, gl.VERTEX_SHADER);
-  fShader = GIZA.compileShader(fNames, gl.FRAGMENT_SHADER);
+  vShader = DEMO.compileShader(vNames, gl.VERTEX_SHADER);
+  fShader = DEMO.compileShader(fNames, gl.FRAGMENT_SHADER);
   program = gl.createProgram();
   gl.attachShader(program, vShader);
   gl.attachShader(program, fShader);
@@ -66,7 +67,7 @@ GIZA.compileProgram = function(vNames, fNames, attribs) {
   return program;
 };
 
-GIZA.compileShader = function(names, type) {
+DEMO.compileShader = function(names, type) {
   var handle, id, source, status;
   source = ((function() {
     var _i, _len, _results;

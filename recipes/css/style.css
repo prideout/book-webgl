@@ -1,3 +1,5 @@
+@import url(http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css);
+@import url(http://fonts.googleapis.com/css?family=Candal);
 
 body {
     background: #f3f3f3;
@@ -35,6 +37,15 @@ ul {
 a, a:visited, a:hover {
     text-decoration: none;
     color: #11a;
+}
+
+#button-bar > a {
+    background: #ccc;
+    padding: 5px;
+}
+
+#button-bar {
+    margin-top:10px;
 }
 
 a:hover {

@@ -1,4 +1,4 @@
-$(document).ready(function() {
+var main = function() {
 
   GIZA.init();
 
@@ -16,7 +16,7 @@ $(document).ready(function() {
     }
   };
 
-  var programs = GIZA.compilePrograms(shaders);
+  var programs = DEMO.compilePrograms(shaders);
   var numPoints = 64;
   var lineBuffer = gl.createBuffer();
 
@@ -39,7 +39,7 @@ $(document).ready(function() {
 
     gl.bindBuffer(gl.ARRAY_BUFFER, lineBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, typedArray, gl.STATIC_DRAW);
-    GIZA.check('Error when trying to create VBO');
+    DEMO.check('Error when trying to create VBO');
 
     gl.clearColor(0.61, 0.527, .397, 1.0);
     gl.lineWidth(1.5 * GIZA.pixelScale);
@@ -97,4 +97,4 @@ $(document).ready(function() {
   init();
   draw(0);
 
-});
+};

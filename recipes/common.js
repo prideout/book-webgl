@@ -1,0 +1,30 @@
+
+// To find the "main" function definition, replace the HTML extension with JS.
+var thisPage = document.URL;
+var mainScript = thisPage.slice(0,-4) + "js"
+
+// Use HeadJS to load scripts asynchronously, but execute them synchronously.
+head.js(
+  "../giza/Giza.js",
+  "../giza/Vector.js",
+  "../giza/Polygon.js",
+  "../giza/Surface.js",
+  //"../giza/Matrix.js",
+  "../recipes/lib/demo.js",
+  "../recipes/lib/stats.min.js",
+  "http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js",
+  "http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js",
+  mainScript,
+  function() {
+    $(document).ready(main);
+    var github = "https://github.com/prideout/book-webgl/blob/master/recipes";
+    var slash = mainScript.lastIndexOf("/");
+    var url = github + mainScript.slice(slash, -2);
+    var index = "../recipes/index.html";
+    $('#button-bar').html([
+      "<a href='" + index + "'>recipe index</a>  &nbsp;&nbsp;&nbsp; ",
+      "<a href='" + url + "html'>view HTML source</a>  &nbsp;&nbsp;&nbsp; ",
+      "<a href='" + url + "js'>view JavaScript source</a>",
+    ].join('\n'));
+  }
+);

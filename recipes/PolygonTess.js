@@ -1,4 +1,4 @@
-$(document).ready(function() {
+var main = function() {
 
   GIZA.init();
 
@@ -27,7 +27,7 @@ $(document).ready(function() {
     }
   };
 
-  var programs = GIZA.compilePrograms(shaders);
+  var programs = DEMO.compilePrograms(shaders);
 
   var contourPts = [];
   var holePts = [];
@@ -39,7 +39,7 @@ $(document).ready(function() {
   };
   var pointCount, outerPointCount, triangleCount;
 
-  GIZA.loadTexture('media/PointSprite.png', function(i) {
+  DEMO.loadTexture('media/PointSprite.png', function(i) {
     spriteTexture = i;
     draw(0);
   });
@@ -69,7 +69,7 @@ $(document).ready(function() {
     var typedArray = new Float32Array(coordsArray);
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.coords);
     gl.bufferData(gl.ARRAY_BUFFER, typedArray, gl.STATIC_DRAW);
-    GIZA.check('Error when trying to create points VBO');
+    DEMO.check('Error when trying to create points VBO');
 
     // Run ear clipping
     var triangles = GIZA.tessellate(
@@ -84,7 +84,7 @@ $(document).ready(function() {
     typedArray = new Uint16Array(GIZA.flatten(triangles));
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.triangles);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, typedArray, gl.STATIC_DRAW);
-    GIZA.check('Error when trying to create triangle VBO');
+    DEMO.check('Error when trying to create triangle VBO');
 
     // Triangle outlines
     var outlines = [];
@@ -100,7 +100,7 @@ $(document).ready(function() {
     typedArray = new Uint16Array(outlines);
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.lines);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, typedArray, gl.STATIC_DRAW);
-    GIZA.check('Error when trying to create skeleton VBO');
+    DEMO.check('Error when trying to create skeleton VBO');
   }
 
   var draw = function(currentTime) {
@@ -158,10 +158,10 @@ $(document).ready(function() {
 
     gl.disableVertexAttribArray(attribs.POSITION);
 
-    GIZA.check('Error during draw cycle');
+    DEMO.check('Error during draw cycle');
     window.requestAnimationFrame(draw, GIZA.canvas);
   }
 
   init();
 
-});
+};

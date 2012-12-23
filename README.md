@@ -1,17 +1,16 @@
 # master
 
-- I think giza/WebGL should move into a DEMO layer (out of giza)
-
 - ch 1 & 2 tangling (please, no fresnel buddha or king tut stuff yet)
   ^-- really need to hammer out the vector math stuff!
   
 - Add lighting to ParametricSurf
 
-- Clean stuff up and invite dbanks as a collaborator
+- Invite dbanks as a collaborator
 
 # later
 
-- GIZA.Turtle for implementing Ankh:
+- GIZA.Turtle2D for implementing Ankh in PolygonTess and
+  GIZA.Turtle3D with GIZA.Tube for implementing Knots
 
 https://github.com/bseth99/pathjs
 http://bseth99.github.com/pathjs/demo/path-generators.html

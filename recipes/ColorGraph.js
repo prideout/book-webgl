@@ -1,4 +1,4 @@
-$(document).ready(function() {
+var main = function() {
 
   var stats = new Stats();
   stats.setMode(1); // 0: fps, 1: ms
@@ -22,7 +22,7 @@ $(document).ready(function() {
     COLOR: 1
   };
 
-  var programs = GIZA.compilePrograms({
+  var programs = DEMO.compilePrograms({
     simple: {
       vs: ['simple-vs'],
       fs: ['solid-color'],
@@ -70,7 +70,7 @@ $(document).ready(function() {
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.wireframe);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, sinc.lines(), gl.STATIC_DRAW);
 
-    GIZA.check('Error when trying to create VBOs');
+    DEMO.check('Error when trying to create VBOs');
   }
 
   var draw = function(currentTime) {
@@ -151,7 +151,7 @@ $(document).ready(function() {
 
     stats.end();
 
-    if (GIZA.check('Error during draw cycle')) {
+    if (DEMO.check('Error during draw cycle')) {
       window.requestAnimationFrame(draw, GIZA.canvas);
     }
   }
@@ -159,4 +159,4 @@ $(document).ready(function() {
   init();
   draw(0);
 
-});
+};

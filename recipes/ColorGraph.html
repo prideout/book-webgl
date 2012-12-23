@@ -2,47 +2,27 @@
 <html lang="en">
   <head>
     <title>ColorGraph</title>
-    <link href="http://fonts.googleapis.com/css?family=Candal" rel="stylesheet" type="text/css">
     <meta charset="utf-8">
     <meta name="author" content="Philip Rideout">
     <link href="../recipes/css/style.css" rel="stylesheet">
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
-    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/headjs/0.99/head.load.min.js" type="text/javascript"></script>
   </head>
   <body>
-
     <h1>Color Graph</h1>
-
-    <div class="tagline">You can choose to evaluate this function in GLSL or in JavaScript.  Choose wisely.</div>
-
+    <div class="tagline">
+      You can choose to evaluate this function in GLSL or in JavaScript.  Choose wisely.
+    </div>
     <div id="radio" style="margin-bottom:10px">
-	<input type="radio" id="glsl" name="radio" checked="checked"/><label for="glsl">glsl</label>
-	<input type="radio" id="js" name="radio"/><label for="js">js</label>
+	  <input type="radio" id="glsl" name="radio" checked="checked"/>
+      <label for="glsl">glsl</label>
+	  <input type="radio" id="js" name="radio"/>
+      <label for="js">js</label>
     </div>
 
-    <!-- 16:9 aspect ratio; consistent with 1080p -->
     <canvas style="width:640px;height:360px;">
     </canvas>
-
-    <div>
-      <a href="../recipes/index.html">
-        <img id="home-button"
-             src="../recipes/media/giza.svg"
-             alt="home">
-      </a>
+    <div id="button-bar">
     </div>
-
-    <!--script src="../build/giza.min.js"></script-->
-    <script src="../giza/Giza.js"></script>
-    <script src="../giza/Vector.js"></script>
-    <script src="../giza/Polygon.js"></script>
-    <script src="../giza/Surface.js"></script>
-    <!--script src="../giza/Matrix.js"></script-->
-    <script src="../giza/WebGL.js"></script>
-
-    <script src="./ColorGraph.js"></script>
-    <script src="../recipes/lib/stats.min.js"></script>
 
     <script id="simple-vs" type="x-shader/x-vertex">
       attribute vec4 Position;
@@ -96,5 +76,6 @@
       }
     </script>
 
+    <script>head.js("common.js");</script>
   </body>
 </html>
