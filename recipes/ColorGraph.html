@@ -14,10 +14,11 @@
 
     <h1>Color Graph</h1>
 
+    <div class="tagline">You can choose to evaluate this function in GLSL or in JavaScript.  Choose wisely.</div>
+
     <div id="radio" style="margin-bottom:10px">
 	<input type="radio" id="glsl" name="radio" checked="checked"/><label for="glsl">glsl</label>
 	<input type="radio" id="js" name="radio"/><label for="js">js</label>
-        <span style="margin-left:10px;color:#700"> <<  Click to see the performance difference</span>
     </div>
 
     <!-- 16:9 aspect ratio; consistent with 1080p -->
@@ -41,6 +42,7 @@
     <script src="../giza/WebGL.js"></script>
 
     <script src="./ColorGraph.js"></script>
+    <script src="../recipes/lib/stats.min.js"></script>
 
     <script id="simple-vs" type="x-shader/x-vertex">
       attribute vec4 Position;
@@ -66,7 +68,6 @@
       uniform float height;
       void main(void)
       {
-          vColor = vec4(1, 0, 0, 1);
           vec4 p = Position;
 
           float x = p.x * interval / width;
@@ -74,6 +75,12 @@
           float r = sqrt(x*x + y*y);
           if (r <= 0.0001) p.z = height; else
           p.z = height * sin(r) / r;
+
+          float v = min(1.0, abs(p.z * 4.0));
+          vColor.r = v;
+          vColor.g = 0.5;
+          vColor.b = 1.0 - v;
+          vColor.a = 0.25;
 
           gl_Position = projection * modelview * p;
       }

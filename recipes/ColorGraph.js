@@ -1,5 +1,12 @@
 $(document).ready(function() {
 
+  var stats = new Stats();
+  stats.setMode(1); // 0: fps, 1: ms
+  stats.domElement.style.position = 'absolute';
+  stats.domElement.style.right = '0px';
+  stats.domElement.style.top = '0px';
+  document.body.appendChild( stats.domElement );  
+
   // The mode variable is either "glsl" or "js".  It specifies if
   // evaluation of the sinc function occurs on the CPU or on the GPU.
   var mode = $("input:checked")[0].id;
@@ -41,7 +48,7 @@ $(document).ready(function() {
   var interval = 50;
   var width = 20;
   var maxHeight = 2;
-  var rowTess = 100;
+  var rowTess = 120;
   var colTess = 500;
   var surfFlags = GIZA.surfaceFlags.POSITIONS | GIZA.surfaceFlags.COLORS;
 
@@ -68,6 +75,7 @@ $(document).ready(function() {
 
   var draw = function(currentTime) {
     
+    stats.begin();
     gl.clear(gl.COLOR_BUFFER_BIT);
     
     var mv = (new mat4).lookAt(
@@ -117,7 +125,7 @@ $(document).ready(function() {
         colorView[colorIndex+0] = v;     // red
         colorView[colorIndex+1] = 128;   // grn
         colorView[colorIndex+2] = 255-v; // blu
-        colorView[colorIndex+3] = 96;    // alp
+        colorView[colorIndex+3] = 64;    // alp
         colorIndex += 16;
         coordIndex += 4;
       }
@@ -140,6 +148,8 @@ $(document).ready(function() {
 
     gl.disableVertexAttribArray(attribs.POSITION);
     gl.disableVertexAttribArray(attribs.COLOR);
+
+    stats.end();
 
     if (GIZA.check('Error during draw cycle')) {
       window.requestAnimationFrame(draw, GIZA.canvas);

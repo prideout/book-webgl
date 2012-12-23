@@ -1,17 +1,15 @@
 # master
 
-- Copy color computation from JS to GLSL.
-
-- Frame rate counter in the HTML; disable vsync?
-
 - I think giza/WebGL should move into a DEMO layer (out of giza)
 
 - ch 1 & 2 tangling (please, no fresnel buddha or king tut stuff yet)
   ^-- really need to hammer out the vector math stuff!
+  
+- Add lighting to ParametricSurf
+
+- Clean stuff up and invite dbanks as a collaborator
 
 # later
-
-- Screenshots
 
 - GIZA.Turtle for implementing Ankh:
 
@@ -46,7 +44,8 @@ http://code.google.com/p/explorercanvas/source/browse/trunk/excanvas.js
     ctx.bezierCurveTo(120.51133,56.48072,130.76056,50.025214,145.81951,50.025214);
     ctx.closePath();
 
-- Add lighting to ParametricSurf
+- Screenshots
+
 - PolygonTess
   - degenerate triangle
   - Add an Ankh. (wikipedia page has a nice SVG)

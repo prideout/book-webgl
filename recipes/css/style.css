@@ -54,3 +54,8 @@ a.small:hover {
     margin-left: 15px;
     color: #730;
 }
+
+.tagline {
+    color:#700;
+    margin-bottom:10px;
+}
