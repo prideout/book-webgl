@@ -1,18 +1,44 @@
+DEMO = {}
 
-GIZA.compilePrograms = function(shaders) {
+DEMO.check = function(msg) {
+  if (gl.getError() !== gl.NO_ERROR) {
+    console.error(msg);
+    return false;
+  }
+  return true;
+};
+
+DEMO.loadTexture = function (filename, onLoaded) {
+    var tex;
+    tex = gl.createTexture();
+    tex.image = new Image();
+    tex.image.onload = function() {
+      gl.bindTexture(gl.TEXTURE_2D, tex);
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, tex.image);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.bindTexture(gl.TEXTURE_2D, null);
+      DEMO.check('Error when loading texture');
+      return onLoaded(tex);
+    };
+    return tex.image.src = filename;
+};
+
+DEMO.compilePrograms = function(shaders) {
   var name, programs, shd;
   programs = {};
   for (name in shaders) {
     shd = shaders[name];
-    programs[name] = GIZA.compileProgram(shd.vs, shd.fs, shd.attribs);
+    programs[name] = DEMO.compileProgram(shd.vs, shd.fs, shd.attribs);
   }
   return programs;
 };
 
-GIZA.compileProgram = function(vNames, fNames, attribs) {
+DEMO.compileProgram = function(vNames, fNames, attribs) {
   var fShader, key, numUniforms, program, status, u, uniforms, vShader, value, _i, _len;
-  vShader = GIZA.compileShader(vNames, gl.VERTEX_SHADER);
-  fShader = GIZA.compileShader(fNames, gl.FRAGMENT_SHADER);
+  vShader = DEMO.compileShader(vNames, gl.VERTEX_SHADER);
+  fShader = DEMO.compileShader(fNames, gl.FRAGMENT_SHADER);
   program = gl.createProgram();
   gl.attachShader(program, vShader);
   gl.attachShader(program, fShader);
@@ -41,7 +67,7 @@ GIZA.compileProgram = function(vNames, fNames, attribs) {
   return program;
 };
 
-GIZA.compileShader = function(names, type) {
+DEMO.compileShader = function(names, type) {
   var handle, id, source, status;
   source = ((function() {
     var _i, _len, _results;

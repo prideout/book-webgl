@@ -1,19 +1,20 @@
 var GIZA = GIZA || { REVISION : '0' };
 var gl;
 
-GIZA.check = function(msg) {
-  if (gl.getError() !== gl.NO_ERROR) {
-    console.error(msg);
-  }
-};
+GIZA.init = function(canvasElement) {
 
-GIZA.init = function() {
+  var canvas;
+  if (canvasElement == null) {
+    canvas = document.getElementsByTagName('canvas')[0];
+  }
+
   var pixelScale = window.devicePixelRatio || 1;
-  var width = parseInt( $('canvas').css('width'));
-  var height = parseInt( $('canvas').css('height'));
+  var style = window.getComputedStyle(canvas);
+  var width = parseInt( style.width );
+  var height = parseInt( style.height );
+
   var aspect = width / height;
 
-  var canvas = $('canvas')[0];
   canvas.width = width * pixelScale;
   canvas.height = height * pixelScale;
   gl = canvas.getContext(
@@ -21,34 +22,26 @@ GIZA.init = function() {
     {antialias: true});
 
   if (!gl) {
-    var msg = "Alas, your browser does not support WebGL."
-    var html = "<p class='error'>" + msg + "</p>";
-    $('canvas').replaceWith(html);
+    var msg = document.createElement('p');
+    msg.classList.add('error');
+    msg.innerHTML = "Alas, your browser does not support WebGL.";
+    canvas.parentNode.replaceChild(msg, canvas);
     return;
   }
 
   GIZA.pixelScale = pixelScale;
   GIZA.canvas = canvas;
   GIZA.aspect = aspect;
+
+  window.onresize = function() {
+    style = window.getComputedStyle(canvas);
+    width = parseInt( style.width );
+    height = parseInt( style.height );
+    GIZA.aspect = width / height;
+    canvas.width = width * pixelScale;
+    canvas.height = height * pixelScale;
+  };
 }
-
-
-GIZA.loadTexture = function (filename, onLoaded) {
-    var tex;
-    tex = gl.createTexture();
-    tex.image = new Image();
-    tex.image.onload = function() {
-      gl.bindTexture(gl.TEXTURE_2D, tex);
-      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, tex.image);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-      gl.bindTexture(gl.TEXTURE_2D, null);
-      GIZA.check('Error when loading texture');
-      return onLoaded(tex);
-    };
-    return tex.image.src = filename;
-};
 
 GIZA.flatten = function(array) {
     var element, flattened, _i, _len;
