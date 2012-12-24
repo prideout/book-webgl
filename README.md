@@ -1,11 +1,11 @@
 # master
 
-- Test nodejs server locally before debugging nodejitsu
-
 - ch 1 & 2 tangling (please, no fresnel buddha or king tut stuff yet)
   ^-- really need to hammer out the vector math stuff!
   
 - Add lighting to ParametricSurf
+
+- Pay for nodejitsu -- maybe it'll get faster
 
 - Invite dbanks as a collaborator
 
