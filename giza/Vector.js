@@ -1847,9 +1847,9 @@ mat4.prototype = {
 		y.cross( z, x );
 
 
-		te[0] = x.x; te[4] = y.x; te[8] = z.x;
-		te[1] = x.y; te[5] = y.y; te[9] = z.y;
-		te[2] = x.z; te[6] = y.z; te[10] = z.z;
+		te[0] = x.x; te[4] = y.x; te[8] = z.x;  te[12] =  x.dot(eye);
+		te[1] = x.y; te[5] = y.y; te[9] = z.y;  te[13] =  y.dot(eye);
+		te[2] = x.z; te[6] = y.z; te[10] = z.z; te[14] = -z.dot(eye);
 
 		return this;
 
