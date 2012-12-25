@@ -24,8 +24,11 @@ head.ready(function() {
   var url = github + mainScript.slice(slash, -2);
   var index = "../recipes/index.html";
   $('#button-bar').html([
-    "<a href='" + index + "'>recipe index</a>  &nbsp;&nbsp;&nbsp; ",
-    "<a href='" + url + "html'>view HTML source</a>  &nbsp;&nbsp;&nbsp; ",
+    "<a href='" + index + "'>go to recipe list</a>",
+    "<a href='" + url + "html'>view HTML source</a>",
     "<a href='" + url + "js'>view JavaScript source</a>",
   ].join('\n'));
+
+  $("a").button()
+
 });
