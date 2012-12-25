@@ -39,8 +39,6 @@ var main = function() {
 
   var init = function() {
 
-    // Goldenrod against Mighnight blue?
-    // gl.clearColor(255, 209, 54, 1); // goldenrod
     gl.clearColor(34 / 255, 74 / 255, 116 / 255, 1);
     gl.enable(gl.DEPTH_TEST);
 
@@ -86,7 +84,7 @@ var main = function() {
     var proj = (new mat4).makePerspective(
       10,       // fov in degrees
       GIZA.aspect,
-      3, 20);   // near and far
+      3, 200);   // near and far
 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.wireframe)
     gl.enableVertexAttribArray(attribs.POSITION);
@@ -95,11 +93,15 @@ var main = function() {
     var program = programs.solid;
     gl.useProgram(program);
     gl.uniformMatrix4fv(program.projection, false, proj.elements);
+    gl.uniform4f(program.lightPosition, 0, 0, 1, 1);
+    gl.uniform3f(program.ambientMaterial, 0.2, 0.1, 0.1);
+    gl.uniform4f(program.diffuseMaterial, 1, 209/255, 54/255, 1);
+    gl.uniform3f(program.specularMaterial, 1, 1, 1);
 
     var theta = currentTime / 1000;
     var previous = mv.clone();
     mv.translate(new vec3(-1.5,0,0));
-    mv.rotateZ(theta);
+    mv.rotateY(theta);
 
     gl.uniformMatrix4fv(program.modelview, false, mv.elements);
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.sphereCoords);
@@ -109,7 +111,7 @@ var main = function() {
     
     mv = previous;
     mv.translate(new vec3(1.5,0,0));
-    mv.rotateZ(theta);
+    mv.rotateY(theta);
 
     gl.uniformMatrix4fv(program.modelview, false, mv.elements);
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.torusCoords);

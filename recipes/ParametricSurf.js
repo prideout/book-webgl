@@ -79,10 +79,8 @@ var main = function() {
     gl.uniformMatrix4fv(program.modelview, false, mv.elements);
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.sphereCoords);
     gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 12, 0);
-    gl.uniform4f(program.color, 0.5, 0, 0, 0.75);
-    gl.drawElements(gl.LINES, buffers.wireframe.lineCount, gl.UNSIGNED_SHORT, 0)
-    gl.uniform4f(program.color, 0.61, 0.527, .397, 0.75);
-    gl.drawElements(gl.LINES, buffers.wireframe.lineCount, gl.UNSIGNED_SHORT, buffers.wireframe.lineCount*2)
+    gl.uniform4f(program.color, 0, 0, 0, 0.75);
+    gl.drawElements(gl.LINES, 2 * buffers.wireframe.lineCount, gl.UNSIGNED_SHORT, 0)
     
     mv = previous;
     mv.translate(new vec3(1.5,0,0));
@@ -91,10 +89,7 @@ var main = function() {
     gl.uniformMatrix4fv(program.modelview, false, mv.elements);
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.torusCoords);
     gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 12, 0);
-    gl.uniform4f(program.color, 0.5, 0, 0, 0.75);
-    gl.drawElements(gl.LINES, buffers.wireframe.lineCount, gl.UNSIGNED_SHORT, 0)
-    gl.uniform4f(program.color, 0.61, 0.527, .397, 0.75);
-    gl.drawElements(gl.LINES, buffers.wireframe.lineCount, gl.UNSIGNED_SHORT, buffers.wireframe.lineCount*2)
+    gl.drawElements(gl.LINES, 2 * buffers.wireframe.lineCount, gl.UNSIGNED_SHORT, 0)
 
     gl.disableVertexAttribArray(attribs.POSITION);
     DEMO.check('Error during draw cycle');
