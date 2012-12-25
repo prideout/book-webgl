@@ -63,11 +63,14 @@ http://code.google.com/p/explorercanvas/source/browse/trunk/excanvas.js
 
 # Notes
 
-Alpha compositing with canvas.  A of ClearColor matters!!
+Alpha compositing with canvas.  Alpha of ClearColor matters!!
 
 We need to add a section somewhere for lost context stuff
 http://blog.xeolabs.com/handling-a-lost-webgl-context-in-scenejs
 WEBKIT_WEBGL_lose_context
+
+How to capture WebGL/Canvas by writing out PNGs to a sandboxed filesystem
+https://gist.github.com/4370822
 
 For chapter 11:
 http://jster.net/blog/webgl-3d-engines-and-tools#.UNKaGonjk5s
