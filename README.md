@@ -63,6 +63,8 @@ http://code.google.com/p/explorercanvas/source/browse/trunk/excanvas.js
 
 # Notes
 
+Immediately-Invoked Function Expression 
+
 Alpha compositing with canvas.  Alpha of ClearColor matters!!
 
 We need to add a section somewhere for lost context stuff

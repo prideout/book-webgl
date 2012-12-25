@@ -5,7 +5,31 @@
     <link href="http://fonts.googleapis.com/css?family=Candal" rel="stylesheet" type="text/css">
     <meta charset="utf-8">
     <meta name="author" content="Philip Rideout">
-    <link  href="../recipes/css/style.css" rel="stylesheet">
+    <link href="../recipes/css/style.css" rel="stylesheet">
+    <style>
+        a, a:visited, a:hover {
+            text-decoration: none;
+            color: #11a;
+        }
+
+        a:hover {
+            color: #55f;
+        }
+
+        a.big {
+            font: 32px 'Candal', sans-serif;
+        }
+
+        a.small {
+            margin-left: 15px;
+            color: #662;
+        }
+
+        a.small:hover {
+            margin-left: 15px;
+            color: #730;
+        }
+    </style>
     <script src="../recipes/lib/ejs_production.js" type="text/javascript">
     </script>
     <script>
@@ -15,7 +39,8 @@
             ResizeTest: "Resize Test",
             PolygonTess: "Polygon Tessellation",
             ColorGraph: "Color Graph",
-            ParametricSurf: "Parametric Surface"
+            ParametricSurf: "Parametric Surface",
+            BasicLighting: "Basic Lighting"
         };
         var ejs = new EJS({element: "recipe-template"});
         ejs.update("recipe-list", {recipes: data});

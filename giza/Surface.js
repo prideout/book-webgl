@@ -47,90 +47,105 @@ GIZA.equations.torus = function(minor, major) {
 };
 
 GIZA.surfaceFlags = {
-    POSITIONS: 1,
-    COLORS: 2,
-    WRAP_COLS: 4,
-    WRAP_ROWS: 8
+  POSITIONS: 1,
+  COLORS: 2,
+  NORMALS: 4,
+  WRAP_COLS: 8,
+  WRAP_ROWS: 16
 };
 
 GIZA.surface = function(equation, rows, cols, flags) {
 
-    var f = GIZA.surfaceFlags;
-    if (flags == null) {
-        flags = f.POSITIONS | f.WRAP_COLS | f.WRAP_ROWS;
-    }
+  var f = GIZA.surfaceFlags;
+  if (flags == null) {
+    flags = f.POSITIONS | f.WRAP_COLS | f.WRAP_ROWS;
+  }
 
-    // rows and cols refer to the number of quads or "cells" in the mesh.
-    //
-    // We always emit vertices for both endpoints of the interval, even
-    // for wrapping meshes (for texture coordinate continuity).
-    //
-    // WRAP_COLS and WRAP_ROWS exist purely to prevent overdraw of
-    // wireframe lines along the seam.
+  // rows and cols refer to the number of quads or "cells" in the mesh.
+  //
+  // We always emit vertices for both endpoints of the interval, even
+  // for wrapping meshes (for texture coordinate continuity).
+  //
+  // WRAP_COLS and WRAP_ROWS exist purely to prevent overdraw of
+  // wireframe lines along the seam.
 
-    var wrapCols = flags & GIZA.surfaceFlags.WRAP_COLS;
-    var wrapRows = flags & GIZA.surfaceFlags.WRAP_ROWS;
-    var padding  = flags & GIZA.surfaceFlags.COLORS;
+  var wrapCols = flags & GIZA.surfaceFlags.WRAP_COLS;
+  var wrapRows = flags & GIZA.surfaceFlags.WRAP_ROWS;
+  var colors   = flags & GIZA.surfaceFlags.COLORS;
+  var normals  = flags & GIZA.surfaceFlags.NORMALS;
 
-    var pointCount = (rows + 1) * (cols + 1);
-    var triangleCount = 2 * rows * cols;
+  var pointCount = (rows + 1) * (cols + 1);
+  var triangleCount = 2 * rows * cols;
 
-    var colLines = wrapCols ? cols : (cols+1);
-    var rowLines = wrapRows ? rows : (rows+1);
-    var lineCount = (colLines * rows) + (rowLines * cols);
-    var bytesPerPoint = 4 * (padding ? 4 : 3);
+  var colLines = wrapCols ? cols : (cols+1);
+  var rowLines = wrapRows ? rows : (rows+1);
+  var lineCount = (colLines * rows) + (rowLines * cols);
 
-    return {
-        "pointCount": function () { return pointCount; },
-        "lineCount": function () { return lineCount; },
-        "points": function () {
-            if (pointCount > 65535) {
-              console.error("Too many points for 16-bit indices");
-            }
-            var coordArray = new Float32Array(pointCount * bytesPerPoint / 4);
-            var coordIndex = 0;
-            var du = 1.0 / cols;
-            var dv = 1.0 / rows;
-            var v = 0;
-            for (var row = 0; row < rows + 1; row++) {
-                var u = 0;
-                for (var col = 0; col < cols + 1; col++) {
-                    var p = equation(u, v);
-                    coordArray[coordIndex++] = p.x;
-                    coordArray[coordIndex++] = p.y;
-                    coordArray[coordIndex++] = p.z;
-                    if (padding) {
-                      coordIndex++;
-                    }
-                    u = (col == cols) ? 1.0 : (u + du);
-                }
-                v = (row == rows) ? 1.0 : (v + dv);
-            }
-            return coordArray;
-        },
-        "lines": function () {
-            var lineArray = new Uint16Array(lineCount * 2);
-            var lineIndex = 0;
-            var pointsPerRow = cols+1;
-            var pointsPerCol = rows+1;
-            for (var row = 0; row < rowLines; row++) {
-                for (var col = 0; col < cols; col++, lineIndex += 2) {
-                    lineArray[lineIndex] = row * pointsPerRow + col;
-                    lineArray[lineIndex+1] = lineArray[lineIndex] + 1;
-                }
-            }
-            for (var row = 0; row < rows; row++) {
-                for (var col = 0; col < colLines; col++, lineIndex += 2) {
-                    lineArray[lineIndex] = row * pointsPerRow + col;
-                    lineArray[lineIndex+1] = lineArray[lineIndex] + pointsPerRow;
-                }
-            }
-            return lineArray;
-        },
-        "triangles": function () {
-            var triangles = [];
-            // TODO
-            return triangles;
+  var numFloats = 3;
+  if (normals) {
+    numFloats += 3;
+  }
+  if (colors) {
+    numFloats++;
+  }
+  var bytesPerPoint = 4 * numFloats;
+
+  return {
+    "pointCount": function () { return pointCount; },
+    "lineCount": function () { return lineCount; },
+    "points": function () {
+      if (pointCount > 65535) {
+        console.error("Too many points for 16-bit indices");
+      }
+      var coordArray = new Float32Array(pointCount * bytesPerPoint / 4);
+      var coordIndex = 0;
+      var du = 1.0 / cols;
+      var dv = 1.0 / rows;
+      var v = 0;
+      for (var row = 0; row < rows + 1; row++) {
+        var u = 0;
+        for (var col = 0; col < cols + 1; col++) {
+          var p = equation(u, v);
+          coordArray[coordIndex++] = p.x;
+          coordArray[coordIndex++] = p.y;
+          coordArray[coordIndex++] = p.z;
+          if (normals) {
+            coordArray[coordIndex++] = p.x;
+            coordArray[coordIndex++] = p.y;
+            coordArray[coordIndex++] = p.z;
+          }
+          if (colors) {
+            coordIndex++;
+          }
+          u = (col == cols) ? 1.0 : (u + du);
         }
-    };
+        v = (row == rows) ? 1.0 : (v + dv);
+      }
+      return coordArray;
+    },
+    "lines": function () {
+      var lineArray = new Uint16Array(lineCount * 2);
+      var lineIndex = 0;
+      var pointsPerRow = cols+1;
+      var pointsPerCol = rows+1;
+      for (var row = 0; row < rowLines; row++) {
+        for (var col = 0; col < cols; col++, lineIndex += 2) {
+          lineArray[lineIndex] = row * pointsPerRow + col;
+          lineArray[lineIndex+1] = lineArray[lineIndex] + 1;
+        }
+      }
+      for (var row = 0; row < rows; row++) {
+        for (var col = 0; col < colLines; col++, lineIndex += 2) {
+          lineArray[lineIndex] = row * pointsPerRow + col;
+          lineArray[lineIndex+1] = lineArray[lineIndex] + pointsPerRow;
+        }
+      }
+      return lineArray;
+    },
+    "triangles": function () {
+      var triangles = [];
+      // TODO
+      return triangles;
+    }
+  };
 };
