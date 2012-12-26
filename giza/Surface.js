@@ -110,9 +110,12 @@ GIZA.surface = function(equation, rows, cols, flags) {
           coordArray[coordIndex++] = p.y;
           coordArray[coordIndex++] = p.z;
           if (normals) {
-            coordArray[coordIndex++] = p.x;
-            coordArray[coordIndex++] = p.y;
-            coordArray[coordIndex++] = p.z;
+            var p2 = (new vec3).sub(equation(u+du, v), p);
+            var p1 = (new vec3).sub(equation(u, v+dv), p);
+            var n = (new vec3).cross(p1, p2).normalize();
+            coordArray[coordIndex++] = n.x;
+            coordArray[coordIndex++] = n.y;
+            coordArray[coordIndex++] = n.z;
           }
           if (colors) {
             coordIndex++;
