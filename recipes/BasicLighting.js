@@ -8,7 +8,6 @@ var main = function() {
 
   $("#checks").buttonset().change(function() {
     comps = getComps();
-    console.info(comps);
   });
 
   GIZA.init();
@@ -43,7 +42,7 @@ var main = function() {
     gl.enable(gl.DEPTH_TEST);
     gl.enable(gl.CULL_FACE);
 
-    var lod = 50;
+    var lod = 100;
 
     var flags = function() {
       var f = GIZA.surfaceFlags;
@@ -94,10 +93,32 @@ var main = function() {
     var program = programs.solid;
     gl.useProgram(program);
     gl.uniformMatrix4fv(program.projection, false, proj.elements);
-    gl.uniform4f(program.lightPosition, 0, 0, 1, 1);
-    gl.uniform3f(program.ambientMaterial, 0.2, 0.1, 0.1);
-    gl.uniform4f(program.diffuseMaterial, 1, 209/255, 54/255, 1);
-    gl.uniform3f(program.specularMaterial, 1, 1, 1);
+    gl.uniform4f(program.lightPosition, 0.75, .25, 1, 1);
+
+    if (comps.indexOf("ambient") > -1) {
+      gl.uniform3f(program.ambientMaterial, 0.2, 0.1, 0.1);
+    } else {
+      gl.uniform3f(program.ambientMaterial, 0, 0, 0);
+    }
+
+    if (comps.indexOf("diffuse") > -1) {
+      gl.uniform4f(program.diffuseMaterial, 1, 209/255, 54/255, 1);
+    } else {
+      gl.uniform4f(program.diffuseMaterial, 0, 0, 0, 1);
+    }
+
+    if (comps.indexOf("specular") > -1) {
+      gl.uniform3f(program.specularMaterial, 0.8, 0.8, 0.7);
+      gl.uniform1f(program.shininess, 180.0);
+    } else {
+      gl.uniform3f(program.specularMaterial, 0, 0, 0);
+    }
+
+    if (comps.indexOf("fresnel") > -1) {
+      gl.uniform1f(program.fresnel, 0.125);
+    } else {
+      gl.uniform1f(program.fresnel, 0);
+    }
 
     var theta = currentTime / 1000;
     var previous = mv.clone();

@@ -13,13 +13,15 @@
       Click to toggle the different lighting components.
     </div>
     <div id="checks" class="customui">
-	  <input type="checkbox" id="ambient" name="radio" checked="checked" />
+	  <input type="checkbox" id="ambient" name="radio"  />
       <label for="ambient">
         Ambient
-      </label><input type="checkbox" id="diffuse" name="radio" checked="checked" /><label for="diffuse">
+      </label><input type="checkbox" id="diffuse" name="radio" /><label for="diffuse">
         Diffuse
       </label><input type="checkbox" id="specular" name="radio" /><label for="specular">
         Specular
+      </label><input type="checkbox" id="fresnel" name="radio" checked="checked" /><label for="fresnel">
+        Fresnel
       </label>
     </div>
     <canvas style="width:640;height:360px">
@@ -31,11 +33,13 @@
       attribute vec4 Position;
       attribute vec3 Normal;
       varying vec3 vNormal;
+      varying vec3 vPosition;
       uniform mat4 modelview;
       uniform mat4 projection;
       void main(void)
       {
           vNormal = mat3(modelview) * Normal;
+          vPosition = Position.xyz;
           vec4 p = Position;
           gl_Position = projection * modelview * p;
       }
@@ -46,20 +50,37 @@
       precision highp vec3;
       uniform vec4 color;
       varying vec3 vNormal;
+      varying vec3 vPosition;
+
       uniform vec4 lightPosition;
       uniform vec3 ambientMaterial;
       uniform vec4 diffuseMaterial;
       uniform vec3 specularMaterial;
       uniform mat4 modelview;
+      uniform float shininess;
+      uniform float fresnel;
+        
       void main()
       {
-          vec3 N = normalize(vNormal);
-          vec3 L = normalize((modelview * lightPosition).xyz);
+          vec3 N = -normalize(vNormal);
+          vec3 L = normalize((lightPosition).xyz);
+          vec3 Eye = vec3(0, 0, 1);
+          vec3 H = normalize(L + Eye);
+    
           float df = max(0.0, dot(N, L));
-          float sf = 0.0;
+          float sf = max(0.0, dot(N, H));
+          sf = pow(sf, shininess);
+
+          float base = max(0.0, 1.0 - dot(N, H));
+          float exp = pow(base, 5.0);
+          float fZero = 0.1;
+          float ff = fZero + (1.0 - fZero) * exp;
+
           vec3 color = ambientMaterial +
                        df * diffuseMaterial.rgb +
-                       sf * specularMaterial.rgb;
+                       sf * specularMaterial.rgb +
+                       ff;
+    
           gl_FragColor = vec4(color, diffuseMaterial.a);
       }
     </script>

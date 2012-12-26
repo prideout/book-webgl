@@ -159,6 +159,7 @@ GIZA.surface = function(equation, rows, cols, flags) {
           triangles[triIndex++] = i;
           triangles[triIndex++] = i+1;
           triangles[triIndex++] = i+pointsPerRow;
+
           triangles[triIndex++] = i+pointsPerRow;
           triangles[triIndex++] = i+1;
           triangles[triIndex++] = i+pointsPerRow+1;
