@@ -107,15 +107,15 @@ var main = function() {
       gl.uniform4f(program.diffuseMaterial, 0, 0, 0, 1);
     }
 
+    gl.uniform1f(program.shininess, 180.0);
     if (comps.indexOf("specular") > -1) {
       gl.uniform3f(program.specularMaterial, 0.8, 0.8, 0.7);
-      gl.uniform1f(program.shininess, 180.0);
     } else {
       gl.uniform3f(program.specularMaterial, 0, 0, 0);
     }
 
     if (comps.indexOf("fresnel") > -1) {
-      gl.uniform1f(program.fresnel, 0.125);
+      gl.uniform1f(program.fresnel, 0.01);
     } else {
       gl.uniform1f(program.fresnel, 0);
     }

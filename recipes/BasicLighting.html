@@ -13,14 +13,13 @@
       Click to toggle the different lighting components.
     </div>
     <div id="checks" class="customui">
-	  <input type="checkbox" id="ambient" name="radio"  />
-      <label for="ambient">
+	  <input type="checkbox" id="ambient" name="radio" checked="checked" /><label for="ambient">
         Ambient
-      </label><input type="checkbox" id="diffuse" name="radio" /><label for="diffuse">
+      </label><input type="checkbox" id="diffuse" name="radio" checked="checked" /><label for="diffuse">
         Diffuse
       </label><input type="checkbox" id="specular" name="radio" /><label for="specular">
         Specular
-      </label><input type="checkbox" id="fresnel" name="radio" checked="checked" /><label for="fresnel">
+      </label><input type="checkbox" id="fresnel" name="radio" /><label for="fresnel">
         Fresnel
       </label>
     </div>
@@ -68,13 +67,12 @@
           vec3 H = normalize(L + Eye);
     
           float df = max(0.0, dot(N, L));
-          float sf = max(0.0, dot(N, H));
-          sf = pow(sf, shininess);
+          float sf = pow(max(0.0, dot(N, H)), shininess);
 
-          float base = max(0.0, 1.0 - dot(N, H));
-          float exp = pow(base, 5.0);
-          float fZero = 0.1;
-          float ff = fZero + (1.0 - fZero) * exp;
+          // Schlick's Approximation
+          float cosTheta = dot(N, Eye);
+          float rfTheta = fresnel + (1.0 - fresnel) * pow(1.0 - cosTheta, 5.0);
+          float ff = (fresnel > 0.0) ? rfTheta : 0.0;
 
           vec3 color = ambientMaterial +
                        df * diffuseMaterial.rgb +
