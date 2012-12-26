@@ -1,14 +1,6 @@
 # master
 
-- hammer out vectors.  usage:
-
-  var X=0, Y=1, Z=2;
-  var V2 = GIZA.Vector2;
-  
-  V2.translate(foo) // returns a mutated foo
-  V2.translated(bar) // returns a new array
-  etc...
-  
+- NewVector.js and MochaTest.js
 
 - ch 1 & 2 tangling (please, no fresnel buddha or king tut stuff yet)
   ^-- really need to hammer out the vector math stuff!
@@ -20,14 +12,13 @@
 # later
 
 - GIZA.Turtle2D; implement bezierCurveTo
+    https://github.com/bseth99/pathjs
+    http://bseth99.github.com/pathjs/demo/path-generators.html
+    https://github.com/phoboslab/Ejecta/blob/master/Source/Ejecta/EJCanvas/EJPath.mm
+    http://www.antigrain.com/research/adaptive_bezier/index.html
+    http://code.google.com/p/explorercanvas/source/browse/trunk/excanvas.js
 
-  GIZA.Turtle3D with GIZA.Tube for implementing Knots
-
-https://github.com/bseth99/pathjs
-http://bseth99.github.com/pathjs/demo/path-generators.html
-https://github.com/phoboslab/Ejecta/blob/master/Source/Ejecta/EJCanvas/EJPath.mm
-http://www.antigrain.com/research/adaptive_bezier/index.html
-http://code.google.com/p/explorercanvas/source/browse/trunk/excanvas.js
+- GIZA.Turtle3D with GIZA.Tube for implementing Knots
 
 - Screenshots
 
@@ -48,6 +39,8 @@ http://code.google.com/p/explorercanvas/source/browse/trunk/excanvas.js
 # Notes
 
 Immediately-Invoked Function Expression 
+
+The foggy glass in front of butterfly screenshot is cool in RTR
 
 Alpha compositing with canvas.  Alpha of ClearColor matters!!
 
