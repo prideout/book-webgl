@@ -8,7 +8,6 @@ var main = function() {
 
   $("#checks").buttonset().change(function() {
     comps = getComps();
-    console.info(comps);
   });
 
   GIZA.init();
@@ -34,15 +33,14 @@ var main = function() {
   var buffers = {
     sphereCoords: gl.createBuffer(),
     torusCoords: gl.createBuffer(),
-    wireframe: gl.createBuffer()
+    mesh: gl.createBuffer()
   };
 
   var init = function() {
 
-    // Goldenrod against Mighnight blue?
-    // gl.clearColor(255, 209, 54, 1); // goldenrod
     gl.clearColor(34 / 255, 74 / 255, 116 / 255, 1);
     gl.enable(gl.DEPTH_TEST);
+    gl.enable(gl.CULL_FACE);
 
     var lod = 100;
 
@@ -67,9 +65,9 @@ var main = function() {
       return surface;
     }();
 
-    buffers.wireframe.lineCount = sphere.lineCount();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.wireframe);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, sphere.lines(), gl.STATIC_DRAW);
+    buffers.mesh.triangleCount = sphere.triangleCount();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.mesh);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, sphere.triangles(), gl.STATIC_DRAW);
 
     DEMO.check('Error when trying to create VBOs');
   }
@@ -86,36 +84,68 @@ var main = function() {
     var proj = (new mat4).makePerspective(
       10,       // fov in degrees
       GIZA.aspect,
-      3, 20);   // near and far
+      3, 200);   // near and far
 
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.wireframe)
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.mesh)
     gl.enableVertexAttribArray(attribs.POSITION);
     gl.enableVertexAttribArray(attribs.NORMAL);
 
     var program = programs.solid;
     gl.useProgram(program);
     gl.uniformMatrix4fv(program.projection, false, proj.elements);
+    gl.uniform4f(program.lightPosition, 0.75, .25, 1, 1);
+
+    if (comps.indexOf("ambient") > -1) {
+      gl.uniform3f(program.ambientMaterial, 0.2, 0.1, 0.1);
+    } else {
+      gl.uniform3f(program.ambientMaterial, 0, 0, 0);
+    }
+
+    if (comps.indexOf("diffuse") > -1) {
+      gl.uniform4f(program.diffuseMaterial, 1, 209/255, 54/255, 1);
+    } else {
+      gl.uniform4f(program.diffuseMaterial, 0, 0, 0, 1);
+    }
+
+    gl.uniform1f(program.shininess, 180.0);
+    if (comps.indexOf("specular") > -1) {
+      gl.uniform3f(program.specularMaterial, 0.8, 0.8, 0.7);
+    } else {
+      gl.uniform3f(program.specularMaterial, 0, 0, 0);
+    }
+
+    if (comps.indexOf("fresnel") > -1) {
+      gl.uniform1f(program.fresnel, 0.01);
+    } else {
+      gl.uniform1f(program.fresnel, 0);
+    }
 
     var theta = currentTime / 1000;
     var previous = mv.clone();
     mv.translate(new vec3(-1.5,0,0));
-    mv.rotateZ(theta);
+    mv.rotateY(theta);
 
     gl.uniformMatrix4fv(program.modelview, false, mv.elements);
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.sphereCoords);
     gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 24, 0);
     gl.vertexAttribPointer(attribs.NORMAL, 3, gl.FLOAT, false, 24, 12);
-    gl.drawElements(gl.LINES, 2 * buffers.wireframe.lineCount, gl.UNSIGNED_SHORT, 0)
+    gl.drawElements(gl.TRIANGLES,
+                    3 * buffers.mesh.triangleCount,
+                    gl.UNSIGNED_SHORT,
+                    0)
     
     mv = previous;
     mv.translate(new vec3(1.5,0,0));
-    mv.rotateZ(theta);
+    mv.rotateY(theta);
 
     gl.uniformMatrix4fv(program.modelview, false, mv.elements);
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.torusCoords);
     gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 24, 0);
     gl.vertexAttribPointer(attribs.NORMAL, 3, gl.FLOAT, false, 24, 12);
-    gl.drawElements(gl.LINES, 2 * buffers.wireframe.lineCount, gl.UNSIGNED_SHORT, 0)
+    gl.drawElements(gl.TRIANGLES,
+                    3 * buffers.mesh.triangleCount,
+                    gl.UNSIGNED_SHORT,
+                    0)
 
     gl.disableVertexAttribArray(attribs.POSITION);
     gl.disableVertexAttribArray(attribs.NORMAL);
