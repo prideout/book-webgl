@@ -1,5 +1,15 @@
 # master
 
+- hammer out vectors.  usage:
+
+  var X=0, Y=1, Z=2;
+  var V2 = GIZA.Vector2;
+  
+  V2.translate(foo) // returns a mutated foo
+  V2.translated(bar) // returns a new array
+  etc...
+  
+
 - ch 1 & 2 tangling (please, no fresnel buddha or king tut stuff yet)
   ^-- really need to hammer out the vector math stuff!
   
@@ -9,7 +19,8 @@
 
 # later
 
-- GIZA.Turtle2D for implementing Ankh in PolygonTess and
+- GIZA.Turtle2D; implement bezierCurveTo
+
   GIZA.Turtle3D with GIZA.Tube for implementing Knots
 
 https://github.com/bseth99/pathjs
@@ -18,37 +29,12 @@ https://github.com/phoboslab/Ejecta/blob/master/Source/Ejecta/EJCanvas/EJPath.mm
 http://www.antigrain.com/research/adaptive_bezier/index.html
 http://code.google.com/p/explorercanvas/source/browse/trunk/excanvas.js
 
-    ctx.moveTo(145.81951,11.151985);
-    ctx.bezierCurveTo(95.611047,11.151985,64.330726,57.81599,65.04964,114.16208);
-    ctx.bezierCurveTo(65.570813,155.00985,86.749849,194.54165,119.00057,243.25502);
-    ctx.lineTo(11.1508857,230.99317);
-    ctx.lineTo(11.1508857,291.06037);
-    ctx.lineTo(127.32279,277.84718);
-    ctx.lineTo(102.04307,503.55502);
-    ctx.lineTo(189.62203,503.55502);
-    ctx.lineTo(164.31623,277.84718);
-    ctx.lineTo(280.51422,291.06037);
-    ctx.lineTo(280.51422,230.99317);
-    ctx.lineTo(172.63844,243.25502);
-    ctx.bezierCurveTo(204.88917,194.54165,226.0682,155.00985,226.58938,114.16208);
-    ctx.bezierCurveTo(227.30829,57.81599,196.02797,11.151985,145.81951,11.151985);
-    ctx.closePath();
-
-    ctx.moveTo(145.81951,50.025214);
-    ctx.bezierCurveTo(160.87845,50.025214,171.12769,56.48072,179.76059,69.052219);
-    ctx.bezierCurveTo(188.3935,81.623719,193.95465,101.05069,193.87445,123.43774);
-    ctx.bezierCurveTo(193.69265,174.18665,166.85172,209.27827,145.81951,241.22019);
-    ctx.bezierCurveTo(124.7873,209.27827,97.946363,174.18665,97.764567,123.43774);
-    ctx.bezierCurveTo(97.684371,101.05069,103.24552,81.623719,111.87842,69.052219);
-    ctx.bezierCurveTo(120.51133,56.48072,130.76056,50.025214,145.81951,50.025214);
-    ctx.closePath();
-
 - Screenshots
 
 - PolygonTess
   - degenerate triangle
-  - Add an Ankh. (wikipedia page has a nice SVG)
   - Move eval into a worker?
+  
 - pycollada -> King Tut
 
 # server 

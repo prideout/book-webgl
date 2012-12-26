@@ -7,9 +7,10 @@ var mainScript = thisPage.slice(0,-4) + "js"
 head.js(
   "../giza/Giza.js",
   "../giza/Vector.js",
+  "../giza/Matrix.js",
   "../giza/Polygon.js",
   "../giza/Surface.js",
-  //"../giza/Matrix.js",
+  "../giza/Turtle.js",
   "../recipes/lib/demo.js",
   "../recipes/lib/stats.min.js",
   "http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js",

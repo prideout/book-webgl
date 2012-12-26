@@ -45,22 +45,55 @@ var main = function() {
   });
 
   var init = function() {
-
+    
     gl.clearColor(0.9, 0.9, 0.9, 1.0);
     gl.lineWidth(1.5 * GIZA.pixelScale);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-    var c = [{x:570,y:336},{x:365,y:30},{x:140,y:336}];
-    var h = [{x:350,y:201},{x:380,y:201},{x:365,y:282}];
+    var turtle;
+    var vec2ify = function(o) {
+      var v = new vec2(600 - o[1], 35 + o[0]);
+      return v;
+    };
 
-    vec2ify = function(o) { return new vec2(o.x, o.y); }
-    contourPts = c.map(vec2ify);
-    holePts = h.map(vec2ify);
+    turtle = GIZA.Turtle2D(145.81951,11.151985);
+    turtle.bezierCurveTo(95.611047,11.151985,64.330726,57.81599,65.04964,114.16208);
+    turtle.bezierCurveTo(65.570813,155.00985,86.749849,194.54165,119.00057,243.25502);
+    turtle.lineTo(11.1508857,230.99317);
+    turtle.lineTo(11.1508857,291.06037);
+    turtle.lineTo(127.32279,277.84718);
+    turtle.lineTo(102.04307,503.55502);
+    turtle.lineTo(189.62203,503.55502);
+    turtle.lineTo(164.31623,277.84718);
+    turtle.lineTo(280.51422,291.06037);
+    turtle.lineTo(280.51422,230.99317);
+    turtle.lineTo(172.63844,243.25502);
+    turtle.bezierCurveTo(204.88917,194.54165,226.0682,155.00985,226.58938,114.16208);
+    turtle.bezierCurveTo(227.30829,57.81599,196.02797,11.151985,145.81951,11.151985);
+    turtle.closePath();
+    contourPts = turtle.coords().map(vec2ify);
+
+    turtle = GIZA.Turtle2D(145.81951,50.025214);
+    turtle.bezierCurveTo(160.87845,50.025214,171.12769,56.48072,179.76059,69.052219);
+    turtle.bezierCurveTo(188.3935,81.623719,193.95465,101.05069,193.87445,123.43774);
+    turtle.bezierCurveTo(193.69265,174.18665,166.85172,209.27827,145.81951,241.22019);
+    turtle.bezierCurveTo(124.7873,209.27827,97.946363,174.18665,97.764567,123.43774);
+    turtle.bezierCurveTo(97.684371,101.05069,103.24552,81.623719,111.87842,69.052219);
+    turtle.bezierCurveTo(120.51133,56.48072,130.76056,50.025214,145.81951,50.025214);
+    turtle.closePath();
+    holePts = turtle.coords().map(vec2ify);
 
     // Diagnostics
-    console.info("outer =", JSON.stringify(contourPts));
-    console.info("inner =", JSON.stringify(holePts));
+    if (false) {
+      var c = [{x:570,y:336},{x:365,y:30},{x:140,y:336}];
+      var h = [{x:350,y:201},{x:380,y:201},{x:365,y:282}];
+      vec2ify = function(o) { return new vec2(o.x, o.y); }
+      contourPts = c.map(vec2ify);
+      holePts = h.map(vec2ify);
+      console.info("outer =", JSON.stringify(contourPts));
+      console.info("inner =", JSON.stringify(holePts));
+    }
 
     // Outer hull
     outerPointCount = contourPts.length;
@@ -77,7 +110,9 @@ var main = function() {
       [holePts]);
 
     // Diagnostics
-    console.info("result =", JSON.stringify(triangles, null, 4));
+    if (false) {
+      console.info("result =", JSON.stringify(triangles, null, 4));
+    }
 
     // Filled triangles
     triangleCount = triangles.length;
