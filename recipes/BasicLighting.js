@@ -34,15 +34,16 @@ var main = function() {
   var buffers = {
     sphereCoords: gl.createBuffer(),
     torusCoords: gl.createBuffer(),
-    wireframe: gl.createBuffer()
+    mesh: gl.createBuffer()
   };
 
   var init = function() {
 
     gl.clearColor(34 / 255, 74 / 255, 116 / 255, 1);
     gl.enable(gl.DEPTH_TEST);
+    gl.enable(gl.CULL_FACE);
 
-    var lod = 100;
+    var lod = 50;
 
     var flags = function() {
       var f = GIZA.surfaceFlags;
@@ -65,9 +66,9 @@ var main = function() {
       return surface;
     }();
 
-    buffers.wireframe.lineCount = sphere.lineCount();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.wireframe);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, sphere.lines(), gl.STATIC_DRAW);
+    buffers.mesh.triangleCount = sphere.triangleCount();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.mesh);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, sphere.triangles(), gl.STATIC_DRAW);
 
     DEMO.check('Error when trying to create VBOs');
   }
@@ -86,7 +87,7 @@ var main = function() {
       GIZA.aspect,
       3, 200);   // near and far
 
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.wireframe)
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.mesh)
     gl.enableVertexAttribArray(attribs.POSITION);
     gl.enableVertexAttribArray(attribs.NORMAL);
 
@@ -107,7 +108,10 @@ var main = function() {
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.sphereCoords);
     gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 24, 0);
     gl.vertexAttribPointer(attribs.NORMAL, 3, gl.FLOAT, false, 24, 12);
-    gl.drawElements(gl.LINES, 2 * buffers.wireframe.lineCount, gl.UNSIGNED_SHORT, 0)
+    gl.drawElements(gl.TRIANGLES,
+                    3 * buffers.mesh.triangleCount,
+                    gl.UNSIGNED_SHORT,
+                    0)
     
     mv = previous;
     mv.translate(new vec3(1.5,0,0));
@@ -117,7 +121,10 @@ var main = function() {
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.torusCoords);
     gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 24, 0);
     gl.vertexAttribPointer(attribs.NORMAL, 3, gl.FLOAT, false, 24, 12);
-    gl.drawElements(gl.LINES, 2 * buffers.wireframe.lineCount, gl.UNSIGNED_SHORT, 0)
+    gl.drawElements(gl.TRIANGLES,
+                    3 * buffers.mesh.triangleCount,
+                    gl.UNSIGNED_SHORT,
+                    0)
 
     gl.disableVertexAttribArray(attribs.POSITION);
     gl.disableVertexAttribArray(attribs.NORMAL);

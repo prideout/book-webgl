@@ -93,6 +93,8 @@ GIZA.surface = function(equation, rows, cols, flags) {
   return {
     "pointCount": function () { return pointCount; },
     "lineCount": function () { return lineCount; },
+    "triangleCount": function () { return triangleCount; },
+
     "points": function () {
       if (pointCount > 65535) {
         console.error("Too many points for 16-bit indices");
@@ -126,6 +128,7 @@ GIZA.surface = function(equation, rows, cols, flags) {
       }
       return coordArray;
     },
+
     "lines": function () {
       var lineArray = new Uint16Array(lineCount * 2);
       var lineIndex = 0;
@@ -145,9 +148,22 @@ GIZA.surface = function(equation, rows, cols, flags) {
       }
       return lineArray;
     },
+
     "triangles": function () {
-      var triangles = [];
-      // TODO
+      var triangles = new Uint16Array(triangleCount * 3);
+      var triIndex = 0;
+      var pointsPerRow = cols+1;
+      for (var row = 0; row < rows; row++) {
+        for (var col = 0; col < cols; col++) {
+          var i = row * pointsPerRow + col;
+          triangles[triIndex++] = i;
+          triangles[triIndex++] = i+1;
+          triangles[triIndex++] = i+pointsPerRow;
+          triangles[triIndex++] = i+pointsPerRow;
+          triangles[triIndex++] = i+1;
+          triangles[triIndex++] = i+pointsPerRow+1;
+        }
+      }
       return triangles;
     }
   };

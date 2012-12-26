@@ -53,7 +53,7 @@
       uniform mat4 modelview;
       void main()
       {
-          vec3 N = -normalize(vNormal);
+          vec3 N = normalize(vNormal);
           vec3 L = normalize((modelview * lightPosition).xyz);
           float df = max(0.0, dot(N, L));
           float sf = 0.0;
