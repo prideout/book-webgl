@@ -52,4 +52,13 @@ describe('V2', function() {
     assert.equal(f, a);
   });
 
+  it('Linear interpolation for fun and profit', function() {
+    var p = V2.make(5, 6);
+    var q = V2.make(7, 8);
+    var v1 = V2.lerp(p, q, 0.75);
+    var v2 = V2.lerp(p, q, 0.25);
+    assert(V2.equivalent(v1, [6.5, 7.5]));
+    assert(V2.equivalent(v2, [5.5, 6.5]));
+  });
+
 });
