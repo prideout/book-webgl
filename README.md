@@ -1,24 +1,50 @@
 # master
 
-- NewVector.js and MochaTest.js
+- NewVector: Add cross products (look at PolygonJS for 2D)
 
-- ch 1 & 2 tangling (please, no fresnel buddha or king tut stuff yet)
-  ^-- really need to hammer out the vector math stuff!
-  
+- NewMatrix.js and MochaTest.js
+
+Matrix4 = {
+    make: function() { args can be None (identity), 1 arg that's an array, or 16 args that are numbers },
+    copy: ...,
+    identity: function() {},
+    lookAt: function(eye, target, up) {},
+    perspective: function(fov, aspect, near, far) {},
+    
+    translate: function(m, xOrArray, y, z) {},
+    translated: function(m, xOrArray, y, z) {},
+    translation: function(xOrArray, y, z) {},
+    
+    rotateX: function(m, theta) {},
+    rotatedX: function(m, theta) {},
+    rotationX: function(theta) {}
+
+    rotateY: function(m, theta) {},
+    rotatedY: function(m, theta) {},
+    rotationY: function(theta) {}
+
+    rotateZ: function(m, theta) {},
+    rotatedZ: function(m, theta) {},
+    rotationZ: function(theta) {}
+};
+
 - Pay for nodejitsu -- maybe it'll get faster
 
-- Invite dbanks as a collaborator
+- Send mail to banks
+
+- ch 1 & 2 tangling (please, no fresnel buddha or king tut stuff yet)
+  ^-- really need to hammer out the vector math stuff!  
 
 # later
 
-- GIZA.Turtle2D; implement bezierCurveTo
+- GIZA.Turtle2D.bezierCurveTo
     https://github.com/bseth99/pathjs
     http://bseth99.github.com/pathjs/demo/path-generators.html
     https://github.com/phoboslab/Ejecta/blob/master/Source/Ejecta/EJCanvas/EJPath.mm
     http://www.antigrain.com/research/adaptive_bezier/index.html
     http://code.google.com/p/explorercanvas/source/browse/trunk/excanvas.js
 
-- GIZA.Turtle3D with GIZA.Tube for implementing Knots
+- GIZA.Turtle3D and GIZA.Tube for implementing Knots
 
 - Screenshots
 

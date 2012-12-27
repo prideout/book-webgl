@@ -1,6 +1,7 @@
 // As a design philosophy, giza never makes WebGL calls, and it
 // doesn't have dependencies on any other JavaScript libraries.  It's
-// a low-level utility layer rather than a scene graph or something.
+// a low-level utility layer rather than a scene graph or effects
+// library.
 
 var GIZA = GIZA || { REVISION : '0' };
 var gl;
