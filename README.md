@@ -1,7 +1,5 @@
 # master
 
-- NewVector: Add cross products (look at PolygonJS for 2D)
-
 - NewMatrix.js and MochaTest.js
 
 Matrix4 = {
@@ -28,7 +26,7 @@ Matrix4 = {
     rotationZ: function(theta) {}
 };
 
-- Pay for nodejitsu -- maybe it'll get faster
+- Carefully phase in NewVector and NewMatrix
 
 - Send mail to banks
 

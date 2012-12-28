@@ -19,21 +19,21 @@ GIZA.Vector2 = {
 
   equivalent: function(a, b, epsilon) {
     epsilon = epsilon || 1e-6;
-    return GIZA.Vector2.distanceSquared(a, b) < epsilon;
+    return this.distanceSquared(a, b) < epsilon;
   },
 
   copy: function(v) {
-    return GIZA.Vector2.make(v[0], v[1]);
+    return this.make(v[0], v[1]);
   },
 
   normalize: function(v) {
     var s = 1 / GIZA.length(v);
-    return GIZA.Vector2.scale(v, s);
+    return this.scale(v, s);
   },
 
   normalized: function(v) {
     var s = 1 / GIZA.length(v);
-    return GIZA.Vector2.scaled(v, s);
+    return this.scaled(v, s);
   },
 
   translate: function(v, delta, ty) {
@@ -48,7 +48,7 @@ GIZA.Vector2 = {
   },
 
   translated: function(v, delta, ty) {
-    var r = GIZA.Vector2.make();
+    var r = this.make();
     if (ty) {
       r[0] = v[0] + delta;
       r[1] = v[1] + ty;
@@ -66,45 +66,74 @@ GIZA.Vector2 = {
   },
 
   scaled: function(v, s) {
-    return GIZA.Vector2.make(
+    return this.make(
       s * v[0],
       s * v[1]);
   },
 
   negate: function(v) {
-    return GIZA.Vector2.scale(v, -1);
+    return this.scale(v, -1);
   },
 
   negated: function(v) {
-    return GIZA.Vector2.scaled(v, -1);
+    return this.scaled(v, -1);
   },
 
   length: function(v) {
-    return Math.sqrt(GIZA.Vector2.dot(v, v));
+    return Math.sqrt(this.dot(v, v));
   },
 
   lengthSquared: function(v) {
-    return GIZA.Vector2.dot(v, v);
+    return this.dot(v, v);
   },
 
   distance: function(a, b) {
-    var d = GIZA.Vector2.subtract(a, b);
-    return GIZA.Vector2.length(d);
+    var d = this.subtract(a, b);
+    return this.length(d);
   },
 
   distanceSquared: function(a, b) {
-    var d = GIZA.Vector2.subtract(a, b);
-    return GIZA.Vector2.lengthSquared(d);
+    var d = this.subtract(a, b);
+    return this.lengthSquared(d);
+  },
+
+  // a cross product of 2D vectors you ask?
+  // see "withinTriangle" and you'll see why!
+  cross: function(a, b) {
+    return this.make(a[0] * b[1] - a[1] * b[0]);
+  },
+
+  // Walk around the edges and determine if
+  // p is to the left or right of each edge.
+  // If the answer is the same for all 3 edges,
+  // then the point is inside.
+  withinTriangle: function(p, a, b, c) {
+    var ab = this.subtract(b, a);
+    var bc = this.subtract(c, b);
+    var ca = this.subtract(a, c);
+    var ap = this.subtract(p, a);
+    var bp = this.subtract(p, b);
+    var cp = this.subtract(p, c);
+    var a = this.cross(ab, ap);
+    var b = this.cross(bc, bp);
+    var c = this.cross(ca, cp);
+    if (a < 0 && b < 0 && c < 0) {
+      return true;
+    }
+    if (a > 0 && b > 0 && c > 0) {
+      return true;
+    }
+    return false;
   },
 
   subtract: function(a, b) {
-    return GIZA.Vector2.make(
+    return this.make(
       a[0] - b[0],
       a[1] - b[1]);
   },
 
   add: function(a, b) {
-    return GIZA.Vector2.make(
+    return this.make(
       a[0] + b[0],
       a[1] + b[1]);
   },
@@ -114,9 +143,9 @@ GIZA.Vector2 = {
   },
 
   lerp: function(a, b, t) {
-    a = GIZA.Vector2.scaled(a, 1-t);
-    b = GIZA.Vector2.scaled(b, t);
-    return GIZA.Vector2.add(a, b);
+    a = this.scaled(a, 1-t);
+    b = this.scaled(b, t);
+    return this.add(a, b);
   },
 
 };
@@ -129,21 +158,21 @@ GIZA.Vector3 = {
 
   equivalent: function(a, b, epsilon) {
     epsilon = epsilon || 1e-6;
-    return GIZA.Vector3.distanceSquared(a, b) < epsilon;
+    return this.distanceSquared(a, b) < epsilon;
   },
 
   copy: function(v) {
-    return GIZA.Vector3.make(v[0], v[1], v[2]);
+    return this.make(v[0], v[1], v[2]);
   },
 
   normalize: function(v) {
     var s = 1 / GIZA.length(v);
-    return GIZA.Vector3.scale(v, s);
+    return this.scale(v, s);
   },
 
   normalized: function(v) {
     var s = 1 / GIZA.length(v);
-    return GIZA.Vector3.scaled(v, s);
+    return this.scaled(v, s);
   },
 
   translate: function(v, delta, ty, tz) {
@@ -160,7 +189,7 @@ GIZA.Vector3 = {
   },
 
   translated: function(v, delta, ty, tz) {
-    var r = GIZA.Vector3.make();
+    var r = this.make();
     if (ty) {
       r[0] = v[0] + delta;
       r[1] = v[1] + ty;
@@ -181,47 +210,54 @@ GIZA.Vector3 = {
   },
 
   scaled: function(v, s) {
-    return GIZA.Vector3.make(
+    return this.make(
       s * v[0],
       s * v[1],
       s * v[2]);
   },
 
   negate: function(v) {
-    return GIZA.Vector3.scale(v, -1);
+    return this.scale(v, -1);
   },
 
   negated: function(v) {
-    return GIZA.Vector3.scaled(v, -1);
+    return this.scaled(v, -1);
   },
 
   length: function(v) {
-    return Math.sqrt(GIZA.Vector3.dot(v, v));
+    return Math.sqrt(this.dot(v, v));
   },
 
   lengthSquared: function(v) {
-    return GIZA.Vector3.dot(v, v);
+    return this.dot(v, v);
   },
 
   distance: function(a, b) {
-    var d = GIZA.Vector3.subtract(a, b);
-    return GIZA.Vector3.length(d);
+    var d = this.subtract(a, b);
+    return this.length(d);
   },
 
   distanceSquared: function(a, b) {
-    var d = GIZA.Vector3.subtract(a, b);
-    return GIZA.Vector3.lengthSquared(d);
+    var d = this.subtract(a, b);
+    return this.lengthSquared(d);
+  },
+
+  cross: function(a, b) {
+    return this.make(
+      a[1] * b[2] - a[2] * b[1],
+      a[2] * b[0] - a[0] * b[2],
+      a[0] * b[1] - a[1] * b[0]);
   },
 
   subtract: function(a, b) {
-    return GIZA.Vector3.make(
+    return this.make(
       a[0] - b[0],
       a[1] - b[1],
       a[2] - b[2]);
   },
 
   add: function(a, b) {
-    return GIZA.Vector3.make(
+    return this.make(
       a[0] + b[0],
       a[1] + b[1],
       a[2] + b[2]);
@@ -232,9 +268,9 @@ GIZA.Vector3 = {
   },
 
   lerp: function(a, b, t) {
-    a = GIZA.Vector3.scaled(a, 1-t);
-    b = GIZA.Vector3.scaled(b, t);
-    return GIZA.Vector3.add(a, b);
+    a = this.scaled(a, 1-t);
+    b = this.scaled(b, t);
+    return this.add(a, b);
   },
 
 };

@@ -8,6 +8,7 @@ var GIZA = require("./NewVector.js").GIZA;
 // We recommend that clients set up these useful aliases:
 var X=0, Y=1, Z=2;
 var V2 = GIZA.Vector2;
+var V3 = GIZA.Vector3;
 
 describe('V2', function() {
 
@@ -59,6 +60,17 @@ describe('V2', function() {
     var v2 = V2.lerp(p, q, 0.25);
     assert(V2.equivalent(v1, [6.5, 7.5]));
     assert(V2.equivalent(v2, [5.5, 6.5]));
+  });
+
+});
+
+describe('V3', function() {
+
+  it('Cross product follows the right-hand rule', function() {
+    var a = V3.make(1, 0, 0);
+    var b = V3.make(0, 0, -1);
+    var n = V3.cross(a, b);
+    assert(V3.equivalent(n, [0,1,0]));
   });
 
 });
