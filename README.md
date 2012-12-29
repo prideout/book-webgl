@@ -1,37 +1,21 @@
 # master
 
-- NewMatrix.js and MochaTest.js
-
-Matrix4 = {
-    make: function() { args can be None (identity), 1 arg that's an array, or 16 args that are numbers },
-    copy: ...,
-    identity: function() {},
-    lookAt: function(eye, target, up) {},
-    perspective: function(fov, aspect, near, far) {},
-    
-    translate: function(m, xOrArray, y, z) {},
-    translated: function(m, xOrArray, y, z) {},
-    translation: function(xOrArray, y, z) {},
-    
-    rotateX: function(m, theta) {},
-    rotatedX: function(m, theta) {},
-    rotationX: function(theta) {}
-
-    rotateY: function(m, theta) {},
-    rotatedY: function(m, theta) {},
-    rotationY: function(theta) {}
-
-    rotateZ: function(m, theta) {},
-    rotatedZ: function(m, theta) {},
-    rotationZ: function(theta) {}
-};
+- Finish NewMatrix.js and MochaTest.js
 
 - Carefully phase in NewVector and NewMatrix
 
-- Send mail to banks
+- back to OSD work for a day or two?
+
+- Various cleanup; I think "var programs = {...};" is better than
+  "var shaders = {}; shaders.foo = "
 
 - ch 1 & 2 tangling (please, no fresnel buddha or king tut stuff yet)
   ^-- really need to hammer out the vector math stuff!  
+
+- manipulators?
+
+- Send mail to banks
+
 
 # later
 

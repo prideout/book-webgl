@@ -1,7 +1,6 @@
 // This file defines groups of free functions (eg, GIZA.Vector2).  It
-// does NOT define new JavaScript objects.  Instead, it simply makes
-// working with tuples easier.  The underlying data can be native
-// JavaScript Arrays or TypedArrays.
+// does NOT define new JavaScript objects.  The underlying data can be
+// native JavaScript Arrays or TypedArrays.
 //
 // See MochaTest.js for usage examples.
 //
@@ -283,21 +282,21 @@ GIZA.Vector4 = {
 
   equivalent: function(a, b, epsilon) {
     epsilon = epsilon || 1e-6;
-    return GIZA.Vector4.distanceSquared(a, b) < epsilon;
+    return this.distanceSquared(a, b) < epsilon;
   },
 
   copy: function(v) {
-    return GIZA.Vector4.make(v[0], v[1], v[2], v[3]);
+    return this.make(v[0], v[1], v[2], v[3]);
   },
 
   normalize: function(v) {
     var s = 1 / GIZA.length(v);
-    return GIZA.Vector4.scale(v, s);
+    return this.scale(v, s);
   },
 
   normalized: function(v) {
     var s = 1 / GIZA.length(v);
-    return GIZA.Vector4.scaled(v, s);
+    return this.scaled(v, s);
   },
 
   translate: function(v, delta, ty, tz, tw) {
@@ -316,7 +315,7 @@ GIZA.Vector4 = {
   },
 
   translated: function(v, delta, ty, tz, tw) {
-    var r = GIZA.Vector4.make();
+    var r = this.make();
     if (ty) {
       r[0] = v[0] + delta;
       r[1] = v[1] + ty;
@@ -340,7 +339,7 @@ GIZA.Vector4 = {
   },
 
   scaled: function(v, s) {
-    return GIZA.Vector4.make(
+    return this.make(
       s * v[0],
       s * v[1],
       s * v[2],
@@ -348,33 +347,33 @@ GIZA.Vector4 = {
   },
 
   negate: function(v) {
-    return GIZA.Vector4.scale(v, -1);
+    return this.scale(v, -1);
   },
 
   negated: function(v) {
-    return GIZA.Vector4.scaled(v, -1);
+    return this.scaled(v, -1);
   },
 
   length: function(v) {
-    return Math.sqrt(GIZA.Vector4.dot(v, v));
+    return Math.sqrt(this.dot(v, v));
   },
 
   lengthSquared: function(v) {
-    return GIZA.Vector4.dot(v, v);
+    return this.dot(v, v);
   },
 
   distance: function(a, b) {
-    var d = GIZA.Vector4.subtract(a, b);
-    return GIZA.Vector4.length(d);
+    var d = this.subtract(a, b);
+    return this.length(d);
   },
 
   distanceSquared: function(a, b) {
-    var d = GIZA.Vector4.subtract(a, b);
-    return GIZA.Vector4.lengthSquared(d);
+    var d = this.subtract(a, b);
+    return this.lengthSquared(d);
   },
 
   subtract: function(a, b) {
-    return GIZA.Vector4.make(
+    return this.make(
       a[0] - b[0],
       a[1] - b[1],
       a[2] - b[2],
@@ -382,7 +381,7 @@ GIZA.Vector4 = {
   },
 
   add: function(a, b) {
-    return GIZA.Vector4.make(
+    return this.make(
       a[0] + b[0],
       a[1] + b[1],
       a[2] + b[2],
@@ -394,9 +393,9 @@ GIZA.Vector4 = {
   },
 
   lerp: function(a, b, t) {
-    a = GIZA.Vector4.scaled(a, 1-t);
-    b = GIZA.Vector4.scaled(b, t);
-    return GIZA.Vector4.add(a, b);
+    a = this.scaled(a, 1-t);
+    b = this.scaled(b, t);
+    return this.add(a, b);
   },
 
 };
