@@ -22,6 +22,12 @@ GIZA.Vector2 = {
     return this.make(v[0], v[1]);
   },
 
+  set: function(dest, src) {
+    dest[0] = src[0];
+    dest[1] = src[1];
+    return dest;
+  },
+
   normalize: function(v) {
     var s = 1 / GIZA.length(v);
     return this.scale(v, s);
@@ -161,6 +167,13 @@ GIZA.Vector3 = {
     return this.make(v[0], v[1], v[2]);
   },
 
+  set: function(dest, src) {
+    dest[0] = src[0];
+    dest[1] = src[1];
+    dest[2] = src[2];
+    return dest;
+  },
+
   normalize: function(v) {
     var s = 1 / this.length(v);
     return this.scale(v, s);
@@ -284,6 +297,14 @@ GIZA.Vector4 = {
 
   copy: function(v) {
     return this.make(v[0], v[1], v[2], v[3]);
+  },
+
+  set: function(dest, src) {
+    dest[0] = src[0];
+    dest[1] = src[1];
+    dest[2] = src[2];
+    dest[3] = src[3];
+    return dest;
   },
 
   normalize: function(v) {

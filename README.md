@@ -2,6 +2,8 @@
 
 - Finish NewMatrix.js and MochaTest.js
 
+- Column/Row extractors
+
 - Carefully phase in NewVector and NewMatrix
 
 - back to OSD work for a day or two?

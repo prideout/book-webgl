@@ -2,6 +2,11 @@
 //  > npm install -g mocha
 //  > mocha MochaTest.js
 
+// TODO Remove the following two lines; they exist solely to detect
+// syntax errors *before* runInThisContext
+require("./NewVector.js");
+require("./NewMatrix.js");
+
 var assert = require("assert");
 var vm = require("vm");
 var fs = require("fs");
@@ -11,10 +16,9 @@ var fs = require("fs");
 // If this were a proper nodejs app, we'd
 // wrap these in modules.
 function include(path) {
-    var code = fs.readFileSync(path, 'utf-8');
-    vm.runInThisContext(code, path);
+  var code = fs.readFileSync(path, 'utf-8');
+  vm.runInThisContext(code, path);
 }
-
 
 include("./GIZA.js");
 include("./NewVector.js");
@@ -141,8 +145,22 @@ describe('M4', function() {
     var target = V3.make(0,0,0);
     var up = V3.make(0,1,0);
     var m = M4.lookAt(eye, target, up);
-    console.info("prideout lookAt =");
-    console.info(M4.stringify(m));
+    assert(M4.equivalent(m, [
+      1, 0, 0, 0,
+      0, 1, 0, 0,
+      0, 0, 1, 0,
+      0, 0, -20, 1]));
+
+    var fov = 10;
+    var aspect = 2;
+    var near = 3, far = 20;
+    var p = M4.perspective(fov, aspect, near, far);
+    
+    assert(M4.equivalent(p, [
+      5.715026378631592, 0, 0, 0,
+      0, 11.430052757263184, 0, 0,
+      0, 0, -1.3529411554336548, -1,
+      0, 0, -7.058823585510254, 0]));
   });
 
 });
