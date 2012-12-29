@@ -6,9 +6,6 @@
 //
 
 var GIZA = GIZA || {};
-if (exports) {
-  exports.GIZA = GIZA;
-}
 
 GIZA.Vector2 = {
 
@@ -165,12 +162,12 @@ GIZA.Vector3 = {
   },
 
   normalize: function(v) {
-    var s = 1 / GIZA.length(v);
+    var s = 1 / this.length(v);
     return this.scale(v, s);
   },
 
   normalized: function(v) {
-    var s = 1 / GIZA.length(v);
+    var s = 1 / this.length(v);
     return this.scaled(v, s);
   },
 
@@ -290,12 +287,12 @@ GIZA.Vector4 = {
   },
 
   normalize: function(v) {
-    var s = 1 / GIZA.length(v);
+    var s = 1 / this.length(v);
     return this.scale(v, s);
   },
 
   normalized: function(v) {
-    var s = 1 / GIZA.length(v);
+    var s = 1 / this.length(v);
     return this.scaled(v, s);
   },
 

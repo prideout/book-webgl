@@ -93,8 +93,9 @@ GIZA.flatten = function(array) {
     return flattened;
 };
 
-String.prototype.supplant = function (o) {
-  return this.replace(
+// The infamous "supplant" method from the esteemed Douglas Crockford
+GIZA.format = function (s, o) {
+  return s.replace(
       /{([^{}]*)}/g,
     function (a, b) {
       var r = o[b];
@@ -102,4 +103,10 @@ String.prototype.supplant = function (o) {
         typeof r === 'number' ? r : a;
     }
   );
+};
+
+GIZA.merge = function (a, b) {
+  for (var attrname in b) {
+    a[attrname] = b[attrname];
+  }
 };

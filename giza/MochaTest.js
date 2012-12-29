@@ -3,7 +3,22 @@
 //  > mocha MochaTest.js
 
 var assert = require("assert");
-var GIZA = require("./NewMatrix.js").GIZA;
+var vm = require("vm");
+var fs = require("fs");
+
+// Here's a little trick to allow nodejs
+// to use simple client-side code files.
+// If this were a proper nodejs app, we'd
+// wrap these in modules.
+function include(path) {
+    var code = fs.readFileSync(path, 'utf-8');
+    vm.runInThisContext(code, path);
+}
+
+
+include("./GIZA.js");
+include("./NewVector.js");
+include("./NewMatrix.js");
 
 // We recommend that clients set up these useful aliases:
 var X=0, Y=1, Z=2;
@@ -119,6 +134,15 @@ describe('M4', function() {
     m[0] = 3;
     assert.equal(n[0], 1);
     assert.notEqual(m, n);
+  });
+
+  it('lookAt and perspective constructors', function() {
+    var eye = V3.make(0,0,20);
+    var target = V3.make(0,0,0);
+    var up = V3.make(0,1,0);
+    var m = M4.lookAt(eye, target, up);
+    console.info("prideout lookAt =");
+    console.info(M4.stringify(m));
   });
 
 });

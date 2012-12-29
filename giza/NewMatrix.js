@@ -5,10 +5,7 @@
 // See MochaTest.js for usage examples.
 //
 
-var GIZA = require("./NewVector.js").GIZA;
-if (exports) {
-  exports.GIZA = GIZA;
-}
+var GIZA = GIZA || {};
 
 GIZA.Matrix4 = {
 
@@ -62,7 +59,26 @@ GIZA.Matrix4 = {
     return true;
   },
 
-  lookAt: function(eye, target, up) {},
+  lookAt: function(eye, target, up) {
+    var V3 = GIZA.Vector3;
+	var z = V3.normalize(V3.subtract(eye, target));
+	if (V3.length(z) === 0) {
+	  z[2] = 1;
+	}
+    var x = V3.normalize(V3.cross(up, z));
+	if (V3.length(x) === 0) {
+	  z[0] += 0.0001;
+      x = V3.normalize(cross(up, z));
+	}
+	var y = V3.cross(z, x);
+	return this.make(
+	  x[0], y[0], z[0], V3.dot(x, eye),
+	  x[1], y[1], z[1], V3.dot(y, eye),
+	  x[2], y[2], z[2], -V3.dot(z, eye),
+      0, 0, 0, 1
+    );
+  },
+
   perspective: function(fov, aspect, near, far) {},
   
   translate: function(m, xOrArray, y, z) {},
@@ -82,4 +98,11 @@ GIZA.Matrix4 = {
 
   rotateZ: function(m, theta) {},
   rotatedZ: function(m, theta) {},
+
+  stringify: function(m) {
+    return m[0] + " " + m[1] + " " + m[2] + " " + m[3] + "\n" +
+      m[4] + " " + m[5] + " " + m[6] + " " + m[7] + "\n" +
+      m[8] + " " + m[9] + " " + m[10] + " " + m[11] + "\n" +
+      m[12] + " " + m[13] + " " + m[14] + " " + m[15] + "\n";
+  }
 };
