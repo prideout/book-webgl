@@ -99,6 +99,20 @@ GIZA.Matrix4 = {
 	  0, 0, -1, 0));
   },
 
+  orthographic: function(left, right, top, bottom, near, far) {
+	var w = right - left;
+	var h = top - bottom;
+	var p = far - near;
+	var x = ( right + left ) / w;
+	var y = ( top + bottom ) / h;
+	var z = ( far + near ) / p;
+    return this.transpose(this.make(
+	  2 / w, 0,     0,      -x,
+	  0,     2 / h, 0,      -y,
+	  0,     0,     -2 / p, -z,
+	  0,     0,     0,      1));
+  },
+
   perspective: function(fov, aspect, near, far) {
 	var ymax = near * Math.tan(fov * Math.PI / 360);
 	var ymin = -ymax;
