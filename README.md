@@ -2,8 +2,6 @@
 
 - refresh server
 
-- safari: bad retina juju even though pixelScale is kosher
-
 - mail banks
 
 - ch 1 & 2 tangling

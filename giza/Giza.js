@@ -40,19 +40,18 @@ GIZA.init = function(canvasElement) {
 
   // Gather various information about the canvas
   var pixelScale = window.devicePixelRatio || 1;
-  var style = window.getComputedStyle(canvas);
-  var width = parseInt( style.width );
-  var height = parseInt( style.height );
+  var width = canvas.clientWidth;
+  var height = canvas.clientHeight;
   var aspect = width / height;
 
-  // Handle retina displays correctly
+  // Handle retina displays correctly.
+  // At the time of writing (Dec 30 2012) this only works for Chrome.
   canvas.width = width * pixelScale;
   canvas.height = height * pixelScale;
 
   // Set up the WebGL context
-  gl = canvas.getContext(
-    'experimental-webgl',
-    {antialias: true});
+  gl = canvas.getContext('experimental-webgl', {antialias: false});
+
   if (!gl) {
     var msg = document.createElement('p');
     msg.classList.add('error');
@@ -68,9 +67,8 @@ GIZA.init = function(canvasElement) {
 
   // Handle resize events appropriately
   window.onresize = function() {
-    style = window.getComputedStyle(canvas);
-    width = parseInt( style.width );
-    height = parseInt( style.height );
+    width = canvas.clientWidth;
+    height = canvas.clientHeight;
     GIZA.aspect = width / height;
     canvas.width = width * pixelScale;
     canvas.height = height * pixelScale;
