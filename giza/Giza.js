@@ -50,7 +50,7 @@ GIZA.init = function(canvasElement) {
   canvas.height = height * pixelScale;
 
   // Set up the WebGL context
-  gl = canvas.getContext('experimental-webgl', {antialias: false});
+  gl = canvas.getContext('experimental-webgl', {antialias: true});
 
   if (!gl) {
     var msg = document.createElement('p');
