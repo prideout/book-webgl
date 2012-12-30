@@ -2,11 +2,6 @@
 //  > npm install -g mocha
 //  > mocha MochaTest.js
 
-// TODO Remove the following two lines; they exist solely to detect
-// syntax errors *before* runInThisContext
-require("./NewVector.js");
-require("./NewMatrix.js");
-
 var assert = require("assert");
 var vm = require("vm");
 var fs = require("fs");
@@ -21,8 +16,8 @@ function include(path) {
 }
 
 include("./GIZA.js");
-include("./NewVector.js");
-include("./NewMatrix.js");
+include("./Vector.js");
+include("./Matrix.js");
 
 // We recommend that clients set up these useful aliases:
 var X=0, Y=1, Z=2;

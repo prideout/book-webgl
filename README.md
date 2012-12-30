@@ -1,7 +1,5 @@
 # master
 
-- Replace Vector & Matrix files and give a good commit message (all caps)
-  
 - DEMO.check seems a bit needless...  how about DEMO.endFrame(draw) ?
 
 - Send mail to banks

@@ -6,10 +6,8 @@ var mainScript = thisPage.slice(0,-4) + "js"
 // Use HeadJS to load scripts asynchronously, but execute them synchronously.
 head.js(
   "../giza/Giza.js",
-/**/  "../giza/Vector.js",
-/**/  "../giza/Matrix.js",
-"../giza/NewVector.js",
-"../giza/NewMatrix.js",
+  "../giza/Vector.js",
+  "../giza/Matrix.js",
   "../giza/Polygon.js",
   "../giza/Surface.js",
   "../giza/Turtle.js",
@@ -31,7 +29,5 @@ head.ready(function() {
     "<a href='" + url + "html'>view HTML source</a>",
     "<a href='" + url + "js'>view JavaScript source</a>",
   ].join('\n'));
-
   $("a").button()
-
 });
