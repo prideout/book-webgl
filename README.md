@@ -1,5 +1,9 @@
 # master
 
+- safari: GL errors.  bad retina juju.
+
+- replace the github links with server-side colorfication, then mail banks
+
 - ch 1 & 2 tangling
 
 - back to OSD work for a day or two?
