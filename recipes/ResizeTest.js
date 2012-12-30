@@ -39,7 +39,6 @@ var main = function() {
 
     gl.bindBuffer(gl.ARRAY_BUFFER, lineBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, typedArray, gl.STATIC_DRAW);
-    DEMO.check('Error when trying to create VBO');
 
     gl.clearColor(0.61, 0.527, .397, 1.0);
     gl.lineWidth(1.5 * GIZA.pixelScale);
@@ -86,7 +85,7 @@ var main = function() {
     gl.uniform4f(program.color, 0, 0.125, 0.5, 1);
     gl.drawArrays(gl.LINE_LOOP, 0, numPoints);
 
-    window.requestAnimationFrame(draw, GIZA.canvas);
+    DEMO.endFrame(draw);
   };
 
   init();

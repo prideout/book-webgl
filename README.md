@@ -1,7 +1,5 @@
 # master
 
-- DEMO.check seems a bit needless...  how about DEMO.endFrame(draw) ?
-
 - Send mail to banks
 
 - ch 1 & 2 tangling (please, no fresnel buddha or king tut stuff yet)

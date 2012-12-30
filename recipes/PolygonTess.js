@@ -100,12 +100,12 @@ var main = function() {
     var typedArray = new Float32Array(coordsArray);
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.coords);
     gl.bufferData(gl.ARRAY_BUFFER, typedArray, gl.STATIC_DRAW);
-    DEMO.check('Error when trying to create points VBO');
+    if (gl.getError() !== gl.NO_ERROR) {
+      console.error('Error when trying to create points VBO');
+    }
 
     // Run ear clipping
-    var triangles = GIZA.tessellate(
-      contourPts,
-      [holePts]);
+    var triangles = GIZA.tessellate(contourPts, [holePts]);
 
     // Diagnostics
     if (false) {
@@ -117,7 +117,9 @@ var main = function() {
     typedArray = new Uint16Array(GIZA.flatten(triangles));
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.triangles);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, typedArray, gl.STATIC_DRAW);
-    DEMO.check('Error when trying to create triangle VBO');
+    if (gl.getError() !== gl.NO_ERROR) {
+      console.error('Error when trying to create triangle VBO');
+    }
 
     // Triangle outlines
     var outlines = [];
@@ -133,7 +135,9 @@ var main = function() {
     typedArray = new Uint16Array(outlines);
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.lines);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, typedArray, gl.STATIC_DRAW);
-    DEMO.check('Error when trying to create skeleton VBO');
+    if (gl.getError() !== gl.NO_ERROR) {
+      console.error('Error when trying to create skeleton VBO');
+    }
   }
 
   var draw = function(currentTime) {
@@ -190,8 +194,7 @@ var main = function() {
 
     gl.disableVertexAttribArray(attribs.POSITION);
 
-    DEMO.check('Error during draw cycle');
-    window.requestAnimationFrame(draw, GIZA.canvas);
+    DEMO.endFrame(draw);
   }
 
   init();

@@ -68,7 +68,9 @@ var main = function() {
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.mesh);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, sphere.triangles(), gl.STATIC_DRAW);
 
-    DEMO.check('Error when trying to create VBOs');
+    if (gl.getError() !== gl.NO_ERROR) {
+      console.error('Error when trying to create VBOs');
+    }
   }
 
   var draw = function(currentTime) {
@@ -147,9 +149,7 @@ var main = function() {
     gl.disableVertexAttribArray(attribs.POSITION);
     gl.disableVertexAttribArray(attribs.NORMAL);
 
-    if (DEMO.check('Error during draw cycle')) {
-      window.requestAnimationFrame(draw, GIZA.canvas);
-    }
+    DEMO.endFrame(draw);
   }
 
   init();

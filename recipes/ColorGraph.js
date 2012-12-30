@@ -58,20 +58,15 @@ var main = function() {
     rowTess, colTess, surfFlags);
 
   var init = function() {
-
     gl.clearColor(0.2,0.2,0.2,1);
     gl.disable(gl.DEPTH_TEST);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.sincCoords);
     gl.bufferData(gl.ARRAY_BUFFER, sinc.points(), gl.STATIC_DRAW);
-
     buffers.wireframe.lineCount = sinc.lineCount();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.wireframe);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, sinc.lines(), gl.STATIC_DRAW);
-
-    DEMO.check('Error when trying to create VBOs');
   }
 
   var draw = function(currentTime) {
@@ -151,10 +146,7 @@ var main = function() {
     gl.disableVertexAttribArray(attribs.COLOR);
 
     stats.end();
-
-    if (DEMO.check('Error during draw cycle')) {
-      window.requestAnimationFrame(draw, GIZA.canvas);
-    }
+    DEMO.endFrame(draw);
   }
 
   init();

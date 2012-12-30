@@ -53,7 +53,9 @@ var main = function() {
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.wireframe);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, sphere.lines(), gl.STATIC_DRAW);
 
-    DEMO.check('Error when trying to create VBOs');
+    if (gl.getError() !== gl.NO_ERROR) {
+      console.error('Error when trying to create VBOs');
+    }
   }
 
   var draw = function(currentTime) {
@@ -97,8 +99,7 @@ var main = function() {
     gl.drawElements(gl.LINES, 2 * buffers.wireframe.lineCount, gl.UNSIGNED_SHORT, 0)
 
     gl.disableVertexAttribArray(attribs.POSITION);
-    DEMO.check('Error during draw cycle');
-    window.requestAnimationFrame(draw, GIZA.canvas);
+    DEMO.endFrame(draw);
   }
 
   init();
