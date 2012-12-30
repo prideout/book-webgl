@@ -1,9 +1,8 @@
 # master
 
-- Phase out old Vector & Matrix
+- Remaining files to clean up: ResizeTest, then PolygonTess.
 
-- Various cleanup; I think "var programs = {...};" is better than
-  "var shaders = {}; shaders.foo = "
+- Replace Vector & Matrix files
   
 - DEMO.check seems a bit needless...  how about DEMO.endFrame(draw) ?
 

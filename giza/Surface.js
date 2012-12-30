@@ -55,10 +55,11 @@ GIZA.surfaceFlags = {
 };
 
 GIZA.surface = function(equation, rows, cols, flags) {
-
-  var f = GIZA.surfaceFlags;
+  
+  var V3 = GIZA.Vector3;
   if (flags == null) {
-    flags = f.POSITIONS | f.WRAP_COLS | f.WRAP_ROWS;
+    var F = GIZA.surfaceFlags;
+    flags = F.POSITIONS | F.WRAP_COLS | F.WRAP_ROWS;
   }
 
   // rows and cols refer to the number of quads or "cells" in the mesh.
@@ -115,7 +116,7 @@ GIZA.surface = function(equation, rows, cols, flags) {
           if (normals) {
             var p2 = V3.subtract(equation(u+du, v), p);
             var p1 = V3.subtract(equation(u, v+dv), p);
-            var n = V3.cross(p1, p2).normalize();
+            var n = V3.normalize(V3.cross(p1, p2));
             coordArray[coordIndex++] = n[0];
             coordArray[coordIndex++] = n[1];
             coordArray[coordIndex++] = n[2];

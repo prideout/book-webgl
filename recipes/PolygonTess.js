@@ -9,25 +9,22 @@ var main = function() {
     TEXCOORD: 2
   };
 
-  var shaders = {};
-
-  shaders.dot = {
-    vs: ['dotvs'],
-    fs: ['dotfs'],
-    attribs: {
-      Position: attribs.POSITION
+  var programs = DEMO.compilePrograms({
+    dot: {
+      vs: ['dotvs'],
+      fs: ['dotfs'],
+      attribs: {
+        Position: attribs.POSITION
+      }
+    },
+    contour: {
+      vs: ['contourvs'],
+      fs: ['contourfs'],
+      attribs: {
+        Position: attribs.POSITION
+      }
     }
-  };
-
-  shaders.contour = {
-    vs: ['contourvs'],
-    fs: ['contourfs'],
-    attribs: {
-      Position: attribs.POSITION
-    }
-  };
-
-  var programs = DEMO.compilePrograms(shaders);
+  });
 
   var contourPts = [];
   var holePts = [];

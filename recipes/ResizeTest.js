@@ -6,17 +6,17 @@ var main = function() {
     POSITION: 0,
   };
 
-  var shaders = {};
 
-  shaders.simple = {
-    vs: ['simplevs'],
-    fs: ['simplefs'],
-    attribs: {
-      Position: attribs.POSITION
+  var programs = DEMO.compilePrograms({
+    simple: {
+      vs: ['simplevs'],
+      fs: ['simplefs'],
+      attribs: {
+        Position: attribs.POSITION
+      }
     }
-  };
+  });
 
-  var programs = DEMO.compilePrograms(shaders);
   var numPoints = 64;
   var lineBuffer = gl.createBuffer();
 
