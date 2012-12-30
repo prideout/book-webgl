@@ -1,3 +1,5 @@
+// Create a COMMON namespace for a small handful of helper functions
+// and properties.
 var COMMON = {cdn: "http://ajax.googleapis.com/ajax/libs/"};
 
 // Use HeadJS to load scripts asynchronously, but execute them
@@ -14,31 +16,56 @@ head.js(
   COMMON.cdn + "jquery/1.8.0/jquery.min.js",
   COMMON.cdn + "jqueryui/1.9.2/jquery-ui.min.js");
 
-// After all scripts have been loaded AND after the document is "Ready", do this:
+// After all scripts have been loaded AND after the document is
+// "Ready", do this:
 head.ready(function() {
 
   // Execute the recipe's main() function
   main();
 
   // Download highlightjs and provide buttons for it
-  head.js("http://yandex.st/highlightjs/7.3/highlight.min.js", function() {
+  var hljsurl = "http://yandex.st/highlightjs/7.3/highlight.min.js";
+  head.js(hljsurl, function() {
 
     // Add some links into the button-bar element
     var slash = document.URL.lastIndexOf("/");
     var recipe = document.URL.slice(slash+1, -4);
     var index = "index.html";
-    var github = "http://github.com/prideout/book-webgl/blob/master/recipes/";
     $('#button-bar').html([
       "<a href='" + index + "'>",
       "    go to recipe list",
       "</a>",
-      "<a href='" + github + recipe + ".html'>",
+      "<button id='view-html'>",
       "    view HTML source",
-      "</a>",
-      "<a href='" + github + recipe + ".js'>",
+      "</button>",
+      "<button id='view-js'>",
       "    view JavaScript source",
-      "</a>",
+      "</button>",
     ].join('\n'));
+
+    // Define a generic click handler for the "view source" buttons.
+    var clickHandler = function(id, lang) {
+      return function(src) {
+        var inner = hljs.highlight(lang, src).value;
+        $('body').html("<pre>" + inner + "</pre>");
+        window.location = '#' + id;
+        $(window).bind('hashchange', function(e) {
+          if (window.location.hash == "") {
+            $(window).unbind('hashchange');
+            window.location.reload();
+          }
+        });
+      };
+    };
+
+    // Assign the click handlers.
+    var base = document.URL.slice(0, -4);
+    $('#view-js').button().click(function() {
+      $.get(base + 'js', clickHandler(this.id, 'javascript'));
+    });
+    $('#view-html').button().click(function() {
+      $.get(base + 'html', clickHandler(this.id, 'xml'));
+    });
 
     // Tell jQueryUI to style the links as buttons
     $("a").button()
@@ -53,28 +80,39 @@ COMMON.endFrame = function(drawFunc) {
   if (gl.getError() != gl.NO_ERROR) {
     console.error("GL error during draw cycle.");
   } else {
-    window.requestAnimationFrame(drawFunc, GIZA.canvas);
+    var wrappedDrawFunc = function(time) {
+      // Clear out the GL error state at the beginning of the next frame.
+      // This is a workaround for a Safari bug.
+      gl.getError();
+      drawFunc(time);
+    };
+    window.requestAnimationFrame(wrappedDrawFunc, GIZA.canvas);
   }
 };
 
 // Simple texture loader for point sprite textures etc.
 COMMON.loadTexture = function (filename, onLoaded) {
-    var tex;
-    tex = gl.createTexture();
-    tex.image = new Image();
-    tex.image.onload = function() {
-      gl.bindTexture(gl.TEXTURE_2D, tex);
-      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, tex.image);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-      gl.bindTexture(gl.TEXTURE_2D, null);
-      if (gl.getError() != gl.NO_ERROR) {
-        console.error('GL error when loading texture');
-      }
-      return onLoaded(tex);
-    };
-    return tex.image.src = filename;
+
+  var tex = gl.createTexture();
+  tex.image = new Image();
+  tex.image.onload = function() {
+
+    // clear out the GL error state to appease Safari
+    gl.getError();
+
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, tex.image);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.bindTexture(gl.TEXTURE_2D, null);
+
+    if (gl.getError() != gl.NO_ERROR) {
+      console.error('GL error when loading texture');
+    }
+    return onLoaded(tex);
+  };
+  return tex.image.src = filename;
 };
 
 // Use the supplied JSON metadata to fetch GLSL, compile it, bind
