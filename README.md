@@ -1,11 +1,6 @@
 # master
 
-- Merge to "server" and test
-
-- Send mail to banks
-
-- ch 1 & 2 tangling (please, no fresnel buddha or king tut stuff yet)
-  ^-- really need to hammer out the vector math stuff!  
+- ch 1 & 2 tangling
 
 - back to OSD work for a day or two?
   Add to its README: rebase to prep for a pull request.
