@@ -43,3 +43,8 @@ ul {
     color:#700;
     margin-bottom:10px;
 }
+
+iframe {
+    border:0;
+}
+

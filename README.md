@@ -1,5 +1,7 @@
 # master
 
+- Merge to "server" and test
+
 - Send mail to banks
 
 - ch 1 & 2 tangling (please, no fresnel buddha or king tut stuff yet)

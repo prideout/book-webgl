@@ -77,7 +77,11 @@ DEMO.compileShader = function(names, type) {
     _results = [];
     for (_i = 0, _len = names.length; _i < _len; _i++) {
       id = names[_i];
-      _results.push($('#' + id).text());
+      var e = $('#' + id);
+      if (!e.length) {
+        e = $('iframe').contents().find('#' + id);
+      }
+      _results.push(e.text());
     }
     return _results;
   })()).join();
@@ -91,3 +95,17 @@ DEMO.compileShader = function(names, type) {
   return handle;
 };
 
+// If you wish the store your shaders in a separate HTML file,
+// include this at the bottom of your main page body:
+//
+//     <iframe src="ResizeTest-Shaders.html" width="0" height="0" />
+//
+// The following function will extract the spec and attribs for you.
+DEMO.initFrame = function() {
+
+  // This sets 'attribs' and 'spec' in the local scope:
+  eval($('iframe').contents().find('#shaders').text());
+
+  DEMO.programs = DEMO.compilePrograms(spec);
+  DEMO.attribs = attribs;
+}
