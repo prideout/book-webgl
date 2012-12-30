@@ -16,6 +16,7 @@
       "express": "3.0.x",
       "ejs": ">= 0.8.3",
       "passport": "0.1.x",
+      "highlight.js": ">= 7.3.0",
       "passport-local": "0.1.x"
   }
 }
