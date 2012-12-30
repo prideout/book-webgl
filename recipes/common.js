@@ -80,28 +80,39 @@ COMMON.endFrame = function(drawFunc) {
   if (gl.getError() != gl.NO_ERROR) {
     console.error("GL error during draw cycle.");
   } else {
-    window.requestAnimationFrame(drawFunc, GIZA.canvas);
+    var wrappedDrawFunc = function(time) {
+      // Clear out the GL error state at the beginning of the next frame.
+      // This is a workaround for a Safari bug.
+      gl.getError();
+      drawFunc(time);
+    };
+    window.requestAnimationFrame(wrappedDrawFunc, GIZA.canvas);
   }
 };
 
 // Simple texture loader for point sprite textures etc.
 COMMON.loadTexture = function (filename, onLoaded) {
-    var tex;
-    tex = gl.createTexture();
-    tex.image = new Image();
-    tex.image.onload = function() {
-      gl.bindTexture(gl.TEXTURE_2D, tex);
-      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, tex.image);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-      gl.bindTexture(gl.TEXTURE_2D, null);
-      if (gl.getError() != gl.NO_ERROR) {
-        console.error('GL error when loading texture');
-      }
-      return onLoaded(tex);
-    };
-    return tex.image.src = filename;
+
+  var tex = gl.createTexture();
+  tex.image = new Image();
+  tex.image.onload = function() {
+
+    // clear out the GL error state to appease Safari
+    gl.getError();
+
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, tex.image);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.bindTexture(gl.TEXTURE_2D, null);
+
+    if (gl.getError() != gl.NO_ERROR) {
+      console.error('GL error when loading texture');
+    }
+    return onLoaded(tex);
+  };
+  return tex.image.src = filename;
 };
 
 // Use the supplied JSON metadata to fetch GLSL, compile it, bind

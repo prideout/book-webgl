@@ -2,7 +2,7 @@
 
 - refresh server
 
-- safari: GL errors.  bad retina juju.
+- safari: bad retina juju even though pixelScale is kosher
 
 - mail banks
 
