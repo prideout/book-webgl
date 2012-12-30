@@ -1,11 +1,12 @@
-DEMO = {}
+var DEMO = DEMO || {}
 
-DEMO.check = function(msg) {
-  if (gl.getError() !== gl.NO_ERROR) {
-    console.error(msg);
-    return false;
+// Prevents cascading errors by halting animation after a GL error.
+DEMO.endFrame = function(drawFunc) {
+  if (gl.getError() != gl.NO_ERROR) {
+    console.error("GL error during draw cycle.");
+  } else {
+    window.requestAnimationFrame(drawFunc, GIZA.canvas);
   }
-  return true;
 };
 
 DEMO.loadTexture = function (filename, onLoaded) {
@@ -19,7 +20,9 @@ DEMO.loadTexture = function (filename, onLoaded) {
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
       gl.bindTexture(gl.TEXTURE_2D, null);
-      DEMO.check('Error when loading texture');
+      if (gl.getError() != gl.NO_ERROR) {
+        console.error('GL error when loading texture');
+      }
       return onLoaded(tex);
     };
     return tex.image.src = filename;
@@ -74,7 +77,11 @@ DEMO.compileShader = function(names, type) {
     _results = [];
     for (_i = 0, _len = names.length; _i < _len; _i++) {
       id = names[_i];
-      _results.push($('#' + id).text());
+      var e = $('#' + id);
+      if (!e.length) {
+        e = $('iframe').contents().find('#' + id);
+      }
+      _results.push(e.text());
     }
     return _results;
   })()).join();
@@ -88,3 +95,17 @@ DEMO.compileShader = function(names, type) {
   return handle;
 };
 
+// If you wish the store your shaders in a separate HTML file,
+// include this at the bottom of your main page body:
+//
+//     <iframe src="ResizeTest-Shaders.html" width="0" height="0" />
+//
+// The following function will extract the spec and attribs for you.
+DEMO.initFrame = function() {
+
+  // This sets 'attribs' and 'spec' in the local scope:
+  eval($('iframe').contents().find('#shaders').text());
+
+  DEMO.programs = DEMO.compilePrograms(spec);
+  DEMO.attribs = attribs;
+}

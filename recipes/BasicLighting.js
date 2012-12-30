@@ -1,34 +1,33 @@
 var main = function() {
 
-  var getComps = function() {
+  // Maintain a global list of lighting components obtained from
+  // checkboxes.
+  var comps;
+  var updateComps = function() {
     var getid = function() { return $(this).attr('id'); };
-    return $("input:checked").map(getid).get();
+    comps = $("input:checked").map(getid).get();
   };
-  var comps = getComps();
-
-  $("#checks").buttonset().change(function() {
-    comps = getComps();
-  });
-
+  updateComps();
+  $("#checks").buttonset().change(updateComps);
+  
   GIZA.init();
+  var M4 = GIZA.Matrix4;
 
   var attribs = {
     POSITION: 0,
     NORMAL: 1,
   };
 
-  var shaders = {};
-
-  shaders.solid = {
-    vs: ['solidvs'],
-    fs: ['solidfs'],
-    attribs: {
-      Position: attribs.POSITION,
-      Normal: attribs.NORMAL
+  var programs = DEMO.compilePrograms({
+    solid: {
+      vs: ['solidvs'],
+      fs: ['solidfs'],
+      attribs: {
+        Position: attribs.POSITION,
+        Normal: attribs.NORMAL
+      }
     }
-  };
-
-  var programs = DEMO.compilePrograms(shaders);
+  });
 
   var buffers = {
     sphereCoords: gl.createBuffer(),
@@ -42,7 +41,7 @@ var main = function() {
     gl.enable(gl.DEPTH_TEST);
     gl.enable(gl.CULL_FACE);
 
-    var lod = 100;
+    var lod = 64;
 
     var flags = function() {
       var f = GIZA.surfaceFlags;
@@ -69,22 +68,24 @@ var main = function() {
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.mesh);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, sphere.triangles(), gl.STATIC_DRAW);
 
-    DEMO.check('Error when trying to create VBOs');
+    if (gl.getError() !== gl.NO_ERROR) {
+      console.error('Error when trying to create VBOs');
+    }
   }
 
   var draw = function(currentTime) {
     
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     
-    var mv = (new mat4).lookAt(
-      new vec3(0,0,20), // eye
-      new vec3(0,0,0),  // target
-      new vec3(0,1,0)); // up
+    var mv = M4.lookAt(
+      [0,0,20], // eye
+      [0,0,0],  // target
+      [0,1,0]); // up
 
-    var proj = (new mat4).makePerspective(
+    var proj = M4.perspective(
       10,       // fov in degrees
       GIZA.aspect,
-      3, 200);   // near and far
+      3, 200);  // near and far
 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.mesh)
     gl.enableVertexAttribArray(attribs.POSITION);
@@ -92,7 +93,7 @@ var main = function() {
 
     var program = programs.solid;
     gl.useProgram(program);
-    gl.uniformMatrix4fv(program.projection, false, proj.elements);
+    gl.uniformMatrix4fv(program.projection, false, proj);
     gl.uniform4f(program.lightPosition, 0.75, .25, 1, 1);
 
     if (comps.indexOf("ambient") > -1) {
@@ -120,12 +121,10 @@ var main = function() {
       gl.uniform1f(program.fresnel, 0);
     }
 
-    var theta = currentTime / 1000;
-    var previous = mv.clone();
-    mv.translate(new vec3(-1.5,0,0));
-    mv.rotateY(theta);
+    var previous = M4.copy(mv);
+    M4.translate(mv, [-1.5,0,0]);
 
-    gl.uniformMatrix4fv(program.modelview, false, mv.elements);
+    gl.uniformMatrix4fv(program.modelview, false, mv);
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.sphereCoords);
     gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 24, 0);
     gl.vertexAttribPointer(attribs.NORMAL, 3, gl.FLOAT, false, 24, 12);
@@ -135,10 +134,10 @@ var main = function() {
                     0)
     
     mv = previous;
-    mv.translate(new vec3(1.5,0,0));
-    mv.rotateY(theta);
+    M4.translate(mv, [1.5,0,0]);
+    M4.rotateY(mv, currentTime / 1000);
 
-    gl.uniformMatrix4fv(program.modelview, false, mv.elements);
+    gl.uniformMatrix4fv(program.modelview, false, mv);
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.torusCoords);
     gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 24, 0);
     gl.vertexAttribPointer(attribs.NORMAL, 3, gl.FLOAT, false, 24, 12);
@@ -150,9 +149,7 @@ var main = function() {
     gl.disableVertexAttribArray(attribs.POSITION);
     gl.disableVertexAttribArray(attribs.NORMAL);
 
-    if (DEMO.check('Error during draw cycle')) {
-      window.requestAnimationFrame(draw, GIZA.canvas);
-    }
+    DEMO.endFrame(draw);
   }
 
   init();

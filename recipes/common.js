@@ -29,7 +29,5 @@ head.ready(function() {
     "<a href='" + url + "html'>view HTML source</a>",
     "<a href='" + url + "js'>view JavaScript source</a>",
   ].join('\n'));
-
   $("a").button()
-
 });

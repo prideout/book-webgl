@@ -1,22 +1,22 @@
 var main = function() {
 
   GIZA.init();
+  var M4 = GIZA.Matrix4;
 
   var attribs = {
     POSITION: 0,
   };
 
-  var shaders = {};
-
-  shaders.simple = {
-    vs: ['simplevs'],
-    fs: ['simplefs'],
-    attribs: {
-      Position: attribs.POSITION
+  var programs = DEMO.compilePrograms({
+    simple: {
+      vs: ['simplevs'],
+      fs: ['simplefs'],
+      attribs: {
+        Position: attribs.POSITION
+      }
     }
-  };
+  });
 
-  var programs = DEMO.compilePrograms(shaders);
   var numPoints = 64;
   var lineBuffer = gl.createBuffer();
 
@@ -39,7 +39,6 @@ var main = function() {
 
     gl.bindBuffer(gl.ARRAY_BUFFER, lineBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, typedArray, gl.STATIC_DRAW);
-    DEMO.check('Error when trying to create VBO');
 
     gl.clearColor(0.61, 0.527, .397, 1.0);
     gl.lineWidth(1.5 * GIZA.pixelScale);
@@ -52,14 +51,10 @@ var main = function() {
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.viewport(0, 0, GIZA.canvas.width, GIZA.canvas.height);
     
-    var mv = new mat4();
-    var proj = new mat4();
-
     var MinWidth = 700;
     var s = (MinWidth / GIZA.canvas.width) * GIZA.pixelScale;
     s = (s < 1.0) ? 1.0 : s;
-
-    proj.makeOrthographic(
+    var proj = M4.orthographic(
         -s * GIZA.aspect, s * GIZA.aspect, // left right
         -s, +s, // bottom top
         0, 1);  // near far
@@ -70,28 +65,27 @@ var main = function() {
 
     var program = programs.simple;
     gl.useProgram(program);
-
-    gl.uniformMatrix4fv(program.projection, false, proj.elements);
-
+    gl.uniformMatrix4fv(program.projection, false, proj);
     gl.bindBuffer(gl.ARRAY_BUFFER, lineBuffer);
 
-    mv.translate(new vec3(-1.0, 0, 0));
-    gl.uniformMatrix4fv(program.modelview, false, mv.elements);
+    var mv = M4.identity();
+    M4.translate(mv, [-1.0, 0, 0]);
+    gl.uniformMatrix4fv(program.modelview, false, mv);
 
     gl.uniform4f(program.color, 0.5, 0.75, 1.0, 1);
     gl.drawArrays(gl.TRIANGLE_FAN, 0, numPoints);
     gl.uniform4f(program.color, 0, 0.125, 0.5, 1);
     gl.drawArrays(gl.LINE_LOOP, 0, numPoints);
 
-    mv.translate(new vec3(+2.0, 0, 0));
-    gl.uniformMatrix4fv(program.modelview, false, mv.elements);
+    M4.translate(mv, [+2.0, 0, 0]);
+    gl.uniformMatrix4fv(program.modelview, false, mv);
 
     gl.uniform4f(program.color, 0.5, 0.75, 1.0, 1);
     gl.drawArrays(gl.TRIANGLE_FAN, 0, numPoints);
     gl.uniform4f(program.color, 0, 0.125, 0.5, 1);
     gl.drawArrays(gl.LINE_LOOP, 0, numPoints);
 
-    window.requestAnimationFrame(draw, GIZA.canvas);
+    DEMO.endFrame(draw);
   };
 
   init();

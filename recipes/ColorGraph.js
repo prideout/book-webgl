@@ -1,5 +1,6 @@
 var main = function() {
 
+  // Provide a performance indicator in the upper-right corner.
   var stats = new Stats();
   stats.setMode(1); // 0: fps, 1: ms
   stats.domElement.style.position = 'absolute';
@@ -10,12 +11,12 @@ var main = function() {
   // The mode variable is either "glsl" or "js".  It specifies if
   // evaluation of the sinc function occurs on the CPU or on the GPU.
   var mode = $("input:checked")[0].id;
-
   $("#radio").buttonset().change(function (e) {
     mode = $("input:checked")[0].id;
   });
 
   GIZA.init();
+  var M4 = GIZA.Matrix4;
 
   var attribs = {
     POSITION: 0,
@@ -57,20 +58,15 @@ var main = function() {
     rowTess, colTess, surfFlags);
 
   var init = function() {
-
     gl.clearColor(0.2,0.2,0.2,1);
     gl.disable(gl.DEPTH_TEST);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.sincCoords);
     gl.bufferData(gl.ARRAY_BUFFER, sinc.points(), gl.STATIC_DRAW);
-
     buffers.wireframe.lineCount = sinc.lineCount();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.wireframe);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, sinc.lines(), gl.STATIC_DRAW);
-
-    DEMO.check('Error when trying to create VBOs');
   }
 
   var draw = function(currentTime) {
@@ -78,14 +74,14 @@ var main = function() {
     stats.begin();
     gl.clear(gl.COLOR_BUFFER_BIT);
     
-    var mv = (new mat4).lookAt(
-        new vec3(0,10,2), // eye
-        new vec3(0,0,0),  // target
-        new vec3(0,0,1)); // up
+    var mv = M4.lookAt(
+        [0,10,2], // eye
+        [0,0,0],  // target
+        [0,0,1]); // up
 
-    mv.rotateZ(currentTime / 1000);
+    M4.rotateZ(mv, currentTime / 1000);
 
-    var proj = (new mat4).makePerspective(
+    var proj = M4.perspective(
       30,        // fov in degrees
       GIZA.aspect,
       3, 200);   // near and far
@@ -137,8 +133,8 @@ var main = function() {
     gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, stride, 0);
     gl.vertexAttribPointer(attribs.COLOR, 4, gl.UNSIGNED_BYTE, true, stride, 12);
 
-    gl.uniformMatrix4fv(program.projection, false, proj.elements);
-    gl.uniformMatrix4fv(program.modelview, false, mv.elements);
+    gl.uniformMatrix4fv(program.projection, false, proj);
+    gl.uniformMatrix4fv(program.modelview, false, mv);
 
     gl.drawElements(
       gl.LINES, // drawing primitive
@@ -150,10 +146,7 @@ var main = function() {
     gl.disableVertexAttribArray(attribs.COLOR);
 
     stats.end();
-
-    if (DEMO.check('Error during draw cycle')) {
-      window.requestAnimationFrame(draw, GIZA.canvas);
-    }
+    DEMO.endFrame(draw);
   }
 
   init();
