@@ -1,49 +1,49 @@
 GIZA.equations = {};
 
 GIZA.equations.sphere = function(radius) {
-    return function(u, v) {
-        u = Math.PI * u;
-        v = 2.0 * Math.PI * v;
-        return new vec3(
-            radius * Math.sin(u) * Math.cos(v),
-            radius * Math.cos(u),
-            radius * -Math.sin(u) * Math.sin(v)
-        );
-    };
+  return function(u, v) {
+    u = Math.PI * u;
+    v = 2.0 * Math.PI * v;
+    return GIZA.Vector3.make(
+      radius * Math.sin(u) * Math.cos(v),
+      radius * Math.cos(u),
+      radius * -Math.sin(u) * Math.sin(v)
+    );
+  };
 };
 
 GIZA.equations.plane = function(width) {
-    return function(u, v) {
-        return new vec3(
-            -width/2 + width * u,
-            -width/2 + width * v,
-            0
-        );
-    };
+  return function(u, v) {
+    return GIZA.Vector3.make(
+        -width/2 + width * u,
+        -width/2 + width * v,
+      0
+    );
+  };
 };
 
 GIZA.equations.sinc = function(interval, width, height) {
-    var plane = GIZA.equations.plane(width);
-    return function(u, v) {
-        var p = plane(u, v);
-        var x = p.x * interval / width;
-        var y = p.y * interval / width;
-        var r = Math.sqrt(x*x + y*y);
-        p.z = height * Math.sin(r) / r;
-        return p;
-    };
+  var plane = GIZA.equations.plane(width);
+  return function(u, v) {
+    var p = plane(u, v);
+    var x = p[0] * interval / width;
+    var y = p[1] * interval / width;
+    var r = Math.sqrt(x*x + y*y);
+    p[2] = height * Math.sin(r) / r;
+    return p;
+  };
 };
 
 GIZA.equations.torus = function(minor, major) {
-    return function(u, v) {
-        u = 2.0 * Math.PI * u;
-        v = 2.0 * Math.PI * v;
-        return new vec3(
-            (major + minor * Math.cos(v)) * Math.cos(u),
-            (major + minor * Math.cos(v)) * Math.sin(u),
-            minor * Math.sin(v)
-        );
-    };
+  return function(u, v) {
+    u = 2.0 * Math.PI * u;
+    v = 2.0 * Math.PI * v;
+    return GIZA.Vector3.make(
+      (major + minor * Math.cos(v)) * Math.cos(u),
+      (major + minor * Math.cos(v)) * Math.sin(u),
+      minor * Math.sin(v)
+    );
+  };
 };
 
 GIZA.surfaceFlags = {
@@ -76,7 +76,6 @@ GIZA.surface = function(equation, rows, cols, flags) {
 
   var pointCount = (rows + 1) * (cols + 1);
   var triangleCount = 2 * rows * cols;
-
   var colLines = wrapCols ? cols : (cols+1);
   var rowLines = wrapRows ? rows : (rows+1);
   var lineCount = (colLines * rows) + (rowLines * cols);
@@ -108,17 +107,20 @@ GIZA.surface = function(equation, rows, cols, flags) {
         var u = 0;
         for (var col = 0; col < cols + 1; col++) {
           var p = equation(u, v);
-          coordArray[coordIndex++] = p.x;
-          coordArray[coordIndex++] = p.y;
-          coordArray[coordIndex++] = p.z;
+
+          coordArray[coordIndex++] = p[0];
+          coordArray[coordIndex++] = p[1];
+          coordArray[coordIndex++] = p[2];
+
           if (normals) {
-            var p2 = (new vec3).sub(equation(u+du, v), p);
-            var p1 = (new vec3).sub(equation(u, v+dv), p);
-            var n = (new vec3).cross(p1, p2).normalize();
-            coordArray[coordIndex++] = n.x;
-            coordArray[coordIndex++] = n.y;
-            coordArray[coordIndex++] = n.z;
+            var p2 = V3.subtract(equation(u+du, v), p);
+            var p1 = V3.subtract(equation(u, v+dv), p);
+            var n = V3.cross(p1, p2).normalize();
+            coordArray[coordIndex++] = n[0];
+            coordArray[coordIndex++] = n[1];
+            coordArray[coordIndex++] = n[2];
           }
+
           if (colors) {
             coordIndex++;
           }
@@ -159,7 +161,6 @@ GIZA.surface = function(equation, rows, cols, flags) {
           triangles[triIndex++] = i;
           triangles[triIndex++] = i+1;
           triangles[triIndex++] = i+pointsPerRow;
-
           triangles[triIndex++] = i+pointsPerRow;
           triangles[triIndex++] = i+1;
           triangles[triIndex++] = i+pointsPerRow+1;

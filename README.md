@@ -4,6 +4,8 @@
 
 - Various cleanup; I think "var programs = {...};" is better than
   "var shaders = {}; shaders.foo = "
+  
+- DEMO.check seems a bit needless...  how about DEMO.endFrame(draw) ?
 
 - Send mail to banks
 

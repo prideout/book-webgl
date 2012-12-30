@@ -1,16 +1,15 @@
 var main = function() {
 
-  // Global list of lighting components, obtained from checkboxes.
+  // Maintain a global list of lighting components obtained from
+  // checkboxes.
   var comps;
-  (function(){
-    var updateComps = function() {
-      var getid = function() { return $(this).attr('id'); };
-      comps = $("input:checked").map(getid).get();
-    };
-    updateComps();
-    $("#checks").buttonset().change(updateComps);
-  })();
-
+  var updateComps = function() {
+    var getid = function() { return $(this).attr('id'); };
+    comps = $("input:checked").map(getid).get();
+  };
+  updateComps();
+  $("#checks").buttonset().change(updateComps);
+  
   GIZA.init();
   var M4 = GIZA.Matrix4;
 
