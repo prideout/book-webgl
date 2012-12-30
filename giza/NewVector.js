@@ -102,7 +102,7 @@ GIZA.Vector2 = {
   // a cross product of 2D vectors you ask?
   // see "withinTriangle" and you'll see why!
   cross: function(a, b) {
-    return this.make(a[0] * b[1] - a[1] * b[0]);
+    return a[0] * b[1] - a[1] * b[0];
   },
 
   // Walk around the edges and determine if

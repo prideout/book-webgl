@@ -1,57 +1,34 @@
 // TODO
 //  - fix the degenerate triangle seen in demo
-//  - remove the custom vec2 type
-//  - make it less CoffeeScript
+//  - make it less CoffeeScripty
 
 var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 GIZA.tessellate = function(coords, holes) {
-  var ab, ac, ap, bc, bp, ca, checkEar, convex, cp, earIndex, ears, getNeighbors, getSlice, h, hole, holeStart, i, intersectSegmentX, isEar, isReflexAngle, isReflexIndex, n, neighbor, newPolygon, ntriangle, p, pcurr, pnext, pointInTri, polygon, pprev, ptriangle, reflex, reflexCount, slice, triangles, vec2, verbose, wasEar, watchdog, _, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _len5, _m, _n, _o, _p, _q, _ref, _ref1, _ref2, _ref3, _ref4, _results;
-  vec2 = GIZA.vec2;
-  ab = new vec2();
-  bc = new vec2();
-  ca = new vec2();
-  ap = new vec2();
-  bp = new vec2();
-  cp = new vec2();
-  ac = new vec2();
-  pointInTri = function(p, tri) {
-    var a, b, c;
-    ab.sub(tri[1], tri[0]);
-    bc.sub(tri[2], tri[1]);
-    ca.sub(tri[0], tri[2]);
-    ap.sub(p, tri[0]);
-    bp.sub(p, tri[1]);
-    cp.sub(p, tri[2]);
-    a = ab.cross(ap);
-    b = bc.cross(bp);
-    c = ca.cross(cp);
-    if (a < 0 && b < 0 && c < 0) {
-      return true;
-    }
-    if (a > 0 && b > 0 && c > 0) {
-      return true;
-    }
-    return false;
-  };
+  var ab, ac, ap, bc, bp, ca, checkEar, convex, cp, earIndex, ears, getNeighbors, getSlice, h, hole, holeStart, i, intersectSegmentX, isEar, isReflexAngle, isReflexIndex, n, neighbor, newPolygon, ntriangle, p, pcurr, pnext, polygon, pprev, ptriangle, reflex, reflexCount, slice, triangles, vec2, verbose, wasEar, watchdog, _, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _len5, _m, _n, _o, _p, _q, _ref, _ref1, _ref2, _ref3, _ref4, _results;
+  var V2 = GIZA.Vector2;
+
   isReflexAngle = function(a, b, c) {
-    ac.sub(c, a);
-    ab.sub(b, a);
-    return 0 > ac.cross(ab);
+    var ac = V2.subtract(c, a);
+    var ab = V2.subtract(b, a);
+    var result = 0 > V2.cross(ac, ab);
+    return result;
   };
+
   intersectSegmentX = function(p0, p1, y) {
     var t;
-    if (p0.y === p1.y) {
-      return p0.x;
+    if (p0[1] === p1[1]) {
+      return p0[0];
     }
-    if (p0.y < p1.y) {
-      t = (y - p0.y) / (p1.y - p0.y);
-      return p0.x + t * (p1.x - p0.x);
+    if (p0[1] < p1[1]) {
+      t = (y - p0[1]) / (p1[1] - p0[1]);
+      return p0[0] + t * (p1[0] - p0[0]);
     } else {
-      t = (y - p1.y) / (p0.y - p1.y);
-      return p1.x + t * (p0.x - p1.x);
+      t = (y - p1[1]) / (p0[1] - p1[1]);
+      return p1[0] + t * (p0[0] - p1[0]);
     }
   };
+
   if (coords.length < 3) {
     return [];
   }
@@ -65,37 +42,38 @@ GIZA.tessellate = function(coords, holes) {
     return _results;
   }).apply(this);
   reflexCount = 0;
+
   getSlice = function(hole) {
     var E, I, M, Mn, P, Pn, R, Rn, Rslope, c0, c1, coord, dx, dy, n, ncurr, nnext, p, slice, slope, tricoords, x, xrightmost, _j, _k, _l, _len, _len1, _len2, _ref1, _ref2;
     Mn = 0;
     xrightmost = -10000;
     for (n = _j = 0, _len = hole.length; _j < _len; n = ++_j) {
       coord = hole[n];
-      if (coord.x > xrightmost) {
-        xrightmost = coord.x;
+      if (coord[0] > xrightmost) {
+        xrightmost = coord[0];
         Mn = n;
       }
     }
     M = hole[Mn];
     E = 0.0001;
-    I = new vec2(10000, M.y);
-    P = new vec2();
+    I = V2.make(10000, M[1]);
+    P = V2.make();
     Pn = -1;
     for (ncurr = _k = 0, _len1 = coords.length; _k < _len1; ncurr = ++_k) {
       c0 = coords[ncurr];
       nnext = (ncurr + 1) % coords.length;
       c1 = coords[nnext];
-      if (c0.x < M.x && c1.x < M.x) {
+      if (c0[0] < M[0] && c1[0] < M[0]) {
         continue;
       }
-      if (c0.x > I.x && c1.x > I.x) {
+      if (c0[0] > I[0] && c1[0] > I[0]) {
         continue;
       }
-      if (((c0.y <= (_ref1 = M.y) && _ref1 <= c1.y)) || ((c1.y <= (_ref2 = M.y) && _ref2 <= c0.y))) {
-        x = intersectSegmentX(c0, c1, M.y);
-        if (x < I.x) {
-          I.x = x;
-          if (c0.x > c1.x) {
+      if (((c0[1] <= (_ref1 = M[1]) && _ref1 <= c1[1])) || ((c1[1] <= (_ref2 = M[1]) && _ref2 <= c0[1]))) {
+        x = intersectSegmentX(c0, c1, M[1]);
+        if (x < I[0]) {
+          I[0] = x;
+          if (c0[0] > c1[0]) {
             P = c0;
             Pn = ncurr;
           } else {
@@ -114,9 +92,9 @@ GIZA.tessellate = function(coords, holes) {
         continue;
       }
       R = coords[n];
-      if (pointInTri(R, tricoords)) {
-        dy = Math.abs(R.y - P.y);
-        dx = Math.abs(R.x - P.x);
+      if (V2.withinTriangle(R, tricoords[0], tricoords[1], tricoords[2])) {
+        dy = Math.abs(R[1] - P[1]);
+        dx = Math.abs(R[0] - P[0]);
         if (dx === 0) {
           continue;
         }
@@ -130,14 +108,17 @@ GIZA.tessellate = function(coords, holes) {
     if (Rn !== -1) {
       Pn = Rn;
     }
-    return slice = [Pn, Mn];
+    slice = [Pn, Mn];
+    return slice;
   };
+
   getNeighbors = function(pcurr) {
     var pnext, pprev;
     pprev = (pcurr + polygon.length - 1) % polygon.length;
     pnext = (pcurr + 1) % polygon.length;
     return [pprev, pnext];
   };
+
   checkEar = function(pcurr) {
     var i, isEar, n, ntriangle, p, pnext, pprev, ptriangle, tricoords, _j, _len, _ref1;
     if (reflexCount === 0) {
@@ -172,13 +153,14 @@ GIZA.tessellate = function(coords, holes) {
       if (!reflex[p]) {
         continue;
       }
-      if (pointInTri(coords[n], tricoords)) {
+      if (V2.withinTriangle(coords[n], tricoords[0], tricoords[1], tricoords[2])) {
         isEar = false;
         break;
       }
     }
     return isEar;
   };
+
   isReflexIndex = function(pcurr) {
     var a, b, c, pnext, pprev, _ref1;
     _ref1 = getNeighbors(pcurr), pprev = _ref1[0], pnext = _ref1[1];
@@ -187,6 +169,7 @@ GIZA.tessellate = function(coords, holes) {
     c = coords[polygon[pnext]];
     return isReflexAngle(a, b, c);
   };
+
   slice = [];
   if (holes.length && holes[0].length >= 3) {
     for (p = _j = 0, _len = polygon.length; _j < _len; p = ++_j) {
@@ -216,6 +199,7 @@ GIZA.tessellate = function(coords, holes) {
     newPolygon.push(newPolygon[polygon.length - 1]);
     polygon = newPolygon;
   }
+
   convex = [];
   reflex = [];
   reflexCount = 0;
@@ -229,6 +213,7 @@ GIZA.tessellate = function(coords, holes) {
       convex.push(p);
     }
   }
+
   ears = [];
   for (_o = 0, _len3 = convex.length; _o < _len3; _o++) {
     p = convex[_o];
@@ -236,6 +221,7 @@ GIZA.tessellate = function(coords, holes) {
       ears.push(p);
     }
   }
+
   verbose = false;
   if (verbose) {
     console.info("");
@@ -243,6 +229,7 @@ GIZA.tessellate = function(coords, holes) {
     console.info("reflex  " + reflex);
     console.info("convex  " + convex);
   }
+
   triangles = [];
   while (polygon.length > 0) {
     pcurr = ears.pop();
@@ -294,88 +281,3 @@ GIZA.tessellate = function(coords, holes) {
   }
   return triangles;
 };
-
-GIZA.vec2 = function ( x, y ) {
-	this.x = x || 0;
-	this.y = y || 0;
-};
-GIZA.vec2.prototype = {
-	constructor: GIZA.vec2,
-	set: function ( x, y ) {
-		this.x = x;
-		this.y = y;
-		return this;
-	},
-	copy: function ( v ) {
-		this.x = v.x;
-		this.y = v.y;
-		return this;
-	},
-	add: function ( a, b ) {
-		this.x = a.x + b.x;
-		this.y = a.y + b.y;
-		return this;
-	},
-	sub: function ( a, b ) {
-		this.x = a.x - b.x;
-		this.y = a.y - b.y;
-		return this;
-	},
-	multiplyScalar: function ( s ) {
-		this.x *= s;
-		this.y *= s;
-		return this;
-	},
-	divideScalar: function ( s ) {
-		if ( s ) {
-			this.x /= s;
-			this.y /= s;
-		} else {
-			this.set( 0, 0 );
-		}
-		return this;
-	},
-	negate: function() {
-		return this.multiplyScalar( - 1 );
-	},
-	dot: function ( v ) {
-		return this.x * v.x + this.y * v.y;
-	},
-	cross: function ( v ) {
-		return this.x * v.y - this.y * v.x;
-	},
-	lengthSq: function () {
-		return this.x * this.x + this.y * this.y;
-	},
-	length: function () {
-		return Math.sqrt( this.lengthSq() );
-	},
-	normalize: function () {
-		return this.divideScalar( this.length() );
-	},
-	distanceTo: function ( v ) {
-		return Math.sqrt( this.distanceToSquared( v ) );
-	},
-	distanceToSquared: function ( v ) {
-		var dx = this.x - v.x, dy = this.y - v.y;
-		return dx * dx + dy * dy;
-	},
-	setLength: function ( l ) {
-		return this.normalize().multiplyScalar( l );
-	},
-	lerpSelf: function ( v, alpha ) {
-		this.x += ( v.x - this.x ) * alpha;
-		this.y += ( v.y - this.y ) * alpha;
-		return this;
-	},
-	equals: function( v ) {
-		return ( ( v.x === this.x ) && ( v.y === this.y ) );
-	},
-	isZero: function ( v ) {
-		return this.lengthSq() < ( v !== undefined ? v : 0.0001 );
-	},
-	clone: function () {
-		return new GIZA.vec2( this.x, this.y );
-	}
-};
-;

@@ -1,7 +1,5 @@
 # master
 
-- Remaining files to clean up: PolygonTess and Turtle.
-
 - Replace Vector & Matrix files and give a good commit message (all caps)
   
 - DEMO.check seems a bit needless...  how about DEMO.endFrame(draw) ?
@@ -14,7 +12,7 @@
 - back to OSD work for a day or two?
   Add to its README: rebase to prep for a pull request.
 
-- manipulators and BEAUTIFUL docs.
+- manipulators, BEAUTIFUL docs, fresnel/marble spiral horn
 
 # later
 

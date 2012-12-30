@@ -1,6 +1,8 @@
 var main = function() {
 
   GIZA.init();
+  var M4 = GIZA.Matrix4;
+  var V2 = GIZA.Vector2;
 
   var attribs = {
     POSITION: 0,
@@ -48,13 +50,12 @@ var main = function() {
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-    var turtle;
     var vec2ify = function(o) {
-      var v = new vec2(600 - o[1], 35 + o[0]);
+      var v = V2.make(600 - o[1], 35 + o[0]);
       return v;
     };
 
-    turtle = GIZA.Turtle2D(145.81951,11.151985);
+    var turtle = GIZA.Turtle2D(145.81951,11.151985);
     turtle.bezierCurveTo(95.611047,11.151985,64.330726,57.81599,65.04964,114.16208);
     turtle.bezierCurveTo(65.570813,155.00985,86.749849,194.54165,119.00057,243.25502);
     turtle.lineTo(11.1508857,230.99317);
@@ -71,7 +72,7 @@ var main = function() {
     turtle.closePath();
     contourPts = turtle.coords().map(vec2ify);
 
-    turtle = GIZA.Turtle2D(145.81951,50.025214);
+    var turtle = GIZA.Turtle2D(145.81951,50.025214);
     turtle.bezierCurveTo(160.87845,50.025214,171.12769,56.48072,179.76059,69.052219);
     turtle.bezierCurveTo(188.3935,81.623719,193.95465,101.05069,193.87445,123.43774);
     turtle.bezierCurveTo(193.69265,174.18665,166.85172,209.27827,145.81951,241.22019);
@@ -85,7 +86,7 @@ var main = function() {
     if (false) {
       var c = [{x:570,y:336},{x:365,y:30},{x:140,y:336}];
       var h = [{x:350,y:201},{x:380,y:201},{x:365,y:282}];
-      vec2ify = function(o) { return new vec2(o.x, o.y); }
+      vec2ify = function(o) { return V2.make(o.x, o.y); }
       contourPts = c.map(vec2ify);
       holePts = h.map(vec2ify);
       console.info("outer =", JSON.stringify(contourPts));
@@ -138,10 +139,9 @@ var main = function() {
   var draw = function(currentTime) {
 
     gl.clear(gl.COLOR_BUFFER_BIT);
-
-    var mv = new mat4();
-    var proj = new mat4();
-    proj.makeOrthographic(
+    
+    var mv = M4.identity();
+    var proj = M4.orthographic(
       0, GIZA.canvas.width / GIZA.pixelScale,
       0, GIZA.canvas.height / GIZA.pixelScale,
       0, 1);
@@ -153,8 +153,8 @@ var main = function() {
     // Draw the filled triangles
     var program = programs.contour;
     gl.useProgram(program);
-    gl.uniformMatrix4fv(program.modelview, false, mv.elements);
-    gl.uniformMatrix4fv(program.projection, false, proj.elements);
+    gl.uniformMatrix4fv(program.modelview, false, mv);
+    gl.uniformMatrix4fv(program.projection, false, proj);
     gl.uniform4f(program.color, 0.25, 0.25, 0, 0.5);
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.triangles);
     gl.drawElements(gl.TRIANGLES, 3 * triangleCount, gl.UNSIGNED_SHORT, 0);
@@ -166,8 +166,8 @@ var main = function() {
     // Draw the outer contour
     program = programs.contour;
     gl.useProgram(program);
-    gl.uniformMatrix4fv(program.modelview, false, mv.elements);
-    gl.uniformMatrix4fv(program.projection, false, proj.elements);
+    gl.uniformMatrix4fv(program.modelview, false, mv);
+    gl.uniformMatrix4fv(program.projection, false, proj);
     gl.uniform4f(program.color, 0, 0.4, 0.8, 1);
     gl.drawArrays(gl.LINE_LOOP, 0, outerPointCount);
 
@@ -181,8 +181,8 @@ var main = function() {
     // Finally draw the dots
     program = programs.dot;
     gl.useProgram(program);
-    gl.uniformMatrix4fv(program.modelview, false, mv.elements);
-    gl.uniformMatrix4fv(program.projection, false, proj.elements);
+    gl.uniformMatrix4fv(program.modelview, false, mv);
+    gl.uniformMatrix4fv(program.projection, false, proj);
     gl.uniform1f(program.pointSize, 6 * GIZA.pixelScale);
     gl.bindTexture(gl.TEXTURE_2D, spriteTexture);
     gl.uniform4f(program.color, 0, 0.25, 0.5, 1);
