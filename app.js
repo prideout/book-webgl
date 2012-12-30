@@ -6,7 +6,6 @@ var routes = require('./routes');
 var http = require('http');
 var path = require('path');
 var passport = require('passport');
-var hljs = require('highlight.js');
 var LocalStrategy = require('passport-local').Strategy;
 
 var app = express();
