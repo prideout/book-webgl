@@ -18,7 +18,7 @@ var main = function() {
     NORMAL: 1,
   };
 
-  var programs = DEMO.compilePrograms({
+  var programs = COMMON.compilePrograms({
     solid: {
       vs: ['solidvs'],
       fs: ['solidfs'],
@@ -149,7 +149,7 @@ var main = function() {
     gl.disableVertexAttribArray(attribs.POSITION);
     gl.disableVertexAttribArray(attribs.NORMAL);
 
-    DEMO.endFrame(draw);
+    COMMON.endFrame(draw);
   }
 
   init();

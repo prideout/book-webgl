@@ -1,8 +1,10 @@
 # master
 
+- replace the github links with server-side colorfication
+
 - safari: GL errors.  bad retina juju.
 
-- replace the github links with server-side colorfication, then mail banks
+- mail banks
 
 - ch 1 & 2 tangling
 

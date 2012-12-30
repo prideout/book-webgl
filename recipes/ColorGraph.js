@@ -23,7 +23,7 @@ var main = function() {
     COLOR: 1
   };
 
-  var programs = DEMO.compilePrograms({
+  var programs = COMMON.compilePrograms({
     simple: {
       vs: ['simple-vs'],
       fs: ['solid-color'],
@@ -146,7 +146,7 @@ var main = function() {
     gl.disableVertexAttribArray(attribs.COLOR);
 
     stats.end();
-    DEMO.endFrame(draw);
+    COMMON.endFrame(draw);
   }
 
   init();
