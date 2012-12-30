@@ -9,10 +9,6 @@ var passport = require('passport');
 var hljs = require('highlight.js');
 var LocalStrategy = require('passport-local').Strategy;
 
-// TODO
-var html = hljs.highlight('javascript', 'var foo = 5;');
-console.info('prideout ', html);
-
 var app = express();
 
 app.configure(function(){

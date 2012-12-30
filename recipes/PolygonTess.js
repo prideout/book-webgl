@@ -11,7 +11,7 @@ var main = function() {
     TEXCOORD: 2
   };
 
-  var programs = DEMO.compilePrograms({
+  var programs = COMMON.compilePrograms({
     dot: {
       vs: ['dotvs'],
       fs: ['dotfs'],
@@ -38,7 +38,7 @@ var main = function() {
   };
   var pointCount, outerPointCount, triangleCount;
 
-  DEMO.loadTexture('media/PointSprite.png', function(i) {
+  COMMON.loadTexture('media/PointSprite.png', function(i) {
     spriteTexture = i;
     draw(0);
   });
@@ -194,7 +194,7 @@ var main = function() {
 
     gl.disableVertexAttribArray(attribs.POSITION);
 
-    DEMO.endFrame(draw);
+    COMMON.endFrame(draw);
   }
 
   init();

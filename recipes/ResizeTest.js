@@ -7,7 +7,7 @@ var main = function() {
     POSITION: 0,
   };
 
-  var programs = DEMO.compilePrograms({
+  var programs = COMMON.compilePrograms({
     simple: {
       vs: ['simplevs'],
       fs: ['simplefs'],
@@ -85,7 +85,7 @@ var main = function() {
     gl.uniform4f(program.color, 0, 0.125, 0.5, 1);
     gl.drawArrays(gl.LINE_LOOP, 0, numPoints);
 
-    DEMO.endFrame(draw);
+    COMMON.endFrame(draw);
   };
 
   init();

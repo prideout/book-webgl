@@ -8,7 +8,7 @@ var main = function() {
     NORMAL: 1,
   };
 
-  var programs = DEMO.compilePrograms({
+  var programs = COMMON.compilePrograms({
     solid: {
       vs: ['solidvs'],
       fs: ['solidfs'],
@@ -99,7 +99,7 @@ var main = function() {
     gl.drawElements(gl.LINES, 2 * buffers.wireframe.lineCount, gl.UNSIGNED_SHORT, 0)
 
     gl.disableVertexAttribArray(attribs.POSITION);
-    DEMO.endFrame(draw);
+    COMMON.endFrame(draw);
   }
 
   init();
