@@ -1,25 +1,22 @@
 # master
 
-- Finish NewMatrix.js and MochaTest.js
-
-- Column/Row extractors
-
-- Carefully phase in NewVector and NewMatrix
-
-- back to OSD work for a day or two?
+- Phase out old Vector & Matrix
 
 - Various cleanup; I think "var programs = {...};" is better than
   "var shaders = {}; shaders.foo = "
 
+- Send mail to banks
+
 - ch 1 & 2 tangling (please, no fresnel buddha or king tut stuff yet)
   ^-- really need to hammer out the vector math stuff!  
 
-- manipulators?
+- back to OSD work for a day or two?
 
-- Send mail to banks
-
+- manipulators.
 
 # later
+
+- test & impl rotateAxis and scale in Matrix4
 
 - GIZA.Turtle2D.bezierCurveTo
     https://github.com/bseth99/pathjs

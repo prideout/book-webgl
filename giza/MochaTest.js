@@ -30,6 +30,7 @@ var V2 = GIZA.Vector2;
 var V3 = GIZA.Vector3;
 var V4 = GIZA.Vector4;
 var M4 = GIZA.Matrix4;
+var I4 = M4.identity();
 
 // Test the 2D vector functions.
 describe('V2', function() {
@@ -126,21 +127,21 @@ describe('M4', function() {
     [9, 10, 11, 12],
     [13, 14, 15, 16]]);
 
-  it('M4.make has many different forms', function() {
+  it('M4.make', function() {
     assert(M4.equivalent(m, m2));
     assert(M4.equivalent(m, m3));
     assert(M4.equivalent(m, m4));
     assert(M4.equivalent(m, m5));
   });
 
-  it('Simple cloning is provided', function() {
+  it('M4.copy', function() {
     var n = M4.copy(m);
     m[0] = 3;
     assert.equal(n[0], 1);
     assert.notEqual(m, n);
   });
 
-  it('lookAt and perspective constructors', function() {
+  it('M4.lookAt, M4.perspective, M4.frustum', function() {
     var eye = V3.make(0,0,20);
     var target = V3.make(0,0,0);
     var up = V3.make(0,1,0);
@@ -150,12 +151,10 @@ describe('M4', function() {
       0, 1, 0, 0,
       0, 0, 1, 0,
       0, 0, -20, 1]));
-
     var fov = 10;
     var aspect = 2;
     var near = 3, far = 20;
     var p = M4.perspective(fov, aspect, near, far);
-    
     assert(M4.equivalent(p, [
       5.715026378631592, 0, 0, 0,
       0, 11.430052757263184, 0, 0,
@@ -163,4 +162,39 @@ describe('M4', function() {
       0, 0, -7.058823585510254, 0]));
   });
 
+  it('M4.translate', function() {
+
+    var t1 = M4.translated(I4, 0.5, 0.25, 0.125);
+    var t2 = M4.translated(I4, [0.5, 0.25, 0.125]);
+
+    assert(M4.equivalent(t1, [
+      1, 0, 0, 0,
+      0, 1, 0, 0,
+      0, 0, 1, 0,
+      0.5, 0.25, 0.125, 1]));
+
+    assert(M4.equivalent(t1, t2));
+
+    var v = M4.multiply(t1, [0, 0, 1, 1]);
+    assert(V2.equivalent(v, [0.5, 0.25, 1.125, 1]));
+  });
+
+
+  it('M4.rotateX', function() {
+    var r = M4.rotatedX(I4, Math.PI / 2);
+    var v = M4.multiply(r, [0, 0, -1, 1]);  // points away from viewer
+    assert(V4.equivalent(v, [0, 1, 0, 1]));
+  });
+
+  it('M4.rotateY', function() {
+    var r = M4.rotatedY(I4, Math.PI / 2);
+    var v = M4.multiply(r, [0, 0, -1, 1]);  // points away from viewer
+    assert(V4.equivalent(v, [-1, 0, 0, 1]));
+  });
+
+  it('M4.rotateZ', function() { // axis points towards viewer
+    var r = M4.rotatedZ(I4, Math.PI / 2);
+    var v = M4.multiply(r, [0, 1, 0, 1]);
+    assert(V4.equivalent(v, [-1, 0, 0, 1]));
+  });
 });
