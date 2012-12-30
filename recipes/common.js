@@ -1,3 +1,5 @@
+// Create a COMMON namespace for a small handful of helper functions
+// and properties.
 var COMMON = {cdn: "http://ajax.googleapis.com/ajax/libs/"};
 
 // Use HeadJS to load scripts asynchronously, but execute them
@@ -14,31 +16,56 @@ head.js(
   COMMON.cdn + "jquery/1.8.0/jquery.min.js",
   COMMON.cdn + "jqueryui/1.9.2/jquery-ui.min.js");
 
-// After all scripts have been loaded AND after the document is "Ready", do this:
+// After all scripts have been loaded AND after the document is
+// "Ready", do this:
 head.ready(function() {
 
   // Execute the recipe's main() function
   main();
 
   // Download highlightjs and provide buttons for it
-  head.js("http://yandex.st/highlightjs/7.3/highlight.min.js", function() {
+  var hljsurl = "http://yandex.st/highlightjs/7.3/highlight.min.js";
+  head.js(hljsurl, function() {
 
     // Add some links into the button-bar element
     var slash = document.URL.lastIndexOf("/");
     var recipe = document.URL.slice(slash+1, -4);
     var index = "index.html";
-    var github = "http://github.com/prideout/book-webgl/blob/master/recipes/";
     $('#button-bar').html([
       "<a href='" + index + "'>",
       "    go to recipe list",
       "</a>",
-      "<a href='" + github + recipe + ".html'>",
+      "<button id='view-html'>",
       "    view HTML source",
-      "</a>",
-      "<a href='" + github + recipe + ".js'>",
+      "</button>",
+      "<button id='view-js'>",
       "    view JavaScript source",
-      "</a>",
+      "</button>",
     ].join('\n'));
+
+    // Define a generic click handler for the "view source" buttons.
+    var clickHandler = function(id, lang) {
+      return function(src) {
+        var inner = hljs.highlight(lang, src).value;
+        $('body').html("<pre>" + inner + "</pre>");
+        window.location = '#' + id;
+        $(window).bind('hashchange', function(e) {
+          if (window.location.hash == "") {
+            $(window).unbind('hashchange');
+            window.location.reload();
+          }
+        });
+      };
+    };
+
+    // Assign the click handlers.
+    var base = document.URL.slice(0, -4);
+    $('#view-js').button().click(function() {
+      $.get(base + 'js', clickHandler(this.id, 'javascript'));
+    });
+    $('#view-html').button().click(function() {
+      $.get(base + 'html', clickHandler(this.id, 'xml'));
+    });
 
     // Tell jQueryUI to style the links as buttons
     $("a").button()

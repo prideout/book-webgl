@@ -1,6 +1,6 @@
 # master
 
-- replace the github links with server-side colorfication
+- refresh server
 
 - safari: GL errors.  bad retina juju.
 
