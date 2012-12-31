@@ -1,13 +1,6 @@
 # master
 
-- refresh server
-
-- mail banks
-
 - ch 1 & 2 tangling
-
-- back to OSD work for a day or two?
-  Add to its README: rebase to prep for a pull request.
 
 - manipulators, BEAUTIFUL docs, fresnel/marble spiral horn
 
@@ -41,6 +34,9 @@
     http://vimalkumar.in/sphinx-themes/solar/html/index.html
 
 # Notes
+
+WebGL Best Practices
+https://developer.mozilla.org/en-US/docs/WebGL/WebGL_best_practices
 
 Immediately-Invoked Function Expression 
 

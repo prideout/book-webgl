@@ -34,13 +34,11 @@
       attribute vec4 Position;
       attribute vec3 Normal;
       varying vec3 vNormal;
-      varying vec3 vPosition;
       uniform mat4 modelview;
       uniform mat4 projection;
       void main(void)
       {
           vNormal = mat3(modelview) * Normal;
-          vPosition = Position.xyz;
           vec4 p = Position;
           gl_Position = projection * modelview * p;
       }
@@ -51,7 +49,6 @@
       precision highp vec3;
       uniform vec4 color;
       varying vec3 vNormal;
-      varying vec3 vPosition;
 
       uniform vec4 lightPosition;
       uniform vec3 ambientMaterial;
