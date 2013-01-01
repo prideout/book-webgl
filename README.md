@@ -44,6 +44,8 @@ https://developer.mozilla.org/en-US/docs/WebGL/WebGL_best_practices
 
 Immediately-Invoked Function Expression 
 
+Chapter 7 is wimpy
+
 The foggy glass in front of butterfly screenshot is cool in RTR
 
 Alpha compositing with canvas.  Alpha of ClearColor matters!!
