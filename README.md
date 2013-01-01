@@ -1,6 +1,10 @@
 # master
 
-- ch 1 & 2 tangling
+- Verbiage for "Getting a Context"
+
+- Try to author all of chapter 1 (except the recipe) BEFORE generating a PDF.
+
+- styling on the recipe index doesn't work with the node server
 
 - manipulators, BEAUTIFUL docs, fresnel/marble spiral horn
 
