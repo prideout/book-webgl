@@ -21,9 +21,9 @@ The \code{\index{canvas}} element is one of the cornerstones of the HTML5 platfo
 
 \subsection{Dealing with Size and High-Resolution Screens}
 
-By default, \code{<canvas>} is a block level element, similar to \code{<div>}.  This means that it can only be a child of <body>, and that it typically has line breaks before and after it.
+By default, \code{<canvas>} is a block level element, similar to \code{<div>}.  This means that it can only be a child of \code{<body>}, and that it typically has line breaks before and after it.
 
-However canvas is set apart from other HTML element in that it's controlled by two separate \index{size}s.  First, there's the \emph{display area}, which is determined with familiar \index{CSS} mechanisms, then there's the canvas-specific \emph{content size}, which is specified with explicit \code{\index{width}} and \code{\index{height}} attributes.  The content size specifies an off-screen drawing surface that is scaled into the display area on the web page.
+One distinction between canvas and other HTML elements is that it has two sets of \index{size}s.  First, there's its \emph{display area}, which is determined with familiar \index{CSS} mechanisms, then there's the canvas-specific \emph{content size}, which is specified with explicit \code{\index{width}} and \code{\index{height}} attributes.  The content size specifies an off-screen drawing surface that is scaled into the display area on the web page.
 
 It's tempting to simply set the content and display sizes to the same dimensions, as in:
 
@@ -64,7 +64,7 @@ In Listing~BLAH, we adjust the canvas width and height not only during initializ
 
 MARGIN NOTE
 \begin{comment}
-Some developers also recompute the WebGL \emph{viewport} and \emph{projection matrix} during a resize event; more on this in future chapters.
+It's also common to adjust the WebGL \emph{viewport} and \emph{projection matrix} during a resize event; more on this in future chapters.
 \end{comment}
 
 \subsection{Getting a Context}
@@ -75,9 +75,9 @@ The entire WebGL API is exposed through a drawing \index{context} object of type
   gl = canvas.getContext('experimental-webgl', {antialias: true});
 \end{lstlisting}
 
-At the time of this writing, ``\index{experimental-webgl}'' is the only string that can be passed to \code{getContext} for WebGL.  (For the 2D canvas API, the string ``2d'' is used.
+At the time of this writing, ``\index{experimental-webgl}'' is the only string that can be passed to \code{getContext} for WebGL.  (For the 2D canvas API, the string ``2d'' is used.)
 
-The second argument is a set of optional attributes, as specified in Table~\ref{ContextAttributes}.
+The second argument is a set of optional attributes, as specified in Table~\ref{tab:ContextAttributes}.
 
 \begin{table}[htb]\centering
   \begin{tabular}{ll}
@@ -93,12 +93,77 @@ The second argument is a set of optional attributes, as specified in Table~\ref{
     \hline
   \end{tabular}
   \caption{WebGL Context Options.}
-  \label{ContextAttributes}
+  \label{tab:ContextAttributes}
 \end{table}
 
 \notetoself{Add references to future sections in the book that deal with context loss and image capture.}
 
 \subsection{Clearing and Compositing}
+
+The only WebGL functions we're discussing in this chapter are the first two methods listed in Table~\ref{tab:Clearing}.
+
+\begin{table}[htb]\centering
+  \begin{tabular}{ll}
+    \hline
+    Method & Argument Types \\
+    \hline
+    clear(mask) & logical or of values in \Table~\ref{tab:ClearBits} \\
+    clearColor(red, green, blue, alpha)  & floating point numbers in [0,1] \\
+    clearDepth(value) & floating point number in [0,1] \\
+    clearStencil(mask) & integer \\
+    \hline
+  \end{tabular}
+  \caption{WebGL Clear Methods.}
+  \label{tab:Clearing}
+\end{table}
+
+\begin{table}[htb]\centering
+  \begin{tabular}{ll}
+    \hline
+    Property & Value & Default Value \\
+    \hline
+    DEPTH\_BUFFER\_BIT   & 0x0100 & 0.0 \\
+    STENCIL\_BUFFER\_BIT & 0x0400 & 0x00000000\\
+    COLOR\_BUFFER\_BIT   & 0x4000 & (0, 0, 0, 0) \\
+    \hline
+  \end{tabular}
+  \caption{WebGL Clear Bits.}
+  \label{tab:ClearBit}
+\end{table}
+
+BRIEFLY DESCRIBE ``PLANES'', DEPTH, and STENCIL here.
+
+Listing~foo shows a typical usage pattern for the \code{clear} method.
+
+\begin{lstlisting}[language=JavaScript]
+gl = canvas.getContext('experimental-webgl', {antialias: true});
+gl.clearColor(1, 1, 0, 1);
+gl.clear(gl.COLOR_BUFFER_BIT);
+\end{lstlisting}
+
+You'll find a \code{clear} call in almost every WebGL sample you ever examine, but it's not always required.  Some applications never even bother filling the background with a solid color; for example, consider an ``infinite tunnel'' game, as depicted on the far left in Figure~foo.  Since every pixel in the canvas is affected by 3D drawing commands, there's no need to clear the color buffer.  However, if the tunnel weren't infinite (middle in Figure~foo), there would be an area of the screen that never gets drawn to.  If you don't explicitly perform a clear before doing any drawing, this unpainted region might contain junk (right in Figure~foo).  This is because the pixels in canvas are simply a region of memory; if don't explicitly the clear memory, it'll contain retain whatever junky data happened to be sitting around.  This brings us to \code{preserveDrawingBuffer}
+
+The \code{clear} command has an immediate* effect on the canvas, while \code{clearColor}, \code{clearDepth}, and \code{clearStencil} are simply configuring the WebGL state machine.  Most of the WebGL API consists of state-setting commands; there are only three methods in the entire API that can draw pixels into your canvas:
+
+- clear
+- drawArrays
+- drawElements
+
+We'll learn more about drawArrays and drawElements in the next chapter.
+
+* It's not quite immediate!  The web browser and graphics driver can buffer up WebGL commands and execute them later.  Moreover the drawing commands usually paint on an offscreen surface or ``backbuffer'', which the browser then presents to the screen all at once.  For learning purposes however, it's fine to think to these actions as having an immediate effect.
+
+
+images of a web page that has a background image (Egypt!)
+each canvas should have an opaque perspective cube
+
+0,0.25,.5,.5 -- no alpha, css-opacity=1
+0,0.25,.5,.5 -- alpha without premultiplied, css-opacity=1
+0,0.25,.5,.5 -- alpha with premultiplied, css-opacity=1
+
+0,0.25,.5,.5 -- no alpha, css-opacity=.5
+0,0.25,.5,.5 -- alpha without premultiplied, css-opacity=.5
+0,0.25,.5,.5 -- alpha with premultiplied, css-opacity=.5
 
 ``Html Page Compositor''
 

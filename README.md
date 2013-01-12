@@ -2,6 +2,27 @@
 
 - Try to author all of chapter 1 (except the recipe) BEFORE generating a PDF.
 
+- Fun with Figures:
+
+    - Infinite tunnel, tunnel with gap, tunnel without clearing or "preserveDrawBuffer"
+
+    - images of a web page that has a background image (Egypt!)
+    each canvas should have an opaque perspective cube
+
+    0,0.25,.5,.5 -- no alpha, css-opacity=1
+    0,0.25,.5,.5 -- alpha without premultiplied, css-opacity=1
+    0,0.25,.5,.5 -- alpha with premultiplied, css-opacity=1
+
+    0,0.25,.5,.5 -- no alpha, css-opacity=.5
+    0,0.25,.5,.5 -- alpha without premultiplied, css-opacity=.5
+    0,0.25,.5,.5 -- alpha with premultiplied, css-opacity=.5
+    
+    - The Assembly Line Metaphor
+    
+    - Timeline of GL
+
+- ask Mona to collect a pinterest album of Egyptian images
+
 - styling on the recipe index doesn't work with the node server
 
 - manipulators, BEAUTIFUL docs, fresnel/marble spiral horn
