@@ -31,7 +31,12 @@ var main = function() {
   var buffers = {
     tubeCoords: gl.createBuffer(),
     triangles: gl.createBuffer(),
-    wireframe: gl.createBuffer()
+    wireframe: gl.createBuffer(),
+    centerline: gl.createBuffer()
+  };
+
+  var arrays = {
+      centerline: new Float32Array(128 * 3)
   };
 
   var init = function() {
@@ -63,6 +68,22 @@ var main = function() {
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.triangles);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, tube.triangles(), gl.STATIC_DRAW);
 
+    var spine = function() {
+      var pointCount = arrays.centerline.length / 3;
+      var i = 0;
+      var t = 0;
+      var dt = 1.0 / pointCount;
+      for (var p = 0; p < pointCount; p++) {
+        var c = GIZA.equations.grannyKnot(t);
+        arrays.centerline[i++] = c[0];
+        arrays.centerline[i++] = c[1];
+        arrays.centerline[i++] = c[2];
+        t += dt;
+      }
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffers.centerline);
+      gl.bufferData(gl.ARRAY_BUFFER, arrays.centerline, gl.STATIC_DRAW);
+    }();
+      
     if (gl.getError() !== gl.NO_ERROR) {
       console.error('Error when trying to create VBOs');
     }
@@ -72,25 +93,28 @@ var main = function() {
     
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+    var ptCount = arrays.centerline.length / 3;
+    var cameraIndex = (currentTime / 100) % ptCount;
+
     var camera = function(t) {
-      return GIZA.equations.grannyKnot(t);
+      var c = (t / 100) % ptCount;
+      c = Math.floor(c);
+      return V3.make(
+        arrays.centerline[c*3 + 0],
+        arrays.centerline[c*3 + 1],
+        arrays.centerline[c*3 + 2]);
     };
     
-    var t = (currentTime / 10000.0);
-    var eye = camera(t);
-    var target = camera(t + 0.01);
+    var eye = camera(currentTime);
+    var target = camera(currentTime + 100);
     var direction = V3.normalize(V3.subtract(target, eye));
     var up = V3.normalize(V3.cross(direction, [0, 0, 1]));
     
-    var mv = M4.lookAt(
-      [0,0,-2],  // eye
-      [0,0,0],  // target
-      [0,1,0]); // up
-
-    //var mv = M4.lookAt(eye, target, up);
+    var mv = M4.lookAt(eye, target, up);
+    mv = M4.lookAt([0,0,3], target, [0,1,0]);
 
     var proj = M4.perspective(
-      60,       // fov in degrees
+      60,          // fov in degrees
       GIZA.aspect,
       0.1, 1000);  // near and far
 
@@ -114,7 +138,7 @@ var main = function() {
     gl.vertexAttribPointer(attribs.NORMAL, 3, gl.FLOAT, false, 24, 12);
     gl.enable(gl.POLYGON_OFFSET_FILL);
     gl.polygonOffset(10, 10);
-    gl.drawElements(gl.TRIANGLES, numIndices, gl.UNSIGNED_SHORT, 0)
+    //gl.drawElements(gl.TRIANGLES, numIndices, gl.UNSIGNED_SHORT, 0)
     gl.disable(gl.POLYGON_OFFSET_FILL);
     gl.disableVertexAttribArray(attribs.NORMAL);
 
@@ -128,6 +152,21 @@ var main = function() {
     gl.uniformMatrix4fv(program.projection, false, proj);
     gl.uniformMatrix4fv(program.modelview, false, mv);
     gl.drawElements(gl.LINES, numIndices, gl.UNSIGNED_SHORT, 0)
+
+    gl.uniform4f(program.color, 1, 1, 0, 0.5);
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffers.centerline);
+    gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 12, 0);
+    gl.drawArrays(gl.LINE_LOOP, 0, arrays.centerline.length / 3);
+
+    if (cameraIndex + 1 < arrays.centerline.length / 3) {
+      gl.lineWidth(6);
+      gl.disable(gl.DEPTH_TEST);
+      gl.uniform4f(program.color, 1, 0, 0, 1);
+      gl.drawArrays(gl.LINE_STRIP, cameraIndex, 2);
+      gl.enable(gl.DEPTH_TEST);
+      gl.lineWidth(2);
+    }
+
     gl.disable(gl.BLEND);
     gl.disableVertexAttribArray(attribs.POSITION);
 
