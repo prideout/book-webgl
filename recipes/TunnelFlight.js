@@ -32,11 +32,13 @@ var main = function() {
     tubeCoords: gl.createBuffer(),
     triangles: gl.createBuffer(),
     wireframe: gl.createBuffer(),
-    centerline: gl.createBuffer()
+    centerline: gl.createBuffer(),
+    points: gl.createBuffer(),
   };
 
   var arrays = {
-      centerline: new Float32Array(128 * 3)
+      centerline: new Float32Array(128 * 3),
+      points: new Float32Array(1 * 3)
   };
 
   var init = function() {
@@ -91,8 +93,7 @@ var main = function() {
 
   var draw = function(currentTime) {
     
-    var realTime = currentTime;
-    //currentTime = 0;
+    //currentTime = 2000;
 
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
@@ -108,10 +109,11 @@ var main = function() {
     
     var eye = camera(currentTime);
     var target = camera(currentTime + 50);
-
-    if (false) {
+    
+    // Turn on some debug code
+    if (true) {
       target = V3.copy(eye);
-      eye[2] -= 0.1;
+      eye[2] -= 0.2;
     }
 
     var direction = V3.normalize(V3.subtract(eye, target));
@@ -153,7 +155,7 @@ var main = function() {
     gl.useProgram(program);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-    gl.uniform4f(program.color, 1, 1, 1, 0.25);
+    gl.uniform4f(program.color, 1, 1, 1, 0.125);
     gl.uniformMatrix4fv(program.projection, false, proj);
     gl.uniformMatrix4fv(program.modelview, false, mv);
     gl.drawElements(gl.LINES, numIndices, gl.UNSIGNED_SHORT, 0)
@@ -163,14 +165,24 @@ var main = function() {
     gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 12, 0);
     gl.drawArrays(gl.LINE_LOOP, 0, arrays.centerline.length / 3);
 
+    gl.disable(gl.DEPTH_TEST);
+    
     if (cameraIndex + 2 < arrays.centerline.length / 3) {
       gl.lineWidth(6);
-      gl.disable(gl.DEPTH_TEST);
       gl.uniform4f(program.color, 1, 0, 0, 1);
       gl.drawArrays(gl.LINE_STRIP, cameraIndex, 3);
-      gl.enable(gl.DEPTH_TEST);
       gl.lineWidth(2);
     }
+
+    // Draw the camera target for debug purposes.
+    arrays.points.set(target);
+    gl.uniform4f(program.color, 0, 1, 0, 1);
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffers.points);
+    gl.bufferData(gl.ARRAY_BUFFER, arrays.points, gl.STATIC_DRAW);
+    gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 12, 0);
+    gl.drawArrays(gl.POINTS, 0, 1);
+
+    gl.enable(gl.DEPTH_TEST);
 
     gl.disable(gl.BLEND);
     gl.disableVertexAttribArray(attribs.POSITION);

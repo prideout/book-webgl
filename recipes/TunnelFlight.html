@@ -29,6 +29,7 @@
           vNormal = mat3(modelview) * Normal;
           vec4 p = Position;
           gl_Position = projection * modelview * p;
+          gl_PointSize = 10.0;
       }
     </script>
 
