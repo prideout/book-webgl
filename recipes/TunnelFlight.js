@@ -2,6 +2,7 @@ var main = function() {
 
   GIZA.init();
   var M4 = GIZA.Matrix4;
+  var V3 = GIZA.Vector3;
 
   var attribs = {
     POSITION: 0,
@@ -47,7 +48,7 @@ var main = function() {
 
     var tube = function() {
       var equation = GIZA.equations.tube(
-        GIZA.equations.grannyKnot, 0.1);
+        GIZA.equations.grannyKnot, 0.2);
       var surface = GIZA.surface(equation, lod, 6*lod, flags);
       gl.bindBuffer(gl.ARRAY_BUFFER, buffers.tubeCoords);
       gl.bufferData(gl.ARRAY_BUFFER, surface.points(), gl.STATIC_DRAW);
@@ -70,16 +71,28 @@ var main = function() {
   var draw = function(currentTime) {
     
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    var camera = function(t) {
+      return GIZA.equations.grannyKnot(t);
+    };
+    
+    var t = (currentTime / 10000.0);
+    var eye = camera(t);
+    var target = camera(t + 0.01);
+    var direction = V3.normalize(V3.subtract(target, eye));
+    var up = V3.normalize(V3.cross(direction, [0, 0, 1]));
     
     var mv = M4.lookAt(
-      [0,0,12], // eye
+      [0,0,-2],  // eye
       [0,0,0],  // target
       [0,1,0]); // up
 
+    //var mv = M4.lookAt(eye, target, up);
+
     var proj = M4.perspective(
-      10,       // fov in degrees
+      60,       // fov in degrees
       GIZA.aspect,
-      3, 200);  // near and far
+      0.1, 1000);  // near and far
 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.triangles)
     gl.enableVertexAttribArray(attribs.POSITION);
