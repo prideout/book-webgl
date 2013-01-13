@@ -48,6 +48,7 @@ GIZA.equations.torus = function(minor, major) {
 
 GIZA.equations.tube = function(curve, radius) {
   var V3 = GIZA.Vector3;
+  var V4 = GIZA.Vector4;
   var M4 = GIZA.Matrix4;
   return function(u, v) {
 
@@ -57,12 +58,12 @@ GIZA.equations.tube = function(curve, radius) {
     var a = V3.normalize(V3.subtract(p1, p2));
     var b = V3.perp(a);
     var c = V3.normalize(V3.cross(a, b));
-    var m = M4.makeBasis(c, b, z);
+    var m = M4.makeBasis(c, b, a);
 
     // Rotate the Z-plane circle appropriately:
     var spokeVector = V4.make(
-      Math.cos(Math.PI * 2.0 * v),
-      Math.sin(Math.PI * 2.0 * v),
+      Math.cos(Math.PI * 4.0 * v),
+      Math.sin(Math.PI * 4.0 * v),
       0, 0);
     spokeVector = M4.multiply(m, spokeVector);
     spokeVector = V4.scale(spokeVector, radius);
@@ -73,7 +74,7 @@ GIZA.equations.tube = function(curve, radius) {
 };
 
 GIZA.equations.grannyKnot = function(t) {
-  t = 2 * t;
+  t = 2 * Math.PI * t;
   var cos = Math.cos, sin = Math.sin;
   var x = -0.22 * cos(t) - 1.28 * sin(t) - 0.44 * cos(3 * t) - 0.78 * sin(3 * t);
   var y = -0.1 * cos(2 * t) - 0.27 * sin(2 * t) + 0.38 * cos(4 * t) + 0.46 * sin(4 * t);

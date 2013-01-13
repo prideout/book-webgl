@@ -48,7 +48,7 @@
         
       void main()
       {
-          vec3 N = -normalize(vNormal);
+          vec3 N = normalize(vNormal);
           vec3 L = normalize((lightPosition).xyz);
           vec3 Eye = vec3(0, 0, 1);
           vec3 H = normalize(L + Eye);
