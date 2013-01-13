@@ -1,9 +1,7 @@
 # master
 
-- TunnelFlight 
-  I think LookAt isn't working correctly.  Do something simple with POINTS in some fixed locations.
-  
-  Infinite tunnel
+- Repair BasicLighting, assuming that lookAt is correct.
+  TunnelFlight: Add screenshot key
   Tunnel with gap
   Tunnel without clearing or "preserveDrawBuffer"
 
@@ -29,6 +27,8 @@
 - ask Mona to collect a pinterest album of Egyptian images
 
 - styling on the recipe index doesn't work with the node server
+
+- positional lighting for TunnelFlight
 
 - manipulators, BEAUTIFUL docs, fresnel/marble spiral horn
 

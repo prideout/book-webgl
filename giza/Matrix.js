@@ -76,11 +76,13 @@ GIZA.Matrix4 = {
 
   lookAt: function(eye, target, up) {
     var V3 = GIZA.Vector3;
+    up = V3.normalized(up);
 	var z = V3.normalize(V3.subtract(eye, target));
-    var x = V3.normalize(V3.cross(up, z));
-	var y = V3.cross(z, x);
-    var M = this.makeBasis(x, y, z);
-    return this.translate(M, V3.negated(eye));
+    var x = V3.normalize(V3.cross(z, up));
+	var y = V3.normalize(V3.cross(x, z));
+    var M = this.transpose(this.makeBasis(x, y, z));
+    M = this.translate(M, V3.negated(eye));
+    return M;
   },
 
   frustum: function(left, right, bottom, top, near, far) {
