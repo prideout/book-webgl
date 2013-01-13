@@ -1,8 +1,8 @@
 # master
 
-- TunnelFlight
-  Note you already have a giza/Tube -- should I use it?
-  http://prideout.net/blog/?p=44#tubes
+- TunnelFlight 
+  I think LookAt isn't working correctly.  Do something simple with POINTS in some fixed locations.
+  
   Infinite tunnel
   Tunnel with gap
   Tunnel without clearing or "preserveDrawBuffer"
