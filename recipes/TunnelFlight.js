@@ -46,7 +46,7 @@ var main = function() {
     gl.clearColor(34 / 255, 74 / 255, 116 / 255, 1);
     gl.enable(gl.DEPTH_TEST);
 
-    var lod = 32;
+    var lod = 64;
 
     var flags = function() {
       var f = GIZA.surfaceFlags;
@@ -129,9 +129,6 @@ var main = function() {
     gl.uniform4f(program.lightPosition, 0.75, .25, 1, 1);
     gl.uniform3f(program.ambientMaterial, 0.2, 0.1, 0.1);
     gl.uniform4f(program.diffuseMaterial, 1, 209/255, 54/255, 1);
-    gl.uniform1f(program.shininess, 180.0);
-    gl.uniform3f(program.specularMaterial, 0.8, 0.8, 0.7);
-    gl.uniform1f(program.fresnel, 0.01);
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.tubeCoords);
     gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 24, 0);
     gl.vertexAttribPointer(attribs.NORMAL, 3, gl.FLOAT, false, 24, 12);

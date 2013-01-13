@@ -78,7 +78,7 @@ var main = function() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     
     var mv = M4.lookAt(
-      [0,0,20], // eye
+      [0,0,-20], // eye
       [0,0,0],  // target
       [0,1,0]); // up
 

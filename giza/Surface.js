@@ -195,12 +195,13 @@ GIZA.surface = function(equation, rows, cols, flags) {
       for (var row = 0; row < rows; row++) {
         for (var col = 0; col < cols; col++) {
           var i = row * pointsPerRow + col;
+          triangles[triIndex++] = i+pointsPerRow;
+          triangles[triIndex++] = i+1;
           triangles[triIndex++] = i;
-          triangles[triIndex++] = i+1;
-          triangles[triIndex++] = i+pointsPerRow;
-          triangles[triIndex++] = i+pointsPerRow;
-          triangles[triIndex++] = i+1;
+
           triangles[triIndex++] = i+pointsPerRow+1;
+          triangles[triIndex++] = i+1;
+          triangles[triIndex++] = i+pointsPerRow;
         }
       }
       return triangles;
