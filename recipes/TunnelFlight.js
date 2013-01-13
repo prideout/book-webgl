@@ -93,28 +93,27 @@ var main = function() {
     
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    var speed = 50; // the lower, the faster :)
+    var speed = 200; // the lower, the faster
+
     var ptCount = arrays.centerline.length / 3;
     var cameraIndex = Math.floor((currentTime / speed) % ptCount);
 
     var camera = function(t) {
-      return GIZA.equations.grannyKnot(t / (speed * ptCount));
-      var c = Math.floor((t / speed) % ptCount);
-      return V3.make(
-        arrays.centerline[c*3 + 0],
-        arrays.centerline[c*3 + 1],
-        arrays.centerline[c*3 + 2]);
+      t = t / (speed * ptCount);
+      return GIZA.equations.grannyKnot(t);
     };
     
     var eye = camera(currentTime);
     var target = camera(currentTime + speed);
     var direction = V3.normalize(V3.subtract(target, eye));
     var up = V3.normalize(V3.cross(direction, [0, 0, 1]));
-    
-    //var mv = M4.lookAt(eye, target, up);
+    var mv = M4.lookAt(eye, target, up);
 
-    eye[2] = 3;
-    var mv = M4.lookAt(eye, target, [0,1,0]);
+    if (true) {
+      target = V3.copy(eye);
+      eye[2] += 1;
+      mv = M4.lookAt(eye, target, [0,1,0]);
+    }
 
     var proj = M4.perspective(
       60,          // fov in degrees
