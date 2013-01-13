@@ -91,6 +91,9 @@ var main = function() {
 
   var draw = function(currentTime) {
     
+    var realTime = currentTime;
+    //currentTime = 0;
+
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     var speed = 200; // the lower, the faster
@@ -104,19 +107,19 @@ var main = function() {
     };
     
     var eye = camera(currentTime);
-    var target = camera(currentTime + speed);
+    var target = camera(currentTime + 50);
 
-    if (true) {
+    if (false) {
       target = V3.copy(eye);
-      eye[2] += 1;
+      eye[2] -= 0.1;
     }
 
-    var direction = V3.normalize(V3.subtract(target, eye));
+    var direction = V3.normalize(V3.subtract(eye, target));
     var up = V3.perp(direction);
     var mv = M4.lookAt(eye, target, up);
 
     var proj = M4.perspective(
-      60,          // fov in degrees
+      90,          // fov in degrees
       GIZA.aspect,
       0.1, 1000);  // near and far
 
@@ -160,11 +163,11 @@ var main = function() {
     gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 12, 0);
     gl.drawArrays(gl.LINE_LOOP, 0, arrays.centerline.length / 3);
 
-    if (cameraIndex + 1 < arrays.centerline.length / 3) {
+    if (cameraIndex + 2 < arrays.centerline.length / 3) {
       gl.lineWidth(6);
       gl.disable(gl.DEPTH_TEST);
       gl.uniform4f(program.color, 1, 0, 0, 1);
-      gl.drawArrays(gl.LINE_STRIP, cameraIndex, 2);
+      gl.drawArrays(gl.LINE_STRIP, cameraIndex, 3);
       gl.enable(gl.DEPTH_TEST);
       gl.lineWidth(2);
     }
