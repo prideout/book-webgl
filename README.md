@@ -1,8 +1,6 @@
 # master
 
-- Repair BasicLighting, assuming that lookAt is correct.
-  TunnelFlight: Add screenshot key
-  Tunnel with gap
+- Tunnel with gap
   Tunnel without clearing or "preserveDrawBuffer"
 
 - Try to author all of chapter 1 (except the recipe) BEFORE generating a PDF.

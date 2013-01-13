@@ -81,6 +81,9 @@ COMMON.endFrame = function(drawFunc) {
     console.error("GL error during draw cycle.");
   } else {
     var wrappedDrawFunc = function(time) {
+
+      COMMON.now = time;
+
       // Clear out the GL error state at the beginning of the next frame.
       // This is a workaround for a Safari bug.
       gl.getError();
