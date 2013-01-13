@@ -282,6 +282,16 @@ GIZA.Vector3 = {
     return this.add(a, b);
   },
 
+  // Every vector in 3-space has an infinite number of perpendicular
+  // vectors, so here we simply choose a reasonable one.
+  perp: function(u) {
+    var uprime = this.cross(u, this.make(1, 0, 0));
+    if (this.lengthSquared(uprime) < 0.01) {
+      uprime = this.cross(u, this.make(0, 1, 0));
+    }
+    return this.normalize(uprime);
+  }
+
 };
 
 GIZA.Vector4 = {

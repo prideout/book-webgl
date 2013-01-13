@@ -1,10 +1,15 @@
 # master
 
+- TunnelFlight
+  Note you already have a giza/Tube -- should I use it?
+  http://prideout.net/blog/?p=44#tubes
+  Infinite tunnel
+  Tunnel with gap
+  Tunnel without clearing or "preserveDrawBuffer"
+
 - Try to author all of chapter 1 (except the recipe) BEFORE generating a PDF.
 
 - Fun with Figures:
-
-    - Infinite tunnel, tunnel with gap, tunnel without clearing or "preserveDrawBuffer"
 
     - images of a web page that has a background image (Egypt!)
     each canvas should have an opaque perspective cube

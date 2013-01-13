@@ -46,7 +46,7 @@ var main = function() {
     }();
 
     var torus = function() {
-      var equation = GIZA.equations.torus(1, 20);
+      var equation = GIZA.equations.torus(4, 16);
       var surface = GIZA.surface(equation, lod, lod, flags);
       gl.bindBuffer(gl.ARRAY_BUFFER, buffers.torusCoords);
       gl.bufferData(gl.ARRAY_BUFFER, surface.points(), gl.STATIC_DRAW);
@@ -71,14 +71,14 @@ var main = function() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     
     var mv = M4.lookAt(
-      [20,0,0], // eye
-      [20,1,0],  // target
-      [0,0,1]); // up
+      [0,0,100], // eye
+      [0,0,0],  // target
+      [0,1,0]); // up
 
     var proj = M4.perspective(
       10,       // fov in degrees
       GIZA.aspect,
-      3, 200);  // near and far
+      3, 2000);  // near and far
 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.triangles)
     gl.enableVertexAttribArray(attribs.POSITION);
