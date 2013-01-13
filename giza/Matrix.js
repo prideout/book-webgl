@@ -76,6 +76,10 @@ GIZA.Matrix4 = {
 
   lookAt: function(eye, target, up) {
     var V3 = GIZA.Vector3;
+    
+    eye = V3.negated(eye);
+    target = V3.negated(target);
+
 	var z = V3.normalize(V3.subtract(eye, target));
 	if (V3.length(z) === 0) {
 	  z[2] = 1;

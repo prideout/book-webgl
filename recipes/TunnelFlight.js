@@ -93,12 +93,13 @@ var main = function() {
     
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+    var speed = 50; // the lower, the faster :)
     var ptCount = arrays.centerline.length / 3;
-    var cameraIndex = (currentTime / 100) % ptCount;
+    var cameraIndex = Math.floor((currentTime / speed) % ptCount);
 
     var camera = function(t) {
-      var c = (t / 100) % ptCount;
-      c = Math.floor(c);
+      return GIZA.equations.grannyKnot(t / (speed * ptCount));
+      var c = Math.floor((t / speed) % ptCount);
       return V3.make(
         arrays.centerline[c*3 + 0],
         arrays.centerline[c*3 + 1],
@@ -106,12 +107,14 @@ var main = function() {
     };
     
     var eye = camera(currentTime);
-    var target = camera(currentTime + 100);
+    var target = camera(currentTime + speed);
     var direction = V3.normalize(V3.subtract(target, eye));
     var up = V3.normalize(V3.cross(direction, [0, 0, 1]));
     
-    var mv = M4.lookAt(eye, target, up);
-    mv = M4.lookAt([0,0,3], target, [0,1,0]);
+    //var mv = M4.lookAt(eye, target, up);
+
+    eye[2] = 3;
+    var mv = M4.lookAt(eye, target, [0,1,0]);
 
     var proj = M4.perspective(
       60,          // fov in degrees
