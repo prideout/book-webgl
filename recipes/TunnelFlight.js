@@ -105,15 +105,15 @@ var main = function() {
     
     var eye = camera(currentTime);
     var target = camera(currentTime + speed);
-    var direction = V3.normalize(V3.subtract(target, eye));
-    var up = V3.normalize(V3.cross(direction, [0, 0, 1]));
-    var mv = M4.lookAt(eye, target, up);
 
     if (true) {
       target = V3.copy(eye);
       eye[2] += 1;
-      mv = M4.lookAt(eye, target, [0,1,0]);
     }
+
+    var direction = V3.normalize(V3.subtract(target, eye));
+    var up = V3.perp(direction);
+    var mv = M4.lookAt(eye, target, up);
 
     var proj = M4.perspective(
       60,          // fov in degrees
