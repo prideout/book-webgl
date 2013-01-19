@@ -14,16 +14,15 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{The Canvas Element}
-
 \summary{Explains the \code{width} and \code{height} attributes and how to handle high-dpi displays (e.g., Apple Retina).}
 
-The \code{\index{canvas}} element is one of the cornerstones of the HTML5 platform.  It provides rich drawing API's for both 2D and 3D graphics.  The 2D API will not be discussed much in this book (except briefly in Chapter 8), and the 3D API is, of course, WebGL.
+The \code{\index{canvas}} element is one of the cornerstones of the HTML5 platform.  It provides rich drawing APIs for both 2D and 3D graphics.  The 2D API will not be discussed much in this book (except briefly in Chapter 8), and the 3D API is, of course, WebGL.
 
 \subsection{Dealing with Size and High-Resolution Screens}
 
-By default, \code{<canvas>} is a block level element, similar to \code{<div>}.  This means that it can only be a child of \code{<body>}, and that it typically has line breaks before and after it.
+By default, \code{<canvas>} is a block level element, similar to \code{<div>}.  This means that it can only be a child of \code{<body>}, and that it's typically rendered with line breaks before and afterwards.
 
-One distinction between canvas and other HTML elements is that it has two sets of \index{size}s.  First, there's its \emph{display area}, which is determined with familiar \index{CSS} mechanisms, then there's the canvas-specific \emph{content size}, which is specified with explicit \code{\index{width}} and \code{\index{height}} attributes.  The content size specifies an off-screen drawing surface that is scaled into the display area on the web page.
+An important distinction between canvas and other HTML elements is its two sets of \index{size}s.  One size is the \emph{display area}, computed with familiar \index{CSS} mechanisms.  The other size is the \emph{content size}, specified with explicit \code{\index{width}} and \code{\index{height}} attributes.  The content size specifies an off-screen drawing surface that gets scaled into the display area on the web page.
 
 It's tempting to simply set the content and display sizes to the same dimensions, as in:
 
@@ -32,9 +31,9 @@ It's tempting to simply set the content and display sizes to the same dimensions
 </canvas>
 \end{lstlisting}
 
-There's nothing wrong with this for simple applications.  However you may wish to have a dynamic style (e.g., \code{width:100%}).  Moreover CSS pixels don't necessarily correspond to actual device pixels.  This is especially true on high-resolution displays like Apple Retina, where browsers typically upscale CSS pixels by 2x. If you assume that device pixels are 1:1 with CSS pixels, you might see ``blurriness'' in your WebGL canvas due to the upscaling.
+There's nothing wrong with the above approach for simple applications.  It's common, however, to specify dynamic styles such as \code{width:100%}.  Moreover CSS pixels don't necessarily correspond to actual device pixels.  This is especially true on high-resolution displays like Apple's Retina displays, where browsers typically upscale CSS pixels by 2x. If you assume that device pixels are 1:1 with CSS pixels, you might see ``blurriness'' in your WebGL canvas due to the upscaling.
 
-To get around these issues, \index{\code{GIZA.init}} examines the \code{devicePixelRatio} window property to check how much (if any) upscaling the browser is performing.  It also examines the \index{\code{clientWidth}} and \index{\code{clientHeight}} properties of the canvas element to see what the finalized display style is.
+To get around these issues, \index{\code{GIZA.init}} (Listing~BLAH) examines the \code{devicePixelRatio} window property to check how much (if any) upscaling the browser is performing.  It also examines the \index{\code{clientWidth}} and \index{\code{clientHeight}} properties of the canvas element to obtain the finalized display area.
 
 \begin{lstlisting}[language=JavaScript]
 GIZA.init = function(canvasElement) {
@@ -84,9 +83,9 @@ The second argument is a set of optional attributes, as specified in Table~\ref{
     \hline
     Key & Default Value & Description \\
     \hline
-    alpha & true & Alpha channel in FBO 0 \\
-    depth & true & Depth buffer in FBO 0 \\
-    stencil & false & Stencil buffer in FBO 0 \\
+    alpha & true & Alpha channel \\
+    depth & true & Depth buffer \\
+    stencil & false & Stencil buffer \\
     antialias & true & Enables multisampling (or supersampling) \\
     premultipliedAlpha & true & Specifies compositing behavior with the web page; ignored if alpha is false \\
     preserveDrawingBuffer & false & Automatically resets the draw buffer, independently of \code{gl.clear} \\
@@ -96,9 +95,11 @@ The second argument is a set of optional attributes, as specified in Table~\ref{
   \label{tab:ContextAttributes}
 \end{table}
 
+We'll examine these attributes in Table~\ref{tab:ContextAttributes} in greater detail in the next section.
+
 \notetoself{Add references to future sections in the book that deal with context loss and image capture.}
 
-\subsection{Clearing and Compositing}
+\subsection{Clearing the Canvas}
 
 The only WebGL functions we're discussing in this chapter are the first two methods listed in Table~\ref{tab:Clearing}.
 
@@ -117,6 +118,24 @@ The only WebGL functions we're discussing in this chapter are the first two meth
   \label{tab:Clearing}
 \end{table}
 
+The \code{clear} command has an immediate\footnote{Not quite!  The web browser and graphics driver can buffer up WebGL commands and execute them later.} effect on the canvas, while \code{clearColor}, \code{clearDepth}, and \code{clearStencil} are simply configuring the WebGL state machine.  Most of the WebGL API consists of state-setting commands; there are only three methods in the entire API that can draw pixels into your canvas:
+
+\begin{itemize}
+\item clear
+\item drawArrays
+\item drawElements
+\end{itemize}
+
+We'll learn more about \code{drawArrays} and \code{drawElements} in the next chapter.  Listing~foo shows a typical usage pattern for the \code{clear} method.
+
+\begin{lstlisting}[language=JavaScript]
+gl = canvas.getContext('experimental-webgl', {antialias: true});
+gl.clearColor(1, 1, 0, 1);
+gl.clear(gl.COLOR_BUFFER_BIT);
+\end{lstlisting}
+
+The \code{COLOR_BUFFER_BIT} flag is one of the constants that can be combined with a logical ``or'' to specify which drawing layers to include in the canvas.  To reduce the memory footprint, choose the fewest number of required flags.  See tab:ClearBit.  Don't worry about the depth and stencil layers; we'll learn more about them in future chapters.
+
 \begin{table}[htb]\centering
   \begin{tabular}{ll}
     \hline
@@ -131,29 +150,19 @@ The only WebGL functions we're discussing in this chapter are the first two meth
   \label{tab:ClearBit}
 \end{table}
 
-BRIEFLY DESCRIBE ``PLANES'', DEPTH, and STENCIL here.
+You can find a \code{clear} call in many WebGL code samples on the web, but keep in mind that it's not always required.  Some applications never bother filling the background with a solid color; for example, consider an ``infinite tunnel'' game, as depicted on the far left in Figure~foo.  Since every pixel in the canvas is affected by 3D drawing commands, there's no need to clear the color buffer.  If, however, the tunnel were finite (middle in Figure~foo), there would be an area of the screen that never gets drawn to.  If you don't explicitly perform a clear before doing any drawing, this unpainted region might contain junk (right in Figure~foo).  This is because the pixels in canvas are simply a region of memory; if don't explicitly the clear memory, it'll contain retain whatever junky data happened to be sitting around.  This brings us to \code{preserveDrawingBuffer}.
 
-Listing~foo shows a typical usage pattern for the \code{clear} method.
+PRESERVEDRAWINGBUFFER
 
-\begin{lstlisting}[language=JavaScript]
-gl = canvas.getContext('experimental-webgl', {antialias: true});
-gl.clearColor(1, 1, 0, 1);
-gl.clear(gl.COLOR_BUFFER_BIT);
-\end{lstlisting}
+\subsection{Alpha Compositing}
 
-You'll find a \code{clear} call in almost every WebGL sample you ever examine, but it's not always required.  Some applications never even bother filling the background with a solid color; for example, consider an ``infinite tunnel'' game, as depicted on the far left in Figure~foo.  Since every pixel in the canvas is affected by 3D drawing commands, there's no need to clear the color buffer.  However, if the tunnel weren't infinite (middle in Figure~foo), there would be an area of the screen that never gets drawn to.  If you don't explicitly perform a clear before doing any drawing, this unpainted region might contain junk (right in Figure~foo).  This is because the pixels in canvas are simply a region of memory; if don't explicitly the clear memory, it'll contain retain whatever junky data happened to be sitting around.  This brings us to \code{preserveDrawingBuffer}
+If you're reading this book, you're probably already familiar with the concept of an alpha channel, invented in the late 70's by Alvy Ray Smith, one of the co-founders of the animation studio where I work.
 
-The \code{clear} command has an immediate* effect on the canvas, while \code{clearColor}, \code{clearDepth}, and \code{clearStencil} are simply configuring the WebGL state machine.  Most of the WebGL API consists of state-setting commands; there are only three methods in the entire API that can draw pixels into your canvas:
+Briefly, alpha is a floating-point value in the [0,1] interval, treated much like the red, green, and blue components of pixel color.  Alpha can be thought of as the inverse of opacity, although WebGL can interpret it in many ways, as we'll learn in Chapter \notetoself{CHAPTER}.  For now we'll focus on the existence of the alpha channel in the canvas and how it interacts with the HTML page compositor in your browser.
 
-- clear
-- drawArrays
-- drawElements
+PAGECOMPOSITOR
 
-We'll learn more about drawArrays and drawElements in the next chapter.
-
-* It's not quite immediate!  The web browser and graphics driver can buffer up WebGL commands and execute them later.  Moreover the drawing commands usually paint on an offscreen surface or ``backbuffer'', which the browser then presents to the screen all at once.  For learning purposes however, it's fine to think to these actions as having an immediate effect.
-
-
+\begin{comment}
 images of a web page that has a background image (Egypt!)
 each canvas should have an opaque perspective cube
 
@@ -164,8 +173,7 @@ each canvas should have an opaque perspective cube
 0,0.25,.5,.5 -- no alpha, css-opacity=.5
 0,0.25,.5,.5 -- alpha without premultiplied, css-opacity=.5
 0,0.25,.5,.5 -- alpha with premultiplied, css-opacity=.5
-
-``Html Page Compositor''
+\end{comment}
 
 MARGIN NOTE
 \begin{comment}
