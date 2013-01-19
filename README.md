@@ -1,11 +1,11 @@
 # master
 
 - TODO sections
-  - Brief History of GL
   - Building Giza: Literate Programming
   - The Assembly Line Metaphor
   - PRESERVEDRAWINGBUFFER
   - PAGECOMPOSITOR
+    http://www.svgopen.org/2005/papers/abstractsvgopen/
   - Animation Timing
   - Recipe
 
@@ -33,6 +33,7 @@
 - FIGURE - The Assembly Line Metaphor
 
 - FIGURE - Timeline of GL (include the inception of RSL and GLSL)
+  We might punt this!
 
 # later
 
