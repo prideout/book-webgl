@@ -1,51 +1,75 @@
 \chapter{Preliminaries}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{A Brief History of *GL}
+\section{WebGL and its Ancestry}
 \summary{Gives an account of WebGL's ancestry (OpenGL, OpenGL ES), motivation, and rapid growth.  Also briefly mentions impediments at the time of writing, such as security concerns and IE support.}
 
-3D graphics in the browser is not new.  Before WebGL, perhaps the most successful API in this area was \index{VRML}, the virtual reality modeling language standardized by the W3C in the mid 90's.  It was popular in academia but didn't quite have the same wildfire effect that characterizes the recent explosion of WebGL.
+3D graphics in the browser is not new.  One of the first technologies in this area was \index{VRML} VRML, the virtual reality modeling language standardized by the W3C in the mid 90's.  VRML was popular in academia but didn't quite have the same wildfire effect that characterizes the recent explosion of WebGL.
 
-Several reasons could explain the gradual demise of past efforts like VRML and its descendants.  JavaScript hasn't been considered a serious platform for professional application programming until recently.  Today's world of highly sophisticated Javascript tools like Google's \index{V8} engine  and John Resig's \index{jQuery} library have created a new world of possibilites on the web.
+Why has WebGL left other 3D web technologies in the dust?  For one, it came along at just the right time; JavaScript only recently attained status as a serious platform for application development.  Today's world of sophisticated tools like Google's V8 \index{V8} engine  and John Resig's jQuery \index{jQuery} library have legitimized JavaScript in the eyes of developers coming from the world of traditional desktop development.
 
-WebGL has plenty of merits that make it more attractive than other browser-based 3D APIs.  At the time of this writing, most popular browsers support it natively, freeing users from the overhead of plug-ins.  WebGL is also a ``close to the metal'' API; by providing low-level access to graphics hardware, developers can maximize performance like never before.
+WebGL has plenty of merits that make it more attractive than other browser-based 3D APIs.  At the time of this writing, almost all popular browsers support it natively, freeing users from the overhead of plug-ins.  WebGL is also ``close to the metal'' -- by providing low-level access to graphics hardware, developers can maximize performance like never before.
 
-WebGL's ancestry actually lies not in VRML (which did give rise to X3D and other XML-based standards) but in a low-level graphics API for C developed by Silicon Graphics in the early 90s called IrisGL.  When SGI released their specification to the world, they re-christened it to OpenGL.   With the rise of mobile platforms, OpenGL spawned OpenGL ES, which essentially encompasses the same feature set of WebGL.  WebGL can be thought of JavaScript bindings for OpenGL ES 2.0.
+WebGL's ancestry actually lies not in VRML (which did give rise to X3D and other XML-based standards) but in a low-level graphics API for C developed by Silicon Graphics in the early 90s.  They initially named their API \emph{IrisGL}, which evolved to \emph{OpenGL} when they released it as an industry standard.   With the rise of mobile platforms, OpenGL spawned \emph{OpenGL ES}, which encompasses almost the same feature set of WebGL.  In a sense, WebGL is simply a JavaScript binding for OpenGL ES 2.0.
 
-WebGL has another ancestor that is arguably just as important as IrisGL: the \emph{Renderman Shading Language} was developed by Pixar long before anyone in the real-time graphics industry could even fathom programmable shading.  WebGL gives developers access to an entire programming lanuage known as \index{GLSL}, used for writing \index{\emph{shaders}}, miniature programs executed on a massive scale of parrelelism.  Shaders have the ``final say'' in the 3D position of every vertex and the RGB values of every rasterized pixel.  We'll learn more about shaders and GLSL in Chapter 2.
+WebGL has another ancestor that is arguably just as influential as IrisGL: the \emph{Renderman Shading Language} was developed by Pixar long before the real-time graphics industry could fathom programmable shading.  WebGL gives developers access to an entire programming language known as \index{GLSL} \emph{GLSL}, used to author \index{shaders} \emph{shaders}, relatively small routines executed with massive parallelism.  Shaders have the final say in the 3D position of every vertex, and the RGB color of every rasterized pixel.  We'll learn more about shaders and GLSL in Chapter 2.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Building Giza: Literate Programming}
+\section{Building Giza}
 \summary{Describes our coding conventions and the \code{giza} library that is developed over the course of the book.}
+
+This is not just a book, it's a library.  Much of the sample code on these pages is lifted directly from the \emph{giza} library, named after the city in ancient Egypt.  The skyline of the Giza Necropolis is composed of triangles, the fundamental drawing primitive in computer graphics.  The pyramid shape also describes the \emph{viewing frustum}, a spatial region that encompasses everything within a certain vantage point in a 3D graphics program.
+
+For access to the full source code to giza, go to its github site:
+
+http://to.be.filled.in.com
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{The Assembly Line Metaphor}
 \summary{High-level overview of the WebGL rendering pipeline.}
 
+Hello world how are you.  See Figure~\ref{fig:AssemblyLine}.
+
+\begin{figure}[htb]\centering
+  \includegraphics[width=70mm]{AssemblyLine.jpg}
+  \caption{In which scenario should you call \code{clear()}?}
+  \label{fig:AssemblyLine}
+\end{figure}\index{tunnel}
+
+How did you like Figure~\ref{fig:AssemblyLine}?  It was cool no?
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{The Canvas Element}
 \summary{Explains the \code{width} and \code{height} attributes and how to handle high-dpi displays (e.g., Apple Retina).}
 
-The \code{\index{canvas}} element is one of the cornerstones of the HTML5 platform.  It provides rich drawing APIs for both 2D and 3D graphics.  The 2D API will not be discussed much in this book (except briefly in Chapter 8), and the 3D API is, of course, WebGL.
+The canvas \index{<canvas>} element is one of the cornerstones of the HTML5 platform.  It provides rich drawing APIs for both 2D and 3D graphics.  The 2D API will not be discussed much in this book (except briefly in Chapter 8), and the 3D API is, of course, WebGL.
 
-\subsection{Dealing with Size and High-Resolution Screens}
+\subsection{Dealing with Size}
 
-By default, \code{<canvas>} is a block level element, similar to \code{<div>}.  This means that it can only be a child of \code{<body>}, and that it's typically rendered with line breaks before and afterwards.
+By default, \code{<canvas>} is a block level element, similar to \code{<div>}.  This means that it can only be a child of \code{<body>}, and that it's typically rendered with surrounding line breaks.
 
-An important distinction between canvas and other HTML elements is its two sets of \index{size}s.  One size is the \emph{display area}, computed with familiar \index{CSS} mechanisms.  The other size is the \emph{content size}, specified with explicit \code{\index{width}} and \code{\index{height}} attributes.  The content size specifies an off-screen drawing surface that gets scaled into the display area on the web page.
+An important distinction between canvas and other elements is that it has two sizes \index{size}.  One size is the \emph{display area}, specified with familiar \index{CSS} CSS mechanisms.  The other size is the \emph{content size}, specified with explicit \code{width} \index{\code{width} attribute} and \code{height} \index{\code{height} attribute} attributes.  The content size specifies an off-screen drawing surface that gets scaled into the display area on the web page.
 
 It's tempting to simply set the content and display sizes to the same dimensions, as in:
 
 \begin{lstlisting}[language=HTML]
-<canvas style="width:640px;height:360px" width="640" height="360">
+<canvas style="width:640px; height:360px"
+        width="640" height="360">
 </canvas>
 \end{lstlisting}
 
-There's nothing wrong with the above approach for simple applications.  It's common, however, to specify dynamic styles such as \code{width:100%}.  Moreover CSS pixels don't necessarily correspond to actual device pixels.  This is especially true on high-resolution displays like Apple's Retina displays, where browsers typically upscale CSS pixels by 2x. If you assume that device pixels are 1:1 with CSS pixels, you might see ``blurriness'' in your WebGL canvas due to the upscaling.
+There's nothing wrong with the above approach for simple applications.  It's common, however, to specify a dynamicly-sized display area rather than a fixed one (e.g., \code{width:100\%}).  Moreover CSS pixels don't necessarily correspond to actual device pixels.  This is especially true on displays with a high pixel density, where browsers typically upscale CSS pixels by 2x.
 
-To get around these issues, \index{\code{GIZA.init}} (Listing~BLAH) examines the \code{devicePixelRatio} window property to check how much (if any) upscaling the browser is performing.  It also examines the \index{\code{clientWidth}} and \index{\code{clientHeight}} properties of the canvas element to obtain the finalized display area.
+\begin{sidenote}
+If you assume that device pixels are 1:1 with CSS pixels, you might see blurriness in your WebGL canvas due to upscaling.
+\end{sidenote}
 
-\begin{lstlisting}[language=JavaScript]
+To get around these issues, \code{GIZA.init} \index{\code{GIZA.init}} (Listing~\ref{lst:GIZA:init}) examines the \code{devicePixelRatio} window property to check how much (if any) upscaling the browser is performing.  It also examines the \code{clientWidth} \index{\code{clientWidth}, \code{clientHeight}} and \code{clientHeight} properties of the canvas element to obtain the finalized display area.
+
+\begin{lstlisting}[
+    caption={Adjusting the Canvas Size},
+    label=lst:GIZA:init,
+    language=JavaScript]
 GIZA.init = function(canvasElement) {
 
   // Find a canvas element if one wasn't specified.
@@ -69,27 +93,26 @@ GIZA.init = function(canvasElement) {
   window.onresize = adjustSize;
 \end{lstlisting}
 
-In Listing~BLAH, we adjust the canvas width and height not only during initialization, but also during the window's \index{\code{onresize}} event.
+In Listing~\ref{lst:GIZA:init}, we adjust the canvas width and height not only during initialization, but also during the window's \index{\code{onresize} event} \code{onresize} event.
 
-MARGIN NOTE
-\begin{comment}
-It's also common to adjust the WebGL \emph{viewport} and \emph{projection matrix} during a resize event; more on this in future chapters.
-\end{comment}
+\begin{sidenote}
+It's also common to adjust the WebGL \emph{viewport} and \emph{projection matrix} during a resize event.  More on this in future chapters.
+\end{sidenote}
 
 \subsection{Getting a Context}
 
-The entire WebGL API is exposed through a drawing \index{context} object of type \index{\code{WebGLRenderingContext}}.  This object is obtained by calling \index{\code{getContext}} on a canvas element, like so:
+The entire WebGL API is exposed through a drawing context \index{context} object of type \code{WebGLRenderingContext} \index{\code{WebGLRenderingContext}}.  This object is obtained by calling \code{getContext} \index{\code{getContext} method} on a canvas element, like so:
 
 \begin{lstlisting}[language=JavaScript]
   gl = canvas.getContext('experimental-webgl', {antialias: true});
 \end{lstlisting}
 
-At the time of this writing, ``\index{experimental-webgl}'' is the only string that can be passed to \code{getContext} for WebGL.  (For the 2D canvas API, the string ``2d'' is used.)
+At the time of this writing, \code{"experimental-webgl"} \index{\code{experimental-webgl}} is the only string that can be passed to \code{getContext} for WebGL.  (For the 2D canvas API, the string \code{"2d"} is used.)
 
 The second argument is a set of optional attributes, as specified in Table~\ref{tab:ContextAttributes}.
 
 \begin{table}[htb]\centering
-  \begin{tabular}{ll}
+  \begin{tabular}{lll}
     \hline
     Key & Default Value & Description \\
     \hline
@@ -118,7 +141,7 @@ The only WebGL functions we're discussing in this chapter are the first two meth
     \hline
     Method & Argument Types \\
     \hline
-    clear(mask) & logical or of values in \Table~\ref{tab:ClearBits} \\
+    clear(mask) & logical or of values in Table~\ref{tab:ClearBits} \\
     clearColor(red, green, blue, alpha)  & floating point numbers in [0,1] \\
     clearDepth(value) & floating point number in [0,1] \\
     clearStencil(mask) & integer \\
@@ -136,31 +159,40 @@ The \code{clear} command has an immediate\footnote{Not quite!  The web browser a
 \item drawElements
 \end{itemize}
 
-We'll learn more about \code{drawArrays} and \code{drawElements} in the next chapter.  Listing~foo shows a typical usage pattern for the \code{clear} method.
+We'll learn more about \code{drawArrays} and \code{drawElements} in the next chapter.  Listing~\ref{lst:ClearCanvas} shows a typical usage pattern for the \code{clear} method.
 
-\begin{lstlisting}[language=JavaScript]
+\begin{lstlisting}[
+    caption={Clearing the canvas},
+    label=lst:ClearCanvas,
+    language=JavaScript]
 gl = canvas.getContext('experimental-webgl', {antialias: true});
 gl.clearColor(1, 1, 0, 1);
 gl.clear(gl.COLOR_BUFFER_BIT);
 \end{lstlisting}
 
-The \code{COLOR_BUFFER_BIT} flag is one of the constants that can be combined with a logical ``or'' to specify which drawing layers to include in the canvas.  To reduce the memory footprint, choose the fewest number of required flags.  See tab:ClearBit.  Don't worry about the depth and stencil layers; we'll learn more about them in future chapters.
+The \code{COLOR\_BUFFER\_BIT} flag is one of the constants that can be combined with a logical ``or'' to specify which drawing layers to include in the canvas.  To reduce the memory footprint, choose the fewest number of required flags.  See tab:ClearBit.  Don't worry about the depth and stencil layers; we'll learn more about them in future chapters.
 
 \begin{table}[htb]\centering
-  \begin{tabular}{ll}
+  \begin{tabular}{lll}
     \hline
     Property & Value & Default Value \\
     \hline
-    DEPTH\_BUFFER\_BIT   & 0x0100 & 0.0 \\
-    STENCIL\_BUFFER\_BIT & 0x0400 & 0x00000000\\
-    COLOR\_BUFFER\_BIT   & 0x4000 & (0, 0, 0, 0) \\
+    \code{DEPTH\_BUFFER\_BIT}   & 0x0100 & 0.0 \\
+    \code{STENCIL\_BUFFER\_BIT} & 0x0400 & 0x00000000\\
+    \code{COLOR\_BUFFER\_BIT}   & 0x4000 & (0, 0, 0, 0) \\
     \hline
   \end{tabular}
   \caption{WebGL Clear Bits.}
   \label{tab:ClearBit}
 \end{table}
 
-You can find a \code{clear} call in many WebGL code samples on the web, but keep in mind that it's not always required.  Some applications never bother filling the background with a solid color; for example, consider an ``infinite tunnel'' game, as depicted on the far left in Figure~foo.  Since every pixel in the canvas is affected by 3D drawing commands, there's no need to clear the color buffer.  If, however, the tunnel were finite (middle in Figure~foo), there would be an area of the screen that never gets drawn to.  If you don't explicitly perform a clear before doing any drawing, this unpainted region might contain junk (right in Figure~foo).  This is because the pixels in canvas are simply a region of memory; if don't explicitly the clear memory, it'll contain retain whatever junky data happened to be sitting around.  This brings us to \code{preserveDrawingBuffer}.
+You can find a \code{clear} call in many WebGL code samples on the web, but keep in mind that it's not always required.  Some applications never bother filling the background with a solid color; for example, consider an ``infinite tunnel'' game, as depicted on the far left in Figure~\ref{fig:Tunnel}.  Since every pixel in the canvas is affected by 3D drawing commands, there's no need to clear the color buffer.  If, however, the tunnel were finite (middle in Figure~\ref{fig:Tunnel}), there would be an area of the screen that never gets drawn to.  If you don't explicitly perform a clear before doing any drawing, this unpainted region might contain junk (right in Figure~\ref{fig:Tunnel}).  This is because the pixels in canvas are simply a region of memory; if don't explicitly the clear memory, it'll contain retain whatever junky data happened to be sitting around.  This brings us to \code{preserveDrawingBuffer}.
+
+\begin{figure}[htb]\centering
+  \includegraphics[width=70mm]{ClosedTunnel.png}
+  \caption{In which scenario should you call \code{clear()}?}
+  \label{fig:Tunnel}
+\end{figure}\index{tunnel}
 
 PRESERVEDRAWINGBUFFER
 
@@ -185,10 +217,9 @@ each canvas should have an opaque perspective cube
 0,0.25,.5,.5 -- alpha with premultiplied, css-opacity=.5
 \end{comment}
 
-MARGIN NOTE
-\begin{comment}
-In this book, we never author children of canvas, but there's nothing wrong with doing so.
-\end{comment}
+\begin{sidenote}
+In this book, we never add children elements to \code{<canvas>}, but there's nothing wrong with doing so.  On some platforms, this can degrade performance, although this is improving as WebGL implementations are maturing.
+\end{sidenote}
 
 ...
 

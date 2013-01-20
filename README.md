@@ -1,15 +1,14 @@
 # master
 
+- Make sure that the index is ok.
+
 - TODO sections
-  - Building Giza: Literate Programming
-  - The Assembly Line Metaphor
   - PRESERVEDRAWINGBUFFER
   - PAGECOMPOSITOR
     http://www.svgopen.org/2005/papers/abstractsvgopen/
+  - The Assembly Line Metaphor
   - Animation Timing
   - Recipe
-
-- Try to author all of chapter 1 (except the recipe) BEFORE generating a PDF.
 
 - FIGURE
   ClosedTunnel should have thicker lines
@@ -32,12 +31,14 @@
 
 - FIGURE - The Assembly Line Metaphor
 
-- FIGURE - Timeline of GL (include the inception of RSL and GLSL)
-  We might punt this!
-
-# later
+- Integrate the style files that they sent, trying to keep the custom paper size.
+  Make sure the listings look good -- for inspiration look at Production Volume
+  Rendering and Insights.
 
 - positional lighting for TunnelFlight
+  every screenshot in the book should be beautiful!
+
+# later
 
 - manipulators, BEAUTIFUL docs, fresnel/marble spiral horn
 
