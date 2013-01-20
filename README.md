@@ -1,7 +1,13 @@
 # master
 
+- COMMON should have a facility for checkboxes
+
 - TODO sections
+
   - PRESERVEDRAWINGBUFFER
+    This can simulate single-buffering.  Impacts ReadPixels
+    http://stackoverflow.com/questions/9491417/when-webgl-decide-to-update-the-display?answertab=votes#tab-top
+    
   - PAGECOMPOSITOR
     http://www.svgopen.org/2005/papers/abstractsvgopen/
   - The Assembly Line Metaphor

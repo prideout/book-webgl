@@ -6,7 +6,7 @@
 var GIZA = GIZA || { REVISION : '0' };
 var gl;
 
-GIZA.init = function(canvasElement) {
+GIZA.init = function(canvas, options) {
 
   window.requestAnimationFrame = window.requestAnimationFrame ||
     window.mozRequestAnimationFrame ||
@@ -14,10 +14,7 @@ GIZA.init = function(canvasElement) {
     window.msRequestAnimationFrame;
 
   // Find a canvas element if it wasn't specified.
-  var canvas = canvasElement;
-  if (!canvasElement) {
-    canvas = document.getElementsByTagName('canvas')[0];
-  }
+  canvas = canvas || document.getElementsByTagName('canvas')[0];
 
   // Gather information about the canvas.
   var pixelScale = window.devicePixelRatio || 1;
@@ -31,7 +28,11 @@ GIZA.init = function(canvasElement) {
   canvas.height = height * pixelScale;
 
   // Set up the WebGL context.
-  gl = canvas.getContext('experimental-webgl', {antialias: true});
+  options = options || {
+    preserveDrawingBuffer: false,
+    antialias: true
+  };
+  gl = canvas.getContext('experimental-webgl', options);
 
   if (!gl) {
     var msg = document.createElement('p');

@@ -12,8 +12,18 @@
   <body>
     <h1>Tunnel Flight</h1>
     <div class="tagline">
+      You don't always need to call <tt>clear()</tt>
     </div>
-    <canvas style="width:640;height:360px">
+    <div id="checks" class="customui">
+      <input type="checkbox" id="finite" name="radio" checked="true"/><label for="finite">
+        Finite
+      </label><input type="checkbox" id="clear" name="radio" /><label for="clear">
+        Clear
+      </label><input type="checkbox" id="freeze" name="radio" checked="true"/><label for="freeze">
+        Freeze
+      </label>
+    </div>
+    <canvas style="width:640px;height:360px">
     </canvas>
     <div id="button-bar">
     </div>

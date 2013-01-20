@@ -1,6 +1,18 @@
 var main = function() {
 
-  GIZA.init();
+  var options;
+  var updateOptions = function() {
+    var getid = function() { return $(this).attr('id'); };
+    options = $("input:checked").map(getid).get();
+  };
+  updateOptions();
+  $("#checks").buttonset().change(updateOptions);
+  
+  GIZA.init(null, {
+    preserveDrawingBuffer: true,
+    antialias: true
+  });
+
   var M4 = GIZA.Matrix4;
   var V3 = GIZA.Vector3;
 
@@ -93,29 +105,45 @@ var main = function() {
 
   var draw = function(currentTime) {
 
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
     var speed = 300; // the lower, the faster
-
     var ptCount = arrays.centerline.length / 3;
-    var cameraIndex = Math.floor((currentTime / speed) % ptCount);
 
+    // Clear the color buffer if desired
+    var clear = options.indexOf("clear") > -1;
+    if (clear) {
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    } else {
+      gl.clear(gl.DEPTH_BUFFER_BIT);
+    }
+    
+    // Good screenshot location
+    var freezeTime = 0.71 * (speed * ptCount);
+    var freeze = options.indexOf("freeze") > -1;
+    if (freeze && currentTime > freezeTime) {
+      currentTime = freezeTime;
+    }
+
+    // Set up the camera
+    var cameraIndex = Math.floor((currentTime / speed) % ptCount);
     var camera = function(t) {
       t = t / (speed * ptCount);
-      return GIZA.equations.grannyKnot(t);
+      //console.info(t - Math.floor(t));
+      var p = GIZA.equations.grannyKnot(t);
+      return p;
     };
-    
     var eye = camera(currentTime);
     var target = camera(currentTime + 50);
     var direction = V3.normalize(V3.subtract(eye, target));
-    target = V3.subtract(eye, direction);
     var up = V3.perp(direction);
     var mv = M4.lookAt(eye, target, up);
 
+    var finite = options.indexOf("finite") > -1;
+    var farPlane = finite ? 1 : 100;
+    var nearPlane = 0.1;
     var proj = M4.perspective(
       40,          // fov in degrees
       GIZA.aspect,
-      0.1, 100);  // near and far
+      nearPlane, farPlane);
 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.triangles)
     gl.enableVertexAttribArray(attribs.POSITION);
@@ -140,7 +168,7 @@ var main = function() {
 
     var program = programs.nonlit;
     var numIndices = 2 * buffers.wireframe.lineCount;
-    gl.lineWidth(2);
+    gl.lineWidth(4);
     gl.useProgram(program);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
@@ -160,7 +188,7 @@ var main = function() {
         gl.lineWidth(6);
         gl.uniform4f(program.color, 1, 0, 0, 1);
         gl.drawArrays(gl.LINE_STRIP, cameraIndex, 3);
-        gl.lineWidth(2);
+        gl.lineWidth(4);
       }
     }
 
@@ -175,7 +203,6 @@ var main = function() {
     }
 
     gl.enable(gl.DEPTH_TEST);
-
     gl.disable(gl.BLEND);
     gl.disableVertexAttribArray(attribs.POSITION);
 
