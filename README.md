@@ -1,7 +1,5 @@
 # master
 
-- Make sure that the index is ok.
-
 - TODO sections
   - PRESERVEDRAWINGBUFFER
   - PAGECOMPOSITOR

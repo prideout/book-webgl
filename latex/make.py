@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os, sys, shutil, argparse
+from termcolor import colored
 
 buildpath = '_build'
 
@@ -34,10 +35,16 @@ def build(args):
     for f in texfiles:
         shutil.copy(f + '.tex', buildpath)
     os.chdir(buildpath)
+    if args.index:
+        cmds.append('makeindex book')
+        cmds.append('pdflatex -shell-escape book.tex')
     for cmd in cmds:
         if os.system(cmd):
             sys.exit(1)
-    print "Success!"
+    print
+    print colored('Success!', 'green')
+    if not args.index:
+        print "To include the index, build again with -index."
 
 def trim(args):
     texfiles.append('trim')
@@ -57,6 +64,10 @@ subparsers = parser.add_subparsers()
 
 # Create the parser for the "build" command.
 parser_build = subparsers.add_parser('build')
+parser_build.add_argument(
+    '-index',
+    help = 'include the index',
+    action = 'store_true')
 parser_build.set_defaults(func = build)
 
 # Create the parser for the "clean" command.
@@ -71,6 +82,7 @@ parser_trim.set_defaults(func = trim)
 parser_view = subparsers.add_parser('view')
 parser_view.add_argument(
     '-file',
+    help = 'specifies an alternate file',
     default = 'book.pdf')
 parser_view.set_defaults(func = view)
 
