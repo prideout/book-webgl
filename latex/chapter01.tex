@@ -18,11 +18,27 @@ WebGL has another ancestor that is arguably just as influential as IrisGL: the \
 \section{Building Giza}
 \summary{Describes our coding conventions and the \code{giza} library that is developed over the course of the book.}
 
-This is not just a book, it's a library.  Much of the sample code on these pages is lifted directly from the \emph{giza} library, named after the city in ancient Egypt.  The skyline of the Giza Necropolis is composed of triangles, the fundamental drawing primitive in computer graphics.  The pyramid shape also describes the \emph{viewing frustum}, a spatial region that encompasses everything within a certain vantage point in a 3D graphics program.
+This is not just a book, it's a library.  Much of the sample code on these pages is lifted directly from the \emph{giza} library, named after the city in ancient Egypt.  The skyline of the Giza Necropolis is composed of triangles, the fundamental drawing primitive in computer graphics.  The pyramid shape also describes a \emph{viewing frustum}, a spatial region that encompasses everything within a certain vantage point in a 3D graphics program.
 
-For access to the full source code to giza, go to its github site:
+All giza methods belong to a global object called \code{GIZA}; this is a namespacing convention that's very common in JavaScript.  For example, here's how we define a small utility function that merges all attributes from object \code{b} into object \code{a}:
 
-http://to.be.filled.in.com
+\begin{lstlisting}[language=JavaScript]
+var GIZA = GIZA || {};
+
+GIZA.merge = function (a, b) {
+  for (var attrname in b) {
+    a[attrname] = b[attrname];
+  }
+};
+\end{lstlisting}
+
+The first line allows clients to pick and choose which of Giza's source files to include; it creates a new GIZA object only if it doesn't already exist.  This isn't necessary when using Giza in minified form, since the entire library is included in that case.
+
+The only other global variable is that we ever set is the \code{gl} variable.  This points to a WebGL context, which we'll learn about in Section~\ref{sec:context}.  We chose to make this a global for purposes of terseness, since we make a huge number of calls to the context object.
+
+For access to the full source code to giza, or to download the minified library, refer to our github site:
+
+\notetoself{http://to.be.filled.in.com}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{The Assembly Line Metaphor}
@@ -100,6 +116,7 @@ It's also common to adjust the WebGL \emph{viewport} and \emph{projection matrix
 \end{sidenote}
 
 \subsection{Getting a Context}
+\label{sec:context}
 
 The entire WebGL API is exposed through a drawing context \index{context} object of type \code{WebGLRenderingContext} \index{\code{WebGLRenderingContext}}.  This object is obtained by calling \code{getContext} \index{\code{getContext} method} on a canvas element, like so:
 
@@ -121,7 +138,7 @@ The second argument is a set of optional attributes, as specified in Table~\ref{
     stencil & false & Stencil buffer \\
     antialias & true & Enables multisampling (or supersampling) \\
     premultipliedAlpha & true & Specifies compositing behavior with the web page; ignored if alpha is false \\
-    preserveDrawingBuffer & false & Automatically resets the draw buffer, independently of \code{gl.clear} \\
+    preserveDrawingBuffer & false & Retains the canvas image from the previous draw cycle \\
     \hline
   \end{tabular}
   \caption{WebGL Context Options.}
@@ -151,7 +168,7 @@ The only WebGL functions we're discussing in this chapter are the first two meth
   \label{tab:Clearing}
 \end{table}
 
-The \code{clear} command has an immediate\footnote{Not quite!  The web browser and graphics driver can buffer up WebGL commands and execute them later.} effect on the canvas, while \code{clearColor}, \code{clearDepth}, and \code{clearStencil} are simply configuring the WebGL state machine.  Most of the WebGL API consists of state-setting commands; there are only three methods in the entire API that can draw pixels into your canvas:
+The \code{clear} command has an immediate\footnote{It's actually not quite immediate -- see \label{sec:doublebuffer}.} effect on the canvas, while \code{clearColor}, \code{clearDepth}, and \code{clearStencil} are simply configuring the WebGL state machine.  Most of the WebGL API consists of state-setting commands; there are only three methods in the entire API that can draw pixels into your canvas:
 
 \begin{itemize}
 \item clear
@@ -186,7 +203,7 @@ The \code{COLOR\_BUFFER\_BIT} flag is one of the constants that can be combined 
   \label{tab:ClearBit}
 \end{table}
 
-You can find a \code{clear} call in many WebGL code samples on the web, but keep in mind that it's not always required.  Some applications never bother filling the background with a solid color; for example, consider an ``infinite tunnel'' game, as depicted on the far left in Figure~\ref{fig:Tunnel}.  Since every pixel in the canvas is affected by 3D drawing commands, there's no need to clear the color buffer.  If, however, the tunnel were finite (middle in Figure~\ref{fig:Tunnel}), there would be an area of the screen that never gets drawn to.  If you don't explicitly perform a clear before doing any drawing, this unpainted region might contain junk (right in Figure~\ref{fig:Tunnel}).  This is because the pixels in canvas are simply a region of memory; if don't explicitly the clear memory, it'll contain retain whatever junky data happened to be sitting around.  This brings us to \code{preserveDrawingBuffer}.
+You can find a \code{clear} call in many WebGL code samples on the web, but keep in mind that it's not always required.  Some applications never bother filling the background with a solid color; for example, consider an ``infinite tunnel'' game, as depicted on the far left in Figure~\ref{fig:Tunnel}.  Since every pixel in the canvas is affected by 3D drawing commands, there's no need to clear the color buffer.  If, however, the tunnel were finite (middle panel, Figure~\ref{fig:Tunnel}), there would be an area of the screen that never gets drawn to.  If you don't explicitly perform a clear before doing any drawing, the unpainted region might contain a ``dirty'' image (right panel, Figure~\ref{fig:Tunnel}), depending on the \code{preserveDrawingBuffer} option you chose when creating the context.
 
 \begin{figure}[htb]\centering
   \includegraphics[width=70mm]{ClosedTunnel.png}
@@ -194,7 +211,16 @@ You can find a \code{clear} call in many WebGL code samples on the web, but keep
   \label{fig:Tunnel}
 \end{figure}\index{tunnel}
 
-PRESERVEDRAWINGBUFFER
+\subsection{When is the canvas \emph{truly} updated?}
+\label{sec:doublebuffer}
+
+You might be familiar with \index{double-buffering} \emph{double-buffering} if you've used other graphics APIs.  WebGL is always double-buffered.  This means that your drawing commands are actually affecting pixels in a \index{backbuffer} \emph{backbuffer}, which is an offscreen drawing surface.  The browser's render loop presents the finalized backbuffer to the screen in one fell swoop.  This creates the illusion of seamless animation; users never see a partially complete scene.
+
+Double-buffering implies that the existing pixels you're drawing on top of do not correspond to what was drawn in the previous frame.  Normally this doesn't matter; most applications either clear the existing buffer, or fill it entirely with 3D drawing primitives.
+
+In some situations you want the existing pixels to exactly correspond to the previously-drawn frame.  For example, you might need to read color values from the canvas (the \index{\code{readPixels}} \code{readPixels} method will be discussed in \notetoself{CHAPTER}), or your application might intentionally update only certain regions of the canvas, perhaps for performance reasons.  This is why \code{preserveDrawingBuffer} exists; it allows you to mimic \index{single-buffering} single-buffering.
+
+You might be thinking: \emph{okay -- the backbuffer is what's immediately updated when I call \code{clear} or \code{drawPixels}}.  Wrong!  The web browser and the graphics driver are actually buffering up WebGL commands and executing them later.  If you'd like, you can tell WebGL to wait till the buffer is done executing by calling the \index{finish} \code{finish} method.  You'll rarely need to use this however, so don't do it unless you really need to.
 
 \subsection{Alpha Compositing}
 

@@ -2,23 +2,20 @@
 
 - TODO sections
 
-  - PRESERVEDRAWINGBUFFER
-    This can simulate single-buffering.  Impacts ReadPixels
-    http://stackoverflow.com/questions/9491417/when-webgl-decide-to-update-the-display?answertab=votes#tab-top
+  - The Assembly Line Metaphor
+    - Animation Timing
+    - Recipe
     
   - PAGECOMPOSITOR
     http://www.svgopen.org/2005/papers/abstractsvgopen/
-  - The Assembly Line Metaphor
-  - Animation Timing
-  - Recipe
+    http://stackoverflow.com/questions/9491417/when-webgl-decide-to-update-the-display?answertab=votes#tab-top
 
-- FIGURE
-  ClosedTunnel should have thicker lines
-  OpenTunnel-Clear
-  OpenTunnel-NoClear-Preserved
-  OpenTunnel-NoClear-NOPreserved
+- FIGURE - Write ImageMagick script (perhaps in node) to combine the "Tunnel" screenshots
+  https://github.com/rsms/node-imagemagick
 
 - FIGURE - Compositing
+
+    http://www.svgopen.org/2005/papers/abstractsvgopen/
 
     - images of a web page that has a background image (Egypt!)
     each canvas should have an opaque perspective cube
@@ -30,8 +27,6 @@
     0,0.25,.5,.5 -- no alpha, css-opacity=.5
     0,0.25,.5,.5 -- alpha without premultiplied, css-opacity=.5
     0,0.25,.5,.5 -- alpha with premultiplied, css-opacity=.5
-
-- FIGURE - The Assembly Line Metaphor
 
 - Integrate the style files that they sent, trying to keep the custom paper size.
   Make sure the listings look good -- for inspiration look at Production Volume
