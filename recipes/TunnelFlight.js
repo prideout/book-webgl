@@ -1,13 +1,8 @@
 var main = function() {
 
-  var options;
-  var updateOptions = function() {
-    var getid = function() { return $(this).attr('id'); };
-    options = $("input:checked").map(getid).get();
-  };
-  updateOptions();
-  $("#checks").buttonset().change(updateOptions);
-  
+  var options = {};
+  COMMON.bindOptions(options, '#checks');
+
   GIZA.init(null, {
     preserveDrawingBuffer: true,
     antialias: true
@@ -109,8 +104,7 @@ var main = function() {
     var ptCount = arrays.centerline.length / 3;
 
     // Clear the color buffer if desired
-    var clear = options.indexOf("clear") > -1;
-    if (clear) {
+    if (options.clear) {
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     } else {
       gl.clear(gl.DEPTH_BUFFER_BIT);
@@ -118,8 +112,7 @@ var main = function() {
     
     // Good screenshot location
     var freezeTime = 0.71 * (speed * ptCount);
-    var freeze = options.indexOf("freeze") > -1;
-    if (freeze && currentTime > freezeTime) {
+    if (options.freeze && currentTime > freezeTime) {
       currentTime = freezeTime;
     }
 
@@ -137,8 +130,7 @@ var main = function() {
     var up = V3.perp(direction);
     var mv = M4.lookAt(eye, target, up);
 
-    var finite = options.indexOf("finite") > -1;
-    var farPlane = finite ? 1 : 100;
+    var farPlane = options.finite ? 1 : 100;
     var nearPlane = 0.1;
     var proj = M4.perspective(
       40,          // fov in degrees

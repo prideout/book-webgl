@@ -1,7 +1,5 @@
 # master
 
-- COMMON should have a facility for checkboxes
-
 - TODO sections
 
   - PRESERVEDRAWINGBUFFER

@@ -190,11 +190,30 @@ COMMON.compileShader = function(names, type) {
 // If you wish the store your shaders in a separate HTML file,
 // include this at the bottom of your main page body:
 //
-//     <iframe src="ResizeTest-Shaders.html" width="0" height="0" />
+//   <iframe src="ResizeTest-Shaders.html" width="0" height="0" />
 //
 // This function will extract the spec and attribs for you.
 COMMON.initFrame = function() {
   eval($('iframe').contents().find('#shaders').text());
   COMMON.programs = COMMON.compilePrograms(spec);
   COMMON.attribs = attribs;
-}
+};
+
+// If you have a div with radio buttons inside, this function will
+// synchronize a given dictionary of attributes to the radio button
+// states.  For example:
+//
+//  var options = {};
+//  COMMON.syncOptions(options, '#checks');
+//
+COMMON.bindOptions = function(options, divid) {
+  var updateOptions = function() {
+    $(divid + " > input").each(function() {
+      var id = $(this).attr('id');
+      var checked = $(this).attr('checked') ? true : false;
+      options[id] = checked;
+    });
+  };
+  updateOptions();
+  $(divid).buttonset().change(updateOptions);
+};
