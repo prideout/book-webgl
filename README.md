@@ -2,13 +2,14 @@
 
 - TODO sections
 
-  - The Assembly Line Metaphor
-    - Animation Timing
-    - Recipe
+  - The Assembly Line Metaphor (add in our figure)
+  - Animation Timing
     
   - PAGECOMPOSITOR
     http://www.svgopen.org/2005/papers/abstractsvgopen/
     http://stackoverflow.com/questions/9491417/when-webgl-decide-to-update-the-display?answertab=votes#tab-top
+
+- The Recipe
 
 - FIGURE - Write ImageMagick script (perhaps in node) to combine the "Tunnel" screenshots
   https://github.com/rsms/node-imagemagick
@@ -36,6 +37,8 @@
   every screenshot in the book should be beautiful!
 
 # later
+
+- http://webgl-bench.appspot.com/
 
 - manipulators, BEAUTIFUL docs, fresnel/marble spiral horn
 
