@@ -2,7 +2,6 @@
 
 - TODO sections
 
-  - The Assembly Line Metaphor (add in our figure)
   - Animation Timing
     
   - PAGECOMPOSITOR
@@ -11,8 +10,11 @@
 
 - The Recipe
 
-- FIGURE - Write ImageMagick script (perhaps in node) to combine the "Tunnel" screenshots
-  https://github.com/rsms/node-imagemagick
+- FIGURE - Finish script in figures/triptych.js
+
+  LEFT   - ClosedTunnel.png
+  MIDDLE - FiniteTunnelCleared.png
+  RIGHT  - FiniteTunnel.png
 
 - FIGURE - Compositing
 
