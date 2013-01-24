@@ -1,5 +1,7 @@
 # master
 
+- I think we should move the closed tunnel to the right (both in the script and in latex)
+
 - TODO sections
 
   - Animation Timing
@@ -9,12 +11,6 @@
     http://stackoverflow.com/questions/9491417/when-webgl-decide-to-update-the-display?answertab=votes#tab-top
 
 - The Recipe
-
-- FIGURE - Finish script in figures/triptych.js
-
-  LEFT   - ClosedTunnel.png
-  MIDDLE - FiniteTunnelCleared.png
-  RIGHT  - FiniteTunnel.png
 
 - FIGURE - Compositing
 

@@ -1,28 +1,53 @@
 #!/usr/local/bin/node
 
 // https://github.com/rsms/node-imagemagick
+// https://github.com/learnboost/node-canvas
+// http://www.imagemagick.org/Usage/
 
 var im = require('imagemagick');
 var util = require('util');
 
-im.identify('ClosedTunnel.png', function(err, features){
-  if (err) {
-    console.error(err);
-    process.exit(1);
-  }
-  var msg = util.format('%s x %s', features.width, features.height);
-  console.info(msg);
+var srcFiles = [
+  'ClosedTunnel.png',
+  'FiniteTunnelCleared.png',
+  'FiniteTunnel.png' ]
+
+var dstFile = 'Tunnels.png';
+
+var totalWidth = 0;
+var maxHeight = 0;
+var padding = 50;
+
+var combine = function() {
+  args = srcFiles.concat(['+append', dstFile]);
+  im.convert(args, function(err, stdout) {
+    if (err) throw err;
+    console.log('stdout:', stdout);
+  });
+};
+
+var doneScanning = function() {
+  totalWidth += padding * (srcFiles.length - 1);
+  console.info(totalWidth, maxHeight);
+  combine();
+};
+
+var scanCount = 0;
+
+srcFiles.forEach(function(filename) {
+  im.identify(filename, function(err, features){
+    if (err) {
+      console.error(err);
+      process.exit(1);
+    }
+    var w = parseInt(features.width);
+    var h = parseInt(features.height);
+    console.info(filename, w, h);
+    totalWidth += w;
+    maxHeight = Math.max(maxHeight, h);
+    scanCount++;
+    if (scanCount == srcFiles.length) {
+      doneScanning();
+    }
+  });
 });
-
-/*
-
-im.resize({
-  srcPath: 'kittens.jpg',
-  dstPath: 'kittens-small.jpg',
-  width:   256
-}, function(err, stdout, stderr){
-  if (err) throw err;
-  console.log('resized kittens.jpg to fit within 256x256px');
-});
-
-*/

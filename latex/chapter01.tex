@@ -192,8 +192,8 @@ The \code{COLOR\_BUFFER\_BIT} flag is one of the constants that can be combined 
 You can find a \code{clear} call in many WebGL code samples on the web, but keep in mind that it's not always required.  Some applications never bother filling the background with a solid color; for example, consider an ``infinite tunnel'' game, as depicted on the far left in Figure~\ref{fig:Tunnel}.  Since every pixel in the canvas is affected by 3D drawing commands, there's no need to clear the color buffer.  If, however, the tunnel were finite (middle panel, Figure~\ref{fig:Tunnel}), there would be an area of the screen that never gets drawn to.  If you don't explicitly perform a clear before doing any drawing, the unpainted region might contain a ``dirty'' image (right panel, Figure~\ref{fig:Tunnel}), depending on the \code{preserveDrawingBuffer} option you chose when creating the context.
 
 \begin{figure}[htb]\centering
-  \includegraphics[width=70mm]{ClosedTunnel.png}
-  \caption{In which scenario should you call \code{clear()}?}
+  \includegraphics[width=120mm]{Tunnels.png}
+  \caption{The effects of \code{clear()} and \code{preserveDrawingBuffer}.  The closed tunnel does not need \code{clear()}.}
   \label{fig:Tunnel}
 \end{figure}\index{tunnel}
 
