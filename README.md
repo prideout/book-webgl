@@ -2,8 +2,6 @@
 
 SAT
 
-- Animation Timing
-    
 - The Recipe
 
 SUN
@@ -11,6 +9,9 @@ SUN
 - Integrate the style files that they sent, trying to keep the custom paper size.
   Make sure the listings look good -- for inspiration look at Production Volume
   Rendering and Insights.
+
+- Consider changing the background for the premult example to:
+  http://en.wikipedia.org/wiki/File:BYR_color_wheel.svg
 
 - positional lighting for TunnelFlight
   every screenshot in the book should be beautiful!

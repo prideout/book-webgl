@@ -18,7 +18,9 @@ WebGL has another ancestor that is arguably just as influential as IrisGL: the R
 \section{Building Giza}
 \summary{Describes our coding conventions and the \code{giza} library that is developed over the course of the book.}
 
-This is not just a book, it's a library.  Much of the sample code on these pages is lifted directly from the \emph{giza} library, named after the city in ancient Egypt.  The skyline of the Giza Necropolis is composed of triangles, the fundamental drawing primitive in computer graphics.  The pyramid shape also describes a \emph{viewing frustum}, a spatial region that encompasses everything within a certain vantage point in a 3D graphics program.
+This is not just a book, it's a library.  Many of the code listings in the book are lifted directly from the \emph{giza} library, named after the city in ancient Egypt.  The skyline of the Giza Necropolis is composed of triangles, the fundamental drawing primitive in computer graphics.  The pyramid shape also describes a \emph{viewing frustum}, a spatial region that encompasses everything within a certain vantage point in a 3D graphics program.
+
+As a design philosphy, giza never calls methods on the WebGL context object -- that's your job!  We made this rule of thumb to ensure that we cover every detail of the API in the book, and to differentiate giza from higher-level libraries such as ThreeJS.  Instead of providing an abstraction of WebGL, giza provides utilities for performing vector math, constructing buffers of mesh data, and more.
 
 All giza methods belong to a global object called \code{GIZA}, following the namespace convention common in JavaScript.  For example, here's how we define a small utility function that merges all attributes from object \code{b} into object \code{a}:
 
@@ -34,11 +36,15 @@ GIZA.merge = function (a, b) {
 
 The first line allows clients to include a subset of Giza's source files by creating a \code{GIZA} namespace only if it doesn't already exist.  This isn't necessary when using giza in minified form, since the entire library is included in that case.
 
-Other than \code{GIZA}, the only other global variable that we ever set is \code{gl}.  This points to a WebGL context, which we'll learn about in Section~\ref{sec:context}.  We made this a global for terseness, since we make a huge number of calls to the context object.
+Other than \code{GIZA}, the only other global variables that we ever set are \code{COMMON} and \code{gl}.  The \code{gl} variable is the context object that exposes the entire WebGL API, which we'll learn about in Section~\ref{sec:context}.  We made this a global for terseness, since we make a huge number of calls to the context object.
+
+The \code{COMMON} namespace is reserved for a few utility methods used in our recipes that don't belong to giza.  So, we came up with \code{COMMON} as a place to put a small handful of WebGL helpers that can be called from any recipe.  Unlike methods in \code{GIZA}, methods in \code{COMMON} are allowed to call jQuery functions and WebGL methods.
 
 For access to the full source code to giza, or to download the minified library, refer to our github site:
 
 \notetoself{http://to.be.filled.in.com}
+
+Our github project also contains the code for all the recipes in this book, including the HTML and CSS source (and the \code{COMMON} layer).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{The Canvas Element}
@@ -66,11 +72,11 @@ There's nothing wrong with the above approach for simple applications.  It's com
 If you assume that device pixels are 1:1 with CSS pixels, you might see blurriness in your WebGL canvas due to upscaling.
 \end{sidenote}
 
-To get around these issues, \code{GIZA.init} \index{\code{GIZA.init}} (Listing~\ref{lst:GIZA:init}) examines the \code{devicePixelRatio} window property to check how much upscaling is active.  It also examines the \code{clientWidth} \index{\code{clientWidth}, \code{clientHeight}} and \code{clientHeight} properties of the canvas element to obtain the finalized display area.
+To get around these issues, \code{GIZA.init} (Listing~\ref{lst:GIZA:init1}) examines the \code{devicePixelRatio} window property to check how much upscaling is active.  It also examines the \code{clientWidth} \index{\code{clientWidth}, \code{clientHeight}} and \code{clientHeight} properties of the canvas element to obtain the finalized display area.
 
 \begin{lstlisting}[
     caption={Adjusting the Canvas Size},
-    label=lst:GIZA:init,
+    label=lst:GIZA:init1,
     language=JavaScript]
 GIZA.init = function(canvasElement) {
 
@@ -93,9 +99,9 @@ GIZA.init = function(canvasElement) {
 
   adjustSize();
   window.onresize = adjustSize;
-\end{lstlisting}
+\end{lstlisting} \index{\code{GIZA.init}}
 
-In Listing~\ref{lst:GIZA:init}, we adjust the canvas width and height not only during initialization, but also during the window's \index{\code{onresize} event} \code{onresize} event.
+In Listing~\ref{lst:GIZA:init1}, we adjust the canvas width and height not only during initialization, but also in response to the window's \index{\code{onresize} event} \code{onresize} event.
 
 \begin{sidenote}
 It's also common to adjust the WebGL \emph{viewport} and \emph{projection matrix} during a resize event.  More on this in future chapters.
@@ -104,7 +110,7 @@ It's also common to adjust the WebGL \emph{viewport} and \emph{projection matrix
 \subsection{Getting a Context}
 \label{sec:context}
 
-The entire WebGL API is exposed through a drawing context \index{context} object of type \code{WebGLRenderingContext} \index{\code{WebGLRenderingContext}}.  This object is obtained by calling \code{getContext} \index{\code{getContext} method} on a canvas element, like so:
+The entire WebGL API is exposed through an object of type \index{\code{WebGLRenderingContext}} \code{WebGLRenderingContext}, commonly known as the \index{draw context} \emph{draw context}.  It's obtained by calling \code{getContext} \index{\code{getContext} method} on a canvas element, like so:
 
 \begin{lstlisting}[language=JavaScript]
   gl = canvas.getContext('experimental-webgl', {antialias: true});
@@ -117,13 +123,13 @@ The second argument is a set of optional attributes, as specified in Table~\ref{
 \begin{table}[htb]\centering
   \begin{tabular}{lll}
     \hline
-    Key & Default Value & Description \\
+    Key & Default & Description \\
     \hline
     alpha & true & Alpha channel \\
     depth & true & Depth buffer \\
     stencil & false & Stencil buffer \\
-    antialias & true & Enables multisampling (or supersampling) \\
-    premultipliedAlpha & true & Specifies compositing behavior with the web page; ignored if alpha is false \\
+    antialias & true & Enables multisampling \\
+    premultipliedAlpha & true & Specifies compositing behavior; ignored if alpha is false \\
     preserveDrawingBuffer & false & Retains the canvas image from the previous draw cycle \\
     \hline
   \end{tabular}
@@ -131,7 +137,7 @@ The second argument is a set of optional attributes, as specified in Table~\ref{
   \label{tab:ContextAttributes}
 \end{table}
 
-We'll examine these attributes in Table~\ref{tab:ContextAttributes} in greater detail in the next section.
+We'll examine the attributes in Table~\ref{tab:ContextAttributes} in greater detail in the next section.
 
 \notetoself{Add references to future sections in the book that deal with context loss and image capture.}
 
@@ -144,7 +150,7 @@ The only WebGL functions we're discussing in this chapter are the first two meth
     \hline
     Method & Argument Types \\
     \hline
-    clear(mask) & logical or of values in Table~\ref{tab:ClearBits} \\
+    clear(mask) & logical ``or'' of values in Table~\ref{tab:ClearBit} \\
     clearColor(red, green, blue, alpha)  & floating point numbers in [0,1] \\
     clearDepth(value) & floating point number in [0,1] \\
     clearStencil(mask) & integer \\
@@ -154,7 +160,7 @@ The only WebGL functions we're discussing in this chapter are the first two meth
   \label{tab:Clearing}
 \end{table}
 
-The \code{clear} command has an immediate\footnote{It's actually not quite immediate -- see \label{sec:doublebuffer}.} effect on the canvas, while \code{clearColor}, \code{clearDepth}, and \code{clearStencil} are simply configuring the WebGL state machine.  Most of the WebGL API consists of state-setting commands; there are only three methods in the entire API that can draw pixels into your canvas:
+The \code{clear} command changes the pixels in the canvas, while \code{clearColor}, \code{clearDepth}, and \code{clearStencil} are simply configuring the WebGL state machine.  Most of the WebGL API consists of state-setting commands; there are only three methods in the entire API that can draw pixels into your canvas:
 
 \begin{itemize}
 \item clear
@@ -162,7 +168,7 @@ The \code{clear} command has an immediate\footnote{It's actually not quite immed
 \item drawElements
 \end{itemize}
 
-We'll learn more about \code{drawArrays} and \code{drawElements} in the next chapter.  Listing~\ref{lst:ClearCanvas} shows a usage example for the \code{clear} method where the canvas is cleared to a solid yellow color.
+We'll learn more about \code{drawArrays} and \code{drawElements} in the next chapter.  Listing~\ref{lst:ClearCanvas} shows a usage example for the \code{clear} method.  It filles the canvas with a solid yellow color.
 
 \begin{lstlisting}[
     caption={Clearing the canvas},
@@ -173,7 +179,7 @@ gl.clearColor(1, 1, 0, 1);
 gl.clear(gl.COLOR_BUFFER_BIT);
 \end{lstlisting}
 
-The \code{COLOR\_BUFFER\_BIT} flag is one of the constants that can be combined with a logical ``or'' to specify which drawing layers to include in the canvas.  To reduce the memory footprint, choose the fewest number of required flags.  See tab:ClearBit.  Don't worry about the depth and stencil layers; we'll learn more about them in future chapters.
+The \code{COLOR\_BUFFER\_BIT} flag is one of the constants that can be combined with a logical ``or'' to specify which drawing layers to include in the canvas.  To reduce the memory footprint, choose the fewest number of flags from Table~\ref{tab:ClearBit}.  In fact, don't worry about the depth and stencil layers just yet; we'll learn more about them in future chapters.
 
 \begin{table}[htb]\centering
   \begin{tabular}{lll}
@@ -189,11 +195,13 @@ The \code{COLOR\_BUFFER\_BIT} flag is one of the constants that can be combined 
   \label{tab:ClearBit}
 \end{table}
 
-You can find a \code{clear} call in most of the code samples in this book, but keep in mind that it's not always required.  Some applications never bother filling the background with a solid color.  For example, consider game inside an infinite tunnel, as depicted on the far left in Figure~\ref{fig:Tunnel}.  Since every pixel in the canvas is affected by 3D drawing commands, there's no need to clear the color buffer.  If, however, the tunnel were finite (middle panel, Figure~\ref{fig:Tunnel}), there would be an area of the screen that never gets drawn to.  If you don't explicitly perform a clear before doing any drawing, the unpainted region might contain a ``dirty'' image (right panel, Figure~\ref{fig:Tunnel}), depending on the \code{preserveDrawingBuffer} option you chose when creating the context.  More on this in the next section.
+You can find a \code{clear} call in most of the code samples in this book, but keep in mind that it's not always required.  Some applications never bother filling the background with a solid color.
+
+For example, consider a game inside an infinite tunnel, as depicted on the far left in Figure~\ref{fig:Tunnel}.  Since every pixel in the canvas is affected by 3D drawing commands, there's no need to clear the color buffer.  If, however, the tunnel were finite (middle panel), there would be an area of the screen that never gets drawn to.  If you don't explicitly perform a clear before doing any drawing, the unpainted region might contain a ``dirty'' image (right panel), depending on the \code{preserveDrawingBuffer} option you chose when creating the context.  More on this in the next section.
 
 \begin{figure}[htb]\centering
   \includegraphics[width=120mm]{Tunnels.png}
-  \caption{The effects of \code{clear()} and \code{preserveDrawingBuffer}.  The closed tunnel does not need \code{clear()}.}
+  \caption{The effects of \code{clear()} and \code{preserveDrawingBuffer}.  The closed tunnel on the far left does not need \code{clear()}.}
   \label{fig:Tunnel}
 \end{figure}\index{tunnel}
 
@@ -202,39 +210,37 @@ You can find a \code{clear} call in most of the code samples in this book, but k
 
 You might be familiar with \index{double-buffering} double-buffering if you've used other graphics APIs.  WebGL is always double-buffered.  This means that your drawing commands are actually affecting pixels in a \index{backbuffer} \emph{backbuffer}, which is an offscreen drawing surface.  The browser's render loop presents the finalized backbuffer to the screen in one fell swoop.  This creates the illusion of seamless animation by never allowing users to see a partially complete scene.
 
-Double-buffering implies that the existing pixels you're drawing on top of do not correspond to what was drawn in the previous frame.  Normally this doesn't matter; most applications either clear the existing buffer, or fill it entirely with 3D drawing primitives.
+One side effect of double-buffering is that that the existing pixels you're overwriting do not necessarily correspond to what was drawn in the previous frame.  Normally this doesn't matter; most applications either clear the existing buffer, or fill it entirely with 3D drawing primitives.
 
-In some situations you want the existing pixels to exactly match the previously-drawn frame.  For example, you might need to read color values from the canvas (the \index{\code{readPixels}} \code{readPixels} method will be discussed in \notetoself{CHAPTER}), or your application might intentionally update only certain regions of the canvas, perhaps for performance reasons.  This is why \code{preserveDrawingBuffer} exists; it allows you to mimic \index{single-buffering} single-buffering.
+In some situations you want the existing pixels to exactly match the previously-drawn frame.  For example, you might need to read color values from the canvas (the \index{\code{readPixels}} \code{readPixels} method will be discussed in \notetoself{CHAPTER}), or your application might intentionally update only certain regions of the canvas for performance reasons.  This is why \code{preserveDrawingBuffer} exists; it allows you to mimic \index{single-buffering} single-buffering.
 
-You might be thinking: ``Okay, so the canvas isn't immediately updated when I call \code{clear} or \code{drawPixels}, but the ``backbuffer'' is!''  Nope -- the web browser and the graphics driver are actually buffering up WebGL commands and executing them later.  If you'd like, you can tell WebGL to wait till the buffer is done executing by calling the \index{finish} \code{finish} method.  You'll rarely need this however, so don't use it unless you know you need it.
+You might be thinking: ``Okay, so the canvas isn't immediately updated when I call \code{clear} or \code{drawPixels}, but the \emph{backbuffer} is!''  Nope -- the web browser and the graphics driver are actually buffering up WebGL commands and executing them later.  If you'd like, you can tell WebGL to wait till the buffer is done executing by calling the \index{finish} \code{finish} method.  You'll rarely need this however, so don't use it unless you know you need it.
 
 \subsection{Alpha Compositing}
 
 If you're reading this book, you probably already know about the alpha channel, invented in the late 70's by Alvy Ray Smith, one of the co-founders of Pixar.
 
-Briefly, alpha is a floating-point value in the [0,1] interval, treated much like the red, green, and blue components of pixel color.  Alpha can be thought of as the inverse of opacity, although WebGL can interpret it in many ways, as we'll learn in \notetoself{CHAPTER}.  For now we'll focus on the existence of the alpha channel in the canvas and how it interacts with the HTML page compositor in your browser.
+Alpha is usually a floating-point value in the [0,1] interval, treated much like the red, green, and blue components of pixel color.  Alpha can be thought of as the inverse of opacity, although WebGL can interpret it in many ways, as we'll learn in \notetoself{CHAPTER}.  For now we'll focus on the existence of the alpha channel in the canvas and how it interacts with the HTML page compositor in your browser.
 
 Consider the case where the canvas is cleared to a half-opaque red color like so:
 
-\begin{lstlisting}[
-    caption={Clearing the canvas},
-    label=lst:ClearCanvas,
-    language=JavaScript]
+\begin{lstlisting}[language=JavaScript]
 gl.clearColor(1, 0, 0, 0.5);
 gl.clear(gl.COLOR_BUFFER_BIT);
 \end{lstlisting}
 
 If the \code{premultipledAlpha} option is disabled upon context creation, the RGB values in the canvas are multiplied by alpha before being added into the underlying color, as seen on the right in Figure~\ref{fig:PreMult}.
 
+Another example would be clearing the background to (1, 1, 1, 0.5).  If \code{premultipledAlpha} is enabled in this case, the canvas woud seem completely opaque because adding white to any color yields white.  If \code{premultipledAlpha} were disabled, this would (crudely) brighten the background by averaging it with white.
+
 \begin{figure}[htb]\centering
   \includegraphics[width=120mm]{PreMult.png}
   \caption{Semi-transparent canvas composed over a CSS \code{background-image}.}
+  % http://en.wikipedia.org/wiki/File:BYR_color_wheel.svg
   \label{fig:PreMult}
 \end{figure}
 
-\begin{sidenote}
 If the \code{alpha} option is disabled when creating a context, none of this matters -- the \code{premultipledAlpha} option is ignored.  The \code{alpha} option is enabled by default, as is \code{premultipledAlpha}.
-\end{sidenote}
 
 \begin{comment}
 Note that we're not addressing css-opacity.
@@ -258,24 +264,41 @@ var delay = 1 / 60;
 window.setInterval(myDrawFunc, delay / 1000);
 \end{lstlisting}
 
-This is good enough in many cases, but for high-performing 3D graphics, it's preferable to hook in to the browser's native rendering loop.  This allows your animation routine to become idle if the browser has no need to draw itself (e.g., if the window is minimized), saving precious battery life and CPU cycles.  It also aligns animation with the refresh rate of the monitor, preventing chopiness.
+The above approach isn't ideal for high-performing 3D graphics -- it's preferable to hook in to the browser's native rendering loop.  This allows your animation routine to become idle if the browser has no need to draw itself (e.g., if the window is minimized), saving precious battery life and CPU cycles.  It also aligns animation with the refresh rate of the monitor, preventing chopiness.
 
-At the time of this writing, all major browsers supply a method on \code{window} exactly for this purpose, although it has a vendor-specific prefix until it becomes fully standardized.
+At the time of this writing, all major browsers supply a method on \code{window} exactly for this purpose, although it has a vendor-specific prefix until it becomes fully standardized.  Giza's \code{init} function handles this for you, as seen in Listing~\ref{lst:GIZA:init2}
 
-GIZA.init += ...
+\begin{lstlisting}[
+    caption={Initializing \code{requestAnimationFrame}},
+    label=lst:GIZA:init2,
+    language=JavaScript]
+GIZA.init = function(canvasElement) {
 
-\begin{lstlisting}[language=JavaScript]
+  ... // see \ref{lst:GIZA:init1}
+
   window.requestAnimationFrame = window.requestAnimationFrame ||
     window.mozRequestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
     window.msRequestAnimationFrame;
-\end{lstlisting}
+\end{lstlisting} \index{\code{GIZA.init}}
 
-It's important to note that \code{requestAnimationFrame} is actually more like \code{setTimeout} than \code{setInterval} in that you need to call it again if you wish another draw cycle to occur.
+It's important to note that \code{requestAnimationFrame} is actually more like \code{setTimeout} than \code{setInterval} in that you need to call it again if you wish another draw cycle to occur.  We provide a function in the \code{COMMON} namespace that can be called at the end of your function to request another draw cycle, and to check the WebGL error state.  This is good practice to ensure clean, error-free code.  See Listing~\ref{lst:COMMON:endFrame}.
 
-Giza provides an end frame
+\begin{lstlisting}[
+    caption={Common end-of-frame tasks.},
+    label=lst:COMMON:endFrame,
+    language=JavaScript]
+  var err = gl.getError();
+  if (err != gl.NO_ERROR) {
+    console.error("WebGL error during draw cycle: ", err);
+    // Don't request another draw cycle here;
+    // this prevents an infinite cascade of errors.
+  } else {
+    window.requestAnimationFrame(wrappedDrawFunc, GIZA.canvas);
+  }
+\end{lstlisting} \index{\code{COMMON.endframe}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\rrecipe{Recipe 1: Strobe Light}
+\section{Recipe 1: Strobe Light}
 \summary{The simplest possible WebGL application; animates a solid color with \code{clear}.}
 

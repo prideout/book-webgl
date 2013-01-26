@@ -77,8 +77,9 @@ head.ready(function() {
 // Requests the next animation frame.  Also prevents cascading errors
 // by halting animation after a GL error.
 COMMON.endFrame = function(drawFunc) {
-  if (gl.getError() != gl.NO_ERROR) {
-    console.error("GL error during draw cycle.");
+  err = gl.getError();
+  if (err != gl.NO_ERROR) {
+    console.error("WebGL error during draw cycle: ", err);
   } else {
     var wrappedDrawFunc = function(time) {
 
