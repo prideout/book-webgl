@@ -6,13 +6,13 @@
 
 3D graphics in the browser is not new.  One of the first technologies in this area was \index{VRML} VRML, the virtual reality modeling language standardized by the W3C in the mid 90's.  VRML was popular in academia but didn't quite have the same wildfire effect that characterizes the recent explosion of WebGL.
 
-Why has WebGL left other 3D web technologies in the dust?  For one, it came along at just the right time; JavaScript only recently attained status as a serious platform for application development.  Today's world of sophisticated tools like Google's V8 \index{V8} engine  and John Resig's jQuery \index{jQuery} library have legitimized JavaScript in the eyes of developers coming from the world of traditional desktop development.
+Why has WebGL left other 3D web technologies in the dust?  For one, it came along at just the right time; JavaScript only recently attained status as a serious platform for application development.  Sophisticated tools like Google's V8 \index{V8} engine  and John Resig's jQuery \index{jQuery} library have legitimized JavaScript in the eyes of developers coming from traditional desktop development.
 
-WebGL has plenty of merits that make it more attractive than other browser-based 3D APIs.  At the time of this writing, almost all popular browsers support it natively, freeing users from the overhead of plug-ins.  WebGL is also ``close to the metal'' -- by providing low-level access to graphics hardware, developers can maximize performance like never before.
+WebGL has plenty of merits that make it more attractive than other browser-based 3D APIs.  Almost all popular browsers support it natively, freeing users from the overhead of plug-ins.  WebGL is also ``close to the metal'' -- by providing low-level access to graphics hardware, developers can maximize performance like never before.
 
-WebGL's ancestry actually lies not in VRML (which did give rise to X3D and other XML-based standards) but in a low-level graphics API for C developed by Silicon Graphics in the early 90s.  They initially named their API \emph{IrisGL}, which evolved to \emph{OpenGL} when they released it as an industry standard.   With the rise of mobile platforms, OpenGL spawned \emph{OpenGL ES}, which encompasses almost the same feature set of WebGL.  In a sense, WebGL is simply a JavaScript binding for OpenGL ES 2.0.
+WebGL's ancestry actually lies not in VRML (which did give rise to X3D and other standards) but in a low-level graphics API for C developed by Silicon Graphics in the early 90's.  They initially named their API \emph{IrisGL}, which evolved to \emph{OpenGL} when they released it as an industry standard.   With the rise of mobile platforms, OpenGL spawned OpenGL ES, which encompasses almost the same feature set of WebGL.  In a sense, WebGL is simply a JavaScript binding for OpenGL ES 2.0.
 
-WebGL has another ancestor that is arguably just as influential as IrisGL: the \emph{Renderman Shading Language} was developed by Pixar long before the real-time graphics industry could fathom programmable shading.  WebGL gives developers access to an entire programming language known as \index{GLSL} \emph{GLSL}, used to author \index{shaders} \emph{shaders}, relatively small routines executed with massive parallelism.  Shaders have the final say in the 3D position of every vertex, and the RGB color of every rasterized pixel.  We'll learn more about shaders and GLSL in Chapter 2.
+WebGL has another ancestor that is arguably just as influential as IrisGL: the Renderman Shading Language (RSL) developed by Pixar inspired much of the syntax in the language that WebGL provides for authoring \index{shaders} \emph{shaders}, relatively small routines executed with massive parallelism.  Shaders have the final say in the 3D position of every vertex, and the RGB color of every rasterized pixel.  We'll learn more about shaders in Chapter 2.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Building Giza}
@@ -20,7 +20,7 @@ WebGL has another ancestor that is arguably just as influential as IrisGL: the \
 
 This is not just a book, it's a library.  Much of the sample code on these pages is lifted directly from the \emph{giza} library, named after the city in ancient Egypt.  The skyline of the Giza Necropolis is composed of triangles, the fundamental drawing primitive in computer graphics.  The pyramid shape also describes a \emph{viewing frustum}, a spatial region that encompasses everything within a certain vantage point in a 3D graphics program.
 
-All giza methods belong to a global object called \code{GIZA}; this is a namespacing convention that's very common in JavaScript.  For example, here's how we define a small utility function that merges all attributes from object \code{b} into object \code{a}:
+All giza methods belong to a global object called \code{GIZA}, following the namespace convention common in JavaScript.  For example, here's how we define a small utility function that merges all attributes from object \code{b} into object \code{a}:
 
 \begin{lstlisting}[language=JavaScript]
 var GIZA = GIZA || {};
@@ -32,9 +32,9 @@ GIZA.merge = function (a, b) {
 };
 \end{lstlisting}
 
-The first line allows clients to pick and choose which of Giza's source files to include; it creates a new GIZA object only if it doesn't already exist.  This isn't necessary when using Giza in minified form, since the entire library is included in that case.
+The first line allows clients to include a subset of Giza's source files by creating a \code{GIZA} namespace only if it doesn't already exist.  This isn't necessary when using giza in minified form, since the entire library is included in that case.
 
-The only other global variable is that we ever set is the \code{gl} variable.  This points to a WebGL context, which we'll learn about in Section~\ref{sec:context}.  We chose to make this a global for purposes of terseness, since we make a huge number of calls to the context object.
+Other than \code{GIZA}, the only other global variable that we ever set is \code{gl}.  This points to a WebGL context, which we'll learn about in Section~\ref{sec:context}.  We made this a global for terseness, since we make a huge number of calls to the context object.
 
 For access to the full source code to giza, or to download the minified library, refer to our github site:
 
@@ -50,7 +50,7 @@ The canvas element \index{\code{<canvas>} element} is one of the cornerstones of
 
 By default, \code{<canvas>} is a block level element, similar to \code{<div>}.  This means that it can only be a child of \code{<body>}, and that it's typically rendered with surrounding line breaks.
 
-An important distinction between canvas and other elements is that it has two sizes \index{size}.  One size is the \emph{display area}, specified with familiar \index{CSS} CSS mechanisms.  The other size is the \emph{content size}, specified with explicit \code{width} \index{\code{width} attribute} and \code{height} \index{\code{height} attribute} attributes.  The content size specifies an off-screen drawing surface that gets scaled into the display area on the web page.
+An important distinction between canvas and other elements is that it has two \index{size} sizes.  One size is the \emph{display area}, specified with familiar \index{CSS} CSS mechanisms.  The other size is the \emph{content size}, specified with explicit \code{width} \index{\code{width} attribute} and \code{height} \index{\code{height} attribute} attributes.  The content size specifies an off-screen drawing surface that gets scaled into the display area on the web page.
 
 It's tempting to simply set the content and display sizes to the same dimensions, as in:
 
@@ -66,7 +66,7 @@ There's nothing wrong with the above approach for simple applications.  It's com
 If you assume that device pixels are 1:1 with CSS pixels, you might see blurriness in your WebGL canvas due to upscaling.
 \end{sidenote}
 
-To get around these issues, \code{GIZA.init} \index{\code{GIZA.init}} (Listing~\ref{lst:GIZA:init}) examines the \code{devicePixelRatio} window property to check how much (if any) upscaling the browser is performing.  It also examines the \code{clientWidth} \index{\code{clientWidth}, \code{clientHeight}} and \code{clientHeight} properties of the canvas element to obtain the finalized display area.
+To get around these issues, \code{GIZA.init} \index{\code{GIZA.init}} (Listing~\ref{lst:GIZA:init}) examines the \code{devicePixelRatio} window property to check how much upscaling is active.  It also examines the \code{clientWidth} \index{\code{clientWidth}, \code{clientHeight}} and \code{clientHeight} properties of the canvas element to obtain the finalized display area.
 
 \begin{lstlisting}[
     caption={Adjusting the Canvas Size},
@@ -189,7 +189,7 @@ The \code{COLOR\_BUFFER\_BIT} flag is one of the constants that can be combined 
   \label{tab:ClearBit}
 \end{table}
 
-You can find a \code{clear} call in many WebGL code samples on the web, but keep in mind that it's not always required.  Some applications never bother filling the background with a solid color; for example, consider an ``infinite tunnel'' game, as depicted on the far left in Figure~\ref{fig:Tunnel}.  Since every pixel in the canvas is affected by 3D drawing commands, there's no need to clear the color buffer.  If, however, the tunnel were finite (middle panel, Figure~\ref{fig:Tunnel}), there would be an area of the screen that never gets drawn to.  If you don't explicitly perform a clear before doing any drawing, the unpainted region might contain a ``dirty'' image (right panel, Figure~\ref{fig:Tunnel}), depending on the \code{preserveDrawingBuffer} option you chose when creating the context.
+You can find a \code{clear} call in most of the code samples in this book, but keep in mind that it's not always required.  Some applications never bother filling the background with a solid color.  For example, consider game inside an infinite tunnel, as depicted on the far left in Figure~\ref{fig:Tunnel}.  Since every pixel in the canvas is affected by 3D drawing commands, there's no need to clear the color buffer.  If, however, the tunnel were finite (middle panel, Figure~\ref{fig:Tunnel}), there would be an area of the screen that never gets drawn to.  If you don't explicitly perform a clear before doing any drawing, the unpainted region might contain a ``dirty'' image (right panel, Figure~\ref{fig:Tunnel}), depending on the \code{preserveDrawingBuffer} option you chose when creating the context.  More on this in the next section.
 
 \begin{figure}[htb]\centering
   \includegraphics[width=120mm]{Tunnels.png}
@@ -200,19 +200,19 @@ You can find a \code{clear} call in many WebGL code samples on the web, but keep
 \subsection{When is the canvas \emph{truly} updated?}
 \label{sec:doublebuffer}
 
-You might be familiar with \index{double-buffering} \emph{double-buffering} if you've used other graphics APIs.  WebGL is always double-buffered.  This means that your drawing commands are actually affecting pixels in a \index{backbuffer} \emph{backbuffer}, which is an offscreen drawing surface.  The browser's render loop presents the finalized backbuffer to the screen in one fell swoop.  This creates the illusion of seamless animation; users never see a partially complete scene.
+You might be familiar with \index{double-buffering} double-buffering if you've used other graphics APIs.  WebGL is always double-buffered.  This means that your drawing commands are actually affecting pixels in a \index{backbuffer} \emph{backbuffer}, which is an offscreen drawing surface.  The browser's render loop presents the finalized backbuffer to the screen in one fell swoop.  This creates the illusion of seamless animation by never allowing users to see a partially complete scene.
 
 Double-buffering implies that the existing pixels you're drawing on top of do not correspond to what was drawn in the previous frame.  Normally this doesn't matter; most applications either clear the existing buffer, or fill it entirely with 3D drawing primitives.
 
-In some situations you want the existing pixels to exactly correspond to the previously-drawn frame.  For example, you might need to read color values from the canvas (the \index{\code{readPixels}} \code{readPixels} method will be discussed in \notetoself{CHAPTER}), or your application might intentionally update only certain regions of the canvas, perhaps for performance reasons.  This is why \code{preserveDrawingBuffer} exists; it allows you to mimic \index{single-buffering} single-buffering.
+In some situations you want the existing pixels to exactly match the previously-drawn frame.  For example, you might need to read color values from the canvas (the \index{\code{readPixels}} \code{readPixels} method will be discussed in \notetoself{CHAPTER}), or your application might intentionally update only certain regions of the canvas, perhaps for performance reasons.  This is why \code{preserveDrawingBuffer} exists; it allows you to mimic \index{single-buffering} single-buffering.
 
-You might be thinking: \emph{okay -- the backbuffer is what's immediately updated when I call \code{clear} or \code{drawPixels}}.  Wrong!  The web browser and the graphics driver are actually buffering up WebGL commands and executing them later.  If you'd like, you can tell WebGL to wait till the buffer is done executing by calling the \index{finish} \code{finish} method.  You'll rarely need to use this however, so don't do it unless you really need to.
+You might be thinking: \emph{okay -- the ``backbuffer'' is immediately updated when I call \code{clear} or \code{drawPixels}}.  Wrong!  The web browser and the graphics driver are actually buffering up WebGL commands and executing them later.  If you'd like, you can tell WebGL to wait till the buffer is done executing by calling the \index{finish} \code{finish} method.  You'll rarely need this however, so don't use it unless you know you need it.
 
 \subsection{Alpha Compositing}
 
-If you're reading this book, you're probably already familiar with the concept of an alpha channel, invented in the late 70's by Alvy Ray Smith, one of the co-founders of the animation studio where I work.
+If you're reading this book, you're probably already familiar with the concept of an alpha channel, invented in the late 70's by Alvy Ray Smith, one of the co-founders of Pixar.
 
-Briefly, alpha is a floating-point value in the [0,1] interval, treated much like the red, green, and blue components of pixel color.  Alpha can be thought of as the inverse of opacity, although WebGL can interpret it in many ways, as we'll learn in Chapter \notetoself{CHAPTER}.  For now we'll focus on the existence of the alpha channel in the canvas and how it interacts with the HTML page compositor in your browser.
+Briefly, alpha is a floating-point value in the [0,1] interval, treated much like the red, green, and blue components of pixel color.  Alpha can be thought of as the inverse of opacity, although WebGL can interpret it in many ways, as we'll learn in \notetoself{CHAPTER}.  For now we'll focus on the existence of the alpha channel in the canvas and how it interacts with the HTML page compositor in your browser.
 
 PAGECOMPOSITOR
 

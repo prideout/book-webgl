@@ -1,7 +1,5 @@
 # master
 
-- I think we should move the closed tunnel to the right (both in the script and in latex)
-
 - TODO sections
 
   - Animation Timing
