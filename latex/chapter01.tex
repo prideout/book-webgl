@@ -258,7 +258,7 @@ var delay = 1 / 60;
 window.setInterval(myDrawFunc, delay / 1000);
 \end{lstlisting}
 
-This is good enough in many cases, but for high-performing 3D graphics, it's preferable to hook in to the browser's native rendering loop.  This also allows your animation routine to become idle if the browser has no need to draw itself (e.g., if the window is minimized), saving precious battery life and CPU cycles.  It also aligns animation with the refresh rate of the monitor, preventing chopiness.
+This is good enough in many cases, but for high-performing 3D graphics, it's preferable to hook in to the browser's native rendering loop.  This allows your animation routine to become idle if the browser has no need to draw itself (e.g., if the window is minimized), saving precious battery life and CPU cycles.  It also aligns animation with the refresh rate of the monitor, preventing chopiness.
 
 At the time of this writing, all major browsers supply a method on \code{window} exactly for this purpose, although it has a vendor-specific prefix until it becomes fully standardized.
 
