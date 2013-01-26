@@ -162,7 +162,7 @@ The \code{clear} command has an immediate\footnote{It's actually not quite immed
 \item drawElements
 \end{itemize}
 
-We'll learn more about \code{drawArrays} and \code{drawElements} in the next chapter.  Listing~\ref{lst:ClearCanvas} shows a typical usage pattern for the \code{clear} method.
+We'll learn more about \code{drawArrays} and \code{drawElements} in the next chapter.  Listing~\ref{lst:ClearCanvas} shows a usage example for the \code{clear} method where the canvas is cleared to a solid yellow color.
 
 \begin{lstlisting}[
     caption={Clearing the canvas},
@@ -210,9 +210,21 @@ You might be thinking: ``Okay, so the canvas isn't immediately updated when I ca
 
 \subsection{Alpha Compositing}
 
-If you're reading this book, you're probably already familiar with the concept of an alpha channel, invented in the late 70's by Alvy Ray Smith, one of the co-founders of Pixar.
+If you're reading this book, you probably already know about the alpha channel, invented in the late 70's by Alvy Ray Smith, one of the co-founders of Pixar.
 
 Briefly, alpha is a floating-point value in the [0,1] interval, treated much like the red, green, and blue components of pixel color.  Alpha can be thought of as the inverse of opacity, although WebGL can interpret it in many ways, as we'll learn in \notetoself{CHAPTER}.  For now we'll focus on the existence of the alpha channel in the canvas and how it interacts with the HTML page compositor in your browser.
+
+Consider the case where the canvas is cleared to a half-opaque red color like so:
+
+\begin{lstlisting}[
+    caption={Clearing the canvas},
+    label=lst:ClearCanvas,
+    language=JavaScript]
+gl.clearColor(1, 0, 0, 0.5);
+gl.clear(gl.COLOR_BUFFER_BIT);
+\end{lstlisting}
+
+If the \code{premultipledAlpha} option is disabled upon context creation, the RGB values in the canvas are multiplied by alpha before being added into the underlying color, as seen on the right in Figure~\ref{fig:PreMult}.
 
 \begin{figure}[htb]\centering
   \includegraphics[width=120mm]{PreMult.png}
@@ -220,26 +232,37 @@ Briefly, alpha is a floating-point value in the [0,1] interval, treated much lik
   \label{fig:PreMult}
 \end{figure}
 
-\begin{comment}
-images of a web page that has a background image (Egypt!)
-each canvas should have an opaque perspective cube
-
-0,0.25,.5,.5 -- no alpha, css-opacity=1
-0,0.25,.5,.5 -- alpha without premultiplied, css-opacity=1
-0,0.25,.5,.5 -- alpha with premultiplied, css-opacity=1
-
-0,0.25,.5,.5 -- no alpha, css-opacity=.5
-0,0.25,.5,.5 -- alpha without premultiplied, css-opacity=.5
-0,0.25,.5,.5 -- alpha with premultiplied, css-opacity=.5
-\end{comment}
-
 \begin{sidenote}
-In this book, we never add children elements to \code{<canvas>}, but there's nothing wrong with doing so.  On some platforms, this can degrade performance, although this is improving as WebGL implementations are maturing.
+If the \code{alpha} option is disabled when creating a context, none of this matters -- the \code{premultipledAlpha} option is ignored.  The \code{alpha} option is enabled by default, as is \code{premultipledAlpha}.
 \end{sidenote}
+
+\begin{comment}
+Note that we're not addressing css-opacity.
+
+In this book, we never add children elements to \code{<canvas>}, but there's nothing wrong with doing so.  On some platforms, this can degrade performance, although this is improving as WebGL implementations are maturing.
+
+http://www.svgopen.org/2005/papers/abstractsvgopen/
+http://stackoverflow.com/questions/9491417/when-webgl-decide-to-update-the-display?answertab=votes#tab-top
+
+\end{comment}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Animation Timing}
 \summary{How to periodically trigger draw events.}
+
+You wouldn't be learning WebGL unless you were interested in animation.  WebGL applications generally issue all rendering commands for a given 3D scene in a \emph{draw cycle}.  The easiest but also most naive way of doing this in JavaScript is \code{setInterval}:
+
+\begin{lstlisting}[language=JavaScript]
+// Call myDrawFunc() every 60th of a second
+var delay = 1 / 60;
+window.setInterval(myDrawFunc, delay / 1000);
+\end{lstlisting}
+
+This is good enough in many cases, but for high-performing 3D graphics, it's preferable to hook in to the browser's native rendering loop.  This also allows your animation routine to become idle if the browser has no need to draw itself (e.g., if the window is minimized), saving precious battery life and CPU cycles.  It also aligns animation with the refresh rate of the monitor, preventing chopiness.
+
+At the time of this writing, all major browsers supply a method on \code{window} exactly for this purpose, although it has a vendor-specific prefix until it becomes fully standardized.
+
+GIZA.init += ...
 
 \begin{lstlisting}[language=JavaScript]
   window.requestAnimationFrame = window.requestAnimationFrame ||
@@ -247,6 +270,10 @@ In this book, we never add children elements to \code{<canvas>}, but there's not
     window.webkitRequestAnimationFrame ||
     window.msRequestAnimationFrame;
 \end{lstlisting}
+
+It's important to note that \code{requestAnimationFrame} is actually more like \code{setTimeout} than \code{setInterval} in that you need to call it again if you wish another draw cycle to occur.
+
+Giza provides an end frame
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \rrecipe{Recipe 1: Strobe Light}

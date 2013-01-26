@@ -1,29 +1,12 @@
 # master
 
-- TODO sections
+SAT
 
-  - Animation Timing
+- Animation Timing
     
-  - PAGECOMPOSITOR
-    http://www.svgopen.org/2005/papers/abstractsvgopen/
-    http://stackoverflow.com/questions/9491417/when-webgl-decide-to-update-the-display?answertab=votes#tab-top
-
 - The Recipe
 
-- FIGURE - Compositing
-
-    http://www.svgopen.org/2005/papers/abstractsvgopen/
-
-    - images of a web page that has a background image (Egypt!)
-    each canvas should have an opaque perspective cube
-
-    0,0.25,.5,.5 -- no alpha, css-opacity=1
-    0,0.25,.5,.5 -- alpha without premultiplied, css-opacity=1
-    0,0.25,.5,.5 -- alpha with premultiplied, css-opacity=1
-
-    0,0.25,.5,.5 -- no alpha, css-opacity=.5
-    0,0.25,.5,.5 -- alpha without premultiplied, css-opacity=.5
-    0,0.25,.5,.5 -- alpha with premultiplied, css-opacity=.5
+SUN
 
 - Integrate the style files that they sent, trying to keep the custom paper size.
   Make sure the listings look good -- for inspiration look at Production Volume
