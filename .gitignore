@@ -1,5 +1,6 @@
 _build
 node_modules
+gen.*
 *.aux
 *.bbl
 *.blg

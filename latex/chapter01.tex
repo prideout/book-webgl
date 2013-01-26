@@ -206,7 +206,7 @@ Double-buffering implies that the existing pixels you're drawing on top of do no
 
 In some situations you want the existing pixels to exactly match the previously-drawn frame.  For example, you might need to read color values from the canvas (the \index{\code{readPixels}} \code{readPixels} method will be discussed in \notetoself{CHAPTER}), or your application might intentionally update only certain regions of the canvas, perhaps for performance reasons.  This is why \code{preserveDrawingBuffer} exists; it allows you to mimic \index{single-buffering} single-buffering.
 
-You might be thinking: \emph{okay -- the ``backbuffer'' is immediately updated when I call \code{clear} or \code{drawPixels}}.  Wrong!  The web browser and the graphics driver are actually buffering up WebGL commands and executing them later.  If you'd like, you can tell WebGL to wait till the buffer is done executing by calling the \index{finish} \code{finish} method.  You'll rarely need this however, so don't use it unless you know you need it.
+You might be thinking: ``Okay, so the canvas isn't immediately updated when I call \code{clear} or \code{drawPixels}, but the ``backbuffer'' is!''  Nope -- the web browser and the graphics driver are actually buffering up WebGL commands and executing them later.  If you'd like, you can tell WebGL to wait till the buffer is done executing by calling the \index{finish} \code{finish} method.  You'll rarely need this however, so don't use it unless you know you need it.
 
 \subsection{Alpha Compositing}
 
@@ -214,7 +214,11 @@ If you're reading this book, you're probably already familiar with the concept o
 
 Briefly, alpha is a floating-point value in the [0,1] interval, treated much like the red, green, and blue components of pixel color.  Alpha can be thought of as the inverse of opacity, although WebGL can interpret it in many ways, as we'll learn in \notetoself{CHAPTER}.  For now we'll focus on the existence of the alpha channel in the canvas and how it interacts with the HTML page compositor in your browser.
 
-PAGECOMPOSITOR
+\begin{figure}[htb]\centering
+  \includegraphics[width=120mm]{PreMult.png}
+  \caption{Semi-transparent canvas composed over a CSS \code{background-image}.}
+  \label{fig:PreMult}
+\end{figure}
 
 \begin{comment}
 images of a web page that has a background image (Egypt!)
