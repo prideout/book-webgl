@@ -231,7 +231,7 @@ gl.clear(gl.COLOR_BUFFER_BIT);
 
 If the \code{premultipledAlpha} option is disabled upon context creation, the RGB values in the canvas are multiplied by alpha before being added into the underlying color, as seen on the right in Figure~\ref{fig:PreMult}.
 
-Another example would be clearing the background to (1, 1, 1, 0.5).  If \code{premultipledAlpha} is enabled in this case, the canvas woud seem completely opaque because adding white to any color yields white.  If \code{premultipledAlpha} were disabled, this would (crudely) brighten the background by averaging it with white.
+Another example would be clearing the background to (1, 1, 1, 0.5).  If \code{premultipledAlpha} were enabled in this case, the canvas would be completely opaque because adding white to any color yields white.  If \code{premultipledAlpha} were disabled, this would (crudely) brighten the background by averaging it with white.
 
 \begin{figure}[htb]\centering
   \includegraphics[width=120mm]{PreMult.png}
