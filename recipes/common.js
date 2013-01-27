@@ -1,6 +1,15 @@
 // Create a COMMON namespace for a small handful of helper functions
 // and constants.
-var COMMON = {cdn: "http://ajax.googleapis.com/ajax/libs/"};
+var COMMON = {}
+
+// Path to a content delivery network for jQuery etc.
+COMMON.cdn = "http://ajax.googleapis.com/ajax/libs/";
+
+// Strip off the .html extension from the URL.
+COMMON.basepath = window.location.toString().slice(0, -5)
+
+// Extract the name of the recipe from the basepath.
+COMMON.recipe = COMMON.basepath.split('/').pop();
 
 // Use HeadJS to load scripts asynchronously, but execute them
 // synchronously.  After we have a build process in place, we'll
@@ -14,7 +23,8 @@ head.js(
   "../giza/Turtle.js",
   "lib/stats.min.js",
   COMMON.cdn + "jquery/1.8.0/jquery.min.js",
-  COMMON.cdn + "jqueryui/1.9.2/jquery-ui.min.js");
+  COMMON.cdn + "jqueryui/1.9.2/jquery-ui.min.js",
+  COMMON.basepath + ".js");
 
 // After all scripts have been loaded AND after the document is
 // "Ready", do this:

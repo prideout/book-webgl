@@ -1,6 +1,6 @@
 # master
 
-- Finish The Recipe
+- One or two more sentences at the end of the chapter.
 
 - Integrate the style files that they sent, trying to keep the custom paper size.
   Make sure the listings look good -- for inspiration look at Production Volume

@@ -310,7 +310,7 @@ Every chapter in this book ends with \emph{recipe} that walks through all the co
   \label{fig:Recipe1}
 \end{figure}
 
-This chapter's recipe is called \code{StrobeLight}, which isn't too exciting but at least establishes the boilerplate we'll be using for future recipes.  First let's take a look at its HTML; see Listing~\ref{lst:StrobeLight1}.
+This chapter's recipe is called \code{StrobeLight}, which isn't too exciting but at least establishes some boilerplate we'll be using for future recipes.  First let's take a look at its HTML; see Listing~\ref{lst:StrobeLight1}.
 
 \begin{lstlisting}[
     caption={\code{StrobeLight.html}},
@@ -323,7 +323,6 @@ This chapter's recipe is called \code{StrobeLight}, which isn't too exciting but
     <link href="css/style.css" rel="stylesheet">
     <script src="lib/head.load.min.js"></script>
     <script src="common.js"></script>
-    <script src="StrobeLight.js"></script>
   </head>
   <body>
     <h1>Strobe Light</h1>
@@ -338,40 +337,58 @@ This chapter's recipe is called \code{StrobeLight}, which isn't too exciting but
 </html>
 \end{lstlisting} \index{\code{StrobeLight.html}}
 
-While giza has no dependencies on any JavaScript libraries, the COMMON layer does use some libraries to make life a little easier.
+While giza has no dependencies on any JavaScript libraries, the COMMON layer depends on the following third-party libraries to make life a little easier:
 
 \begin{description}
-\item[head.js] TODO 
-\item[stats.js] TODO
-\item[jQuery] TODO
+\item[head.js] JavaScript loader utility.
+\item[stats.js] Performance monitoring widget used only in some recipes.
+\item[jQuery] John Resig's ``write less do more'' library.
 \end{description}
 
-Next up see Listing~\ref{lst:COMMON:file}.  TBD
+HeadJS helps us make each recipe-specific HTML file very simple by sharing a list of JavaScript libraries in \code{common.js}, instead of including a huge number of \code{<script>} tags in every HTML file.  It also has the benefit of loading scripts asynchronously for better performance.  See Listing~\ref{lst:COMMON:file} for \code{common.js}.  We'll extend this file in future chapters by adding some small utilities for loading textures, compiling shaders, etc.
 
 \begin{lstlisting}[
     caption={\code{common.js}},
     label=lst:COMMON:file,
     language=JavaScript]
-// Create a COMMON namespace for a small handful of helper functions
-// and constants.
-var COMMON = {cdn: "http://ajax.googleapis.com/ajax/libs/"};
+var COMMON = {}
 
-// Use HeadJS to load scripts asynchronously, but execute them
-// synchronously.
+// Path to a content delivery network for jQuery etc.
+COMMON.cdn = "http://ajax.googleapis.com/ajax/libs/";
+
+// Strip off the .html extension from the current URL.
+COMMON.basepath = window.location.toString().slice(0, -5)
+
+// Use HeadJS to efficiently load and run a list of scripts.
 head.js(
   "lib/giza.min.js",
   "lib/stats.min.js",
   COMMON.cdn + "jquery/1.8.0/jquery.min.js",
-  COMMON.cdn + "jqueryui/1.9.2/jquery-ui.min.js");
+  COMMON.cdn + "jqueryui/1.9.2/jquery-ui.min.js",
+  COMMON.basepath + ".js");
 
-// After all scripts have been loaded AND after the document is
-// "Ready", execute the recipe's main() function.
+// The last script in the above list defines a function called
+// "main" which we wish to run after the document is ready.
 head.ready(main);
 
-... // Replace ellipses with Listing~\ref{lst:COMMON:endFrame}.
+// Define various utility methods:
+
+COMMON.endFrame = ...; // see Listing~\ref{lst:COMMON:endFrame}.
 \end{lstlisting} \index{\code{common.js}}
 
-Next up see Listing~\ref{lst:StrobeLight2}.  TBD
+Each recipe in the book consists of two files: \code{RecipeName.html} and \code{RecipeName.js}.  The latter defines a function \code{main} which we pass to \code{head.ready} to ensure that it executes after all libraries are loaded and the document is ready.
+
+\begin{comment}
+{RecipeName}.js
+{RecipeName}.html
+common.js
+css/style.css
+lib/head.load.min.js
+lib/giza.min.js
+lib/stats.min.js
+\end{comment}
+
+Next let's take a look at the \code{main} function for the Strobe Light in  recipe.  See Listing~\ref{lst:StrobeLight2}.
 
 \begin{lstlisting}[
     caption={\code{StrobeLight.js}},
@@ -379,7 +396,7 @@ Next up see Listing~\ref{lst:StrobeLight2}.  TBD
     language=JavaScript]
 var main = function() {
 
-  GIZA.init();
+  GIZA.init(); //  see Listing~\ref{lst:GIZA:init1} and \ref{lst:GIZA:init2}
 
   var draw = function(currentTime) {
     var x = 0.5 + 0.5 * Math.sin(currentTime / 100);
@@ -394,4 +411,4 @@ var main = function() {
 };
 \end{lstlisting} \index{\code{StrobeLight.js}}
 
-TBD.
+By now you should understand everything Listing~\ref{lst:StrobeLight2}...
