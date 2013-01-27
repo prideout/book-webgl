@@ -1,10 +1,6 @@
 # master
 
-SAT
-
-- The Recipe
-
-SUN
+- Finish The Recipe
 
 - Integrate the style files that they sent, trying to keep the custom paper size.
   Make sure the listings look good -- for inspiration look at Production Volume

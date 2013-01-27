@@ -160,13 +160,13 @@ The only WebGL functions we're discussing in this chapter are the first two meth
   \label{tab:Clearing}
 \end{table}
 
-The \code{clear} command changes the pixels in the canvas, while \code{clearColor}, \code{clearDepth}, and \code{clearStencil} are simply configuring the WebGL state machine.  Most of the WebGL API consists of state-setting commands; there are only three methods in the entire API that can draw pixels into your canvas:
+The \code{clear} command changes the pixels in the canvas, while \code{clearColor}, \code{clearDepth}, and \code{clearStencil} are simply configuring the WebGL state machine.  Most of the WebGL API consists of state-setting commands; in fact there are only three methods in the entire API that can draw pixels into your canvas:
 
-\begin{itemize}
-\item clear
-\item drawArrays
-\item drawElements
-\end{itemize}
+\begin{description}
+\item[clear] Fill the color buffer (or depth/stencil).
+\item[drawArrays] Draw 3D geometry defined by a sequential list of vertices.
+\item[drawElements] Draw 3D geometry defined by a list of indices into a vertex buffer.
+\end{description}
 
 We'll learn more about \code{drawArrays} and \code{drawElements} in the next chapter.  Listing~\ref{lst:ClearCanvas} shows a usage example for the \code{clear} method.  It filles the canvas with a solid yellow color.
 
@@ -337,6 +337,14 @@ This chapter's recipe is called \code{StrobeLight}, which isn't too exciting but
   </body>
 </html>
 \end{lstlisting} \index{\code{StrobeLight.html}}
+
+While giza has no dependencies on any JavaScript libraries, the COMMON layer does use some libraries to make life a little easier.
+
+\begin{description}
+\item[head.js] TODO 
+\item[stats.js] TODO
+\item[jQuery] TODO
+\end{description}
 
 Next up see Listing~\ref{lst:COMMON:file}.  TBD
 
