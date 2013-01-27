@@ -7,6 +7,8 @@
   \term instead of \emph so that we can color it
   \code should perhaps be bold
 
+- Update nodejitsu server
+
 - Consider changing the background for the premult example to:
   http://en.wikipedia.org/wiki/File:BYR_color_wheel.svg
 
@@ -18,8 +20,6 @@
 - http://webgl-bench.appspot.com/
 
 - manipulators, BEAUTIFUL docs, fresnel/marble spiral horn
-
-- styling on the recipe index doesn't work with the node server
 
 - test & impl rotateAxis and scale in Matrix4
 
