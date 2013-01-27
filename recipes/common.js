@@ -1,5 +1,5 @@
 // Create a COMMON namespace for a small handful of helper functions
-// and properties.
+// and constants.
 var COMMON = {cdn: "http://ajax.googleapis.com/ajax/libs/"};
 
 // Use HeadJS to load scripts asynchronously, but execute them

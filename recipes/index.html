@@ -36,13 +36,13 @@
       window.onload = function() {
         var data = {
             StrobeLight: "Strobe Light",
-            ResizeTest: "Resize Test",
+            ResizeTest: "(Resize Test)",
+            TunnelFlight: "(Tunnel Flight)",
+            Compositor: "(Compositor)",
             PolygonTess: "Polygon Tessellation",
             ColorGraph: "Color Graph",
             ParametricSurf: "Parametric Surface",
             BasicLighting: "Basic Lighting",
-            TunnelFlight: "TunnelFlight",
-            Compositor: "Compositor"
         };
         var ejs = new EJS({element: "recipe-template"});
         ejs.update("recipe-list", {recipes: data});
