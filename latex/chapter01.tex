@@ -411,4 +411,12 @@ var main = function() {
 };
 \end{lstlisting} \index{\code{StrobeLight.js}}
 
-By now you should understand everything Listing~\ref{lst:StrobeLight2}...
+By now you should understand everything in Listing~\ref{lst:StrobeLight2}.  
+
+\begin{enumerate}
+\item Call \code{GIZA.init()} to creat the global \code{gl} object, which is extracted from the \code{<canvas>} element.
+\item Define a draw function that applies a sine function to the current time (in milliseconds) to modulate the background between amber and yellow colors.  It calls \code{COMMON.endFrame} at the end so that another animation frame is always requested, unless a WebGL error occurs.
+\item Finally, call \code{draw(0)} to kick off the infinite animation.
+\end{enumerate}
+
+This was a rather boring example, but it was just a ``Hello world'' -- we'll start drawing actual 3D geometry in the chapter.

@@ -1,10 +1,11 @@
 # master
 
-- One or two more sentences at the end of the chapter.
-
 - Integrate the style files that they sent, trying to keep the custom paper size.
   Make sure the listings look good -- for inspiration look at Production Volume
   Rendering and Insights.
+  
+  \term instead of \emph so that we can color it
+  \code should perhaps be bold
 
 - Consider changing the background for the premult example to:
   http://en.wikipedia.org/wiki/File:BYR_color_wheel.svg
