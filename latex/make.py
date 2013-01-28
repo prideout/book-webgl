@@ -4,6 +4,12 @@ import os, sys, shutil, argparse
 from termcolor import colored
 
 buildpath = '_build'
+#roottex = 'book'
+roottex = 'akp7_5x9_25'
+
+styfiles = '''
+../akp/akpbook
+'''.split()
 
 texfiles = '''
 book
@@ -18,11 +24,14 @@ chapter08
 chapter09
 chapter10
 chapter11
+../akp/front
+../akp/preface
+../akp/akp7_5x9_25
 '''.split()
 
 cmds = [
-    'pdflatex -shell-escape book.tex',
-    'pdflatex -shell-escape book.tex',
+    'pdflatex -shell-escape %s.tex' % roottex,
+    'pdflatex -shell-escape %s.tex' % roottex,
 ]
 
 def clean(args):
@@ -34,10 +43,12 @@ def build(args):
     os.mkdir(buildpath)
     for f in texfiles:
         shutil.copy(f + '.tex', buildpath)
+    for f in styfiles:
+        shutil.copy(f + '.sty', buildpath)
     os.chdir(buildpath)
     if args.index:
-        cmds.append('makeindex book')
-        cmds.append('pdflatex -shell-escape book.tex')
+        cmds.append('makeindex %s' % roottex)
+        cmds.append('pdflatex -shell-escape %s.tex' % roottex)
     for cmd in cmds:
         if os.system(cmd):
             sys.exit(1)
@@ -83,7 +94,7 @@ parser_view = subparsers.add_parser('view')
 parser_view.add_argument(
     '-file',
     help = 'specifies an alternate file',
-    default = 'book.pdf')
+    default = '%s.pdf' % roottex)
 parser_view.set_defaults(func = view)
 
 # Parse and execute!

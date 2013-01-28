@@ -1,4 +1,5 @@
-\chapter{Preliminaries}
+\chapter{Preliminaries}%{Philip Rideout}
+\label{ch1}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{WebGL and its Ancestry}
@@ -10,15 +11,15 @@ Why has WebGL left other 3D web technologies in the dust?  For one, it came alon
 
 WebGL has plenty of merits that make it more attractive than other browser-based 3D APIs.  Almost all popular browsers support it natively, freeing users from the overhead of plug-ins.  WebGL is also ``close to the metal'' -- by providing low-level access to graphics hardware, developers can maximize performance like never before.
 
-WebGL's ancestry actually lies not in VRML (which did give rise to X3D and other standards) but in a low-level graphics API for C developed by Silicon Graphics in the early 90's.  They initially named their API \emph{IrisGL}, which evolved to \emph{OpenGL} when they released it as an industry standard.   With the rise of mobile platforms, OpenGL spawned OpenGL ES, which encompasses almost the same feature set of WebGL.  In a sense, WebGL is simply a JavaScript binding for OpenGL ES 2.0.
+WebGL's ancestry actually lies not in VRML (which did give rise to X3D and other standards) but in a low-level graphics API for C developed by Silicon Graphics in the early 90's.  They initially named their API \term{IrisGL}, which evolved to \term{OpenGL} when they released it as an industry standard.   With the rise of mobile platforms, OpenGL spawned \term{OpenGL~ES}, which encompasses almost the same feature set of WebGL.  In a sense, WebGL is simply a JavaScript binding for OpenGL ES 2.0.
 
-WebGL has another ancestor that is arguably just as influential as IrisGL: the Renderman Shading Language (RSL) developed by Pixar inspired much of the syntax in the language that WebGL provides for authoring \index{shaders} \emph{shaders}, relatively small routines executed with massive parallelism.  Shaders have the final say in the 3D position of every vertex, and the RGB color of every rasterized pixel.  We'll learn more about shaders in Chapter 2.
+WebGL has another ancestor that is arguably just as influential as IrisGL: the Renderman Shading Language (RSL) developed by Pixar inspired much of the syntax in the language that WebGL provides for authoring \index{shaders} \term{shaders}, relatively small routines executed with massive parallelism.  Shaders have the final say in the 3D position of every vertex, and the RGB color of every rasterized pixel.  We'll learn more about shaders in Chapter 2.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Building Giza}
 \summary{Describes our coding conventions and the \code{giza} library that is developed over the course of the book.}
 
-This is not just a book, it's a library.  Many of the code listings in the book are lifted directly from the \emph{giza} library, named after the city in ancient Egypt.  The skyline of the Giza Necropolis is composed of triangles, the fundamental drawing primitive in computer graphics.  The pyramid shape also describes a \emph{viewing frustum}, a spatial region that encompasses everything within a certain vantage point in a 3D graphics program.
+This is not just a book, it's a library.  Many of the code listings in the book are lifted directly from the giza library, named after the city in ancient Egypt.  The skyline of the Giza Necropolis is composed of triangles, the fundamental drawing primitive in computer graphics.  The pyramid shape also describes a \term{viewing frustum}, a spatial region that encompasses everything within a certain vantage point in a 3D graphics program.
 
 As a design philosphy, giza never calls methods on the WebGL context object -- that's your job!  We made this rule of thumb to ensure that we cover every detail of the API in the book, and to differentiate giza from higher-level libraries such as ThreeJS.  Instead of providing an abstraction of WebGL, giza provides utilities for performing vector math, constructing buffers of mesh data, and more.
 
@@ -56,7 +57,7 @@ The canvas element \index{\code{<canvas>} element} is one of the cornerstones of
 
 By default, \code{<canvas>} is a block level element, similar to \code{<div>}.  This means that it can only be a child of \code{<body>}, and that it's typically rendered with surrounding line breaks.
 
-An important distinction between canvas and other elements is that it has two \index{size} sizes.  One size is the \emph{display area}, specified with familiar \index{CSS} CSS mechanisms.  The other size is the \emph{content size}, specified with explicit \code{width} \index{\code{width} attribute} and \code{height} \index{\code{height} attribute} attributes.  The content size specifies an off-screen drawing surface that gets scaled into the display area on the web page.
+An important distinction between canvas and other elements is that it has two \index{size} sizes.  One size is the \term{display area}, specified with familiar \index{CSS} CSS mechanisms.  The other size is the \term{content size}, specified with explicit \code{width} \index{\code{width} attribute} and \code{height} \index{\code{height} attribute} attributes.  The content size specifies an off-screen drawing surface that gets scaled into the display area on the web page.
 
 It's tempting to simply set the content and display sizes to the same dimensions, as in:
 
@@ -75,7 +76,7 @@ If you assume that device pixels are 1:1 with CSS pixels, you might see blurrine
 To get around these issues, \code{GIZA.init} (Listing~\ref{lst:GIZA:init1}) examines the \code{devicePixelRatio} window property to check how much upscaling is active.  It also examines the \code{clientWidth} \index{\code{clientWidth}, \code{clientHeight}} and \code{clientHeight} properties of the canvas element to obtain the finalized display area.
 
 \begin{lstlisting}[
-    caption={Adjusting the Canvas Size},
+    caption={Adjusting the canvas size.},
     label=lst:GIZA:init1,
     language=JavaScript]
 GIZA.init = function(canvasElement) {
@@ -104,13 +105,13 @@ GIZA.init = function(canvasElement) {
 In Listing~\ref{lst:GIZA:init1}, we adjust the canvas width and height not only during initialization, but also in response to the window's \index{\code{onresize} event} \code{onresize} event.
 
 \begin{sidenote}
-It's also common to adjust the WebGL \emph{viewport} and \emph{projection matrix} during a resize event.  More on this in future chapters.
+It's also common to adjust the WebGL \term{viewport} and \term{projection matrix} during a resize event.  More on this in future chapters.
 \end{sidenote}
 
 \subsection{Getting a Context}
 \label{sec:context}
 
-The entire WebGL API is exposed through an object of type \index{\code{WebGLRenderingContext}} \code{WebGLRenderingContext}, commonly known as the \index{draw context} \emph{draw context}.  It's obtained by calling \code{getContext} \index{\code{getContext} method} on a canvas element, like so:
+The entire WebGL API is exposed through an object of type \index{\code{WebGLRenderingContext}} \code{WebGLRenderingContext}, commonly known as the \index{draw context} \term{draw context}.  It's obtained by calling \code{getContext} \index{\code{getContext} method} on a canvas element, like so:
 
 \begin{lstlisting}[language=JavaScript]
   gl = canvas.getContext('experimental-webgl', {antialias: true});
@@ -129,11 +130,11 @@ The second argument is a set of optional attributes, as specified in Table~\ref{
     depth & true & Depth buffer \\
     stencil & false & Stencil buffer \\
     antialias & true & Enables multisampling \\
-    premultipliedAlpha & true & Specifies compositing behavior; ignored if alpha is false \\
-    preserveDrawingBuffer & false & Retains the canvas image from the previous draw cycle \\
+    premultipliedAlpha & true & Specifies compositing behavior \\
+    preserveDrawingBuffer & false & Retains canvas image previous draw cycle \\
     \hline
   \end{tabular}
-  \caption{WebGL Context Options.}
+  \caption{WebGL context options.}
   \label{tab:ContextAttributes}
 \end{table}
 
@@ -156,7 +157,7 @@ The only WebGL functions we're discussing in this chapter are the first two meth
     clearStencil(mask) & integer \\
     \hline
   \end{tabular}
-  \caption{WebGL Clear Methods.}
+  \caption{WebGL clear methods.}
   \label{tab:Clearing}
 \end{table}
 
@@ -171,7 +172,7 @@ The \code{clear} command changes the pixels in the canvas, while \code{clearColo
 We'll learn more about \code{drawArrays} and \code{drawElements} in the next chapter.  Listing~\ref{lst:ClearCanvas} shows a usage example for the \code{clear} method.  It filles the canvas with a solid yellow color.
 
 \begin{lstlisting}[
-    caption={Clearing the canvas},
+    caption={Clearing the canvas.},
     label=lst:ClearCanvas,
     language=JavaScript]
 gl = canvas.getContext('experimental-webgl', {antialias: true});
@@ -191,7 +192,7 @@ The \code{COLOR\_BUFFER\_BIT} flag is one of the constants that can be combined 
     \code{COLOR\_BUFFER\_BIT}   & 0x4000 & (0, 0, 0, 0) \\
     \hline
   \end{tabular}
-  \caption{WebGL Clear Bits.}
+  \caption{WebGL clear bits.}
   \label{tab:ClearBit}
 \end{table}
 
@@ -208,7 +209,7 @@ For example, consider a game inside an infinite tunnel, as depicted on the far l
 \subsection{When is the canvas \emph{truly} updated?}
 \label{sec:doublebuffer}
 
-You might be familiar with \index{double-buffering} double-buffering if you've used other graphics APIs.  WebGL is always double-buffered.  This means that your drawing commands are actually affecting pixels in a \index{backbuffer} \emph{backbuffer}, which is an offscreen drawing surface.  The browser's render loop presents the finalized backbuffer to the screen in one fell swoop.  This creates the illusion of seamless animation by never allowing users to see a partially complete scene.
+You might be familiar with \index{double-buffering} double-buffering if you've used other graphics APIs.  WebGL is always double-buffered.  This means that your drawing commands are actually affecting pixels in a \index{backbuffer} \term{backbuffer}, which is an offscreen drawing surface.  The browser's render loop presents the finalized backbuffer to the screen in one fell swoop.  This creates the illusion of seamless animation by never allowing users to see a partially complete scene.
 
 One side effect of double-buffering is that that the existing pixels you're overwriting do not necessarily correspond to what was drawn in the previous frame.  Normally this doesn't matter; most applications either clear the existing buffer, or fill it entirely with 3D drawing primitives.
 
@@ -256,7 +257,7 @@ http://stackoverflow.com/questions/9491417/when-webgl-decide-to-update-the-displ
 \section{Animation Timing}
 \summary{How to periodically trigger draw events.}
 
-You wouldn't be learning WebGL unless you were interested in animation.  WebGL applications generally issue all rendering commands for a given 3D scene in a \emph{draw cycle}.  The easiest but also most naive way of doing this in JavaScript is \code{setInterval}:
+You wouldn't be learning WebGL unless you were interested in animation.  WebGL applications generally issue all rendering commands for a given 3D scene in a \term{draw cycle}.  The easiest but also most naive way of doing this in JavaScript is \code{setInterval}:
 
 \begin{lstlisting}[language=JavaScript]
 // Call myDrawFunc() every 60th of a second
@@ -269,12 +270,13 @@ The above approach isn't ideal for high-performing 3D graphics -- it's preferabl
 At the time of this writing, all major browsers supply a method on \code{window} exactly for this purpose, although it has a vendor-specific prefix until it becomes fully standardized.  Giza's \code{init} function handles this for you, as seen in Listing~\ref{lst:GIZA:init2}
 
 \begin{lstlisting}[
-    caption={Initializing \code{requestAnimationFrame}},
+    caption={Initializing \code{requestAnimationFrame}.},
     label=lst:GIZA:init2,
+    escapechar=\%,
     language=JavaScript]
 GIZA.init = function(canvasElement) {
 
-  ... // Replace ellipses with Listing~\ref{lst:GIZA:init1}
+  ... // Replace ellipses with %\color{purple}Listing~\ref{lst:GIZA:init1}%
 
   window.requestAnimationFrame = window.requestAnimationFrame ||
     window.mozRequestAnimationFrame ||
@@ -299,18 +301,18 @@ It's important to note that \code{requestAnimationFrame} is actually more like \
 \end{lstlisting} \index{\code{COMMON.endframe}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Recipe 1: Strobe Light}
+\rrecipe{Recipe 1: Strobe Light}
 \summary{The simplest possible WebGL application; animates a solid color with \code{clear}.}
 
-Every chapter in this book ends with \emph{recipe} that walks through all the code for a certain giza demo.  Each recipe has fairly simple HTML, as seen in Figure~\ref{fig:Recipe1}.
+Every chapter in this book ends with \term{recipe} that walks through all the code for a certain giza demo.  Each recipe has fairly simple HTML, as seen in Figure~\ref{fig:Recipe1}.
 
 \begin{figure}[htb]\centering
   \includegraphics[width=120mm]{Recipe1.png}
-  \caption{Examples of ``recipes'': \code{StrobeLight} from Chapter 1 and \code{BasicLighting} from Chapter 4.}
+  \caption{Examples of recipes: \code{StrobeLight} from Chapter 1 and \code{BasicLighting} from Chapter 4.}
   \label{fig:Recipe1}
 \end{figure}
 
-This chapter's recipe is called \code{StrobeLight}, which isn't too exciting but at least establishes some boilerplate we'll be using for future recipes.  First let's take a look at its HTML; see Listing~\ref{lst:StrobeLight1}.
+This chapter's recipe is called \code{StrobeLight}, which isn't very exciting but at least establishes some boilerplate for future recipes.  First let's take a look at its HTML; see Listing~\ref{lst:StrobeLight1}.
 
 \begin{lstlisting}[
     caption={\code{StrobeLight.html}},
@@ -337,7 +339,7 @@ This chapter's recipe is called \code{StrobeLight}, which isn't too exciting but
 </html>
 \end{lstlisting} \index{\code{StrobeLight.html}}
 
-While giza has no dependencies on any JavaScript libraries, the COMMON layer depends on the following third-party libraries to make life a little easier:
+While giza has no dependencies on any JavaScript libraries, the \code{COMMON} layer depends on the following third-party libraries to make life a little easier:
 
 \begin{description}
 \item[head.js] JavaScript loader utility.
@@ -349,6 +351,7 @@ HeadJS helps us make each recipe-specific HTML file very simple by sharing a lis
 
 \begin{lstlisting}[
     caption={\code{common.js}},
+    escapechar=\%,
     label=lst:COMMON:file,
     language=JavaScript]
 var COMMON = {}
@@ -373,7 +376,7 @@ head.ready(main);
 
 // Define various utility methods:
 
-COMMON.endFrame = ...; // see Listing~\ref{lst:COMMON:endFrame}.
+COMMON.endFrame = ...; // see %\color{purple}Listing~\ref{lst:COMMON:endFrame}.%
 \end{lstlisting} \index{\code{common.js}}
 
 Each recipe in the book consists of two files: \code{RecipeName.html} and \code{RecipeName.js}.  The latter defines a function \code{main} which we pass to \code{head.ready} to ensure that it executes after all libraries are loaded and the document is ready.
@@ -393,10 +396,11 @@ Next let's take a look at the \code{main} function for the Strobe Light in  reci
 \begin{lstlisting}[
     caption={\code{StrobeLight.js}},
     label=lst:StrobeLight2,
+    escapechar=\%,
     language=JavaScript]
 var main = function() {
 
-  GIZA.init(); //  see Listing~\ref{lst:GIZA:init1} and \ref{lst:GIZA:init2}
+  GIZA.init(); // see %\color{purple}Listing~\ref{lst:GIZA:init1} and \ref{lst:GIZA:init2}%
 
   var draw = function(currentTime) {
     var x = 0.5 + 0.5 * Math.sin(currentTime / 100);

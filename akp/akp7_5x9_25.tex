@@ -34,7 +34,12 @@ layouthoffset=0.5in,
 % Packages
 %*******************************************************************************
 %---BEGIN AUTHOR EDIT---
-
+\usepackage{listings}
+\usepackage{color}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage{verbatim}
+\usepackage[scaled]{beramono}
+\usepackage[T1]{fontenc}
 %---END AUTHOR EDIT---
 
 %*******************************************************************************
@@ -43,6 +48,45 @@ layouthoffset=0.5in,
 %   either inline or by including an external TeX file (e.g. \include{MyMacros})
 %*******************************************************************************
 %---BEGIN AUTHOR EDIT---
+
+\lstdefinelanguage{JavaScript}{
+  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{
+   language=JavaScript,
+   backgroundcolor=\color[rgb]{.9,.9,.8},
+   extendedchars=true,
+   basicstyle=\footnotesize\ttfamily,
+   showstringspaces=false,
+   showspaces=false,
+   tabsize=2,
+   breaklines=true,
+   showtabs=false,
+   captionpos=b
+}
+
+\newcommand{\rrecipe}[1] {\section{#1}}
+\newcommand{\term}[1]{\textcolor{BrickRed}{\emph{#1}}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\notetoself}[1]{\textcolor{red}{#1}}
+\newenvironment{sidenote}{\color{NavyBlue}}{\ignorespacesafterend}
+\newcommand{\summary}[1]{\addtocontents{toc}{
+    \setlength{\leftskip}{15pt} \noindent  \footnotesize
+    \textcolor{Gray}{#1}\normalsize\protect\par}
+}
+\renewcommand{\summary}[1]{}
 
 %---END AUTHOR EDIT---
 
@@ -60,7 +104,7 @@ layouthoffset=0.5in,
 %
 %   or similar command.
 %*******************************************************************************
-%\graphicspath{} % you may uncomment this line if needed
+\graphicspath{ {../../figures/} {../figures/} {../../akp/} }
 
 %*******************************************************************************
 % Workspace
@@ -99,7 +143,7 @@ layouthoffset=0.5in,
 
  \tableofcontents % uncomment this line if you need to generate a TOC
 % \include{toc} % use and edit for final version
- \include{preface}
+% \include{preface}
 %---BEGIN AUTHOR EDIT---
 
 %---END AUTHOR EDIT---
@@ -113,7 +157,17 @@ layouthoffset=0.5in,
  \renewcommand{\chaptermark}[1]{\markboth{\thechapter. #1}{}}
  \renewcommand{\sectionmark}[1]{\markright{\thesection. #1}}
 %---BEGIN AUTHOR EDIT---
-\include{chapter1}
+\include{chapter01}
+\include{chapter02}
+\include{chapter03}
+\include{chapter04}
+\include{chapter05}
+\include{chapter06}
+\include{chapter07}
+\include{chapter08}
+\include{chapter09}
+\include{chapter10}
+\include{chapter11}
 %---END AUTHOR EDIT---
 
 %*******************************************************************************
