@@ -5,7 +5,8 @@ from termcolor import colored
 
 buildpath = '_build'
 #roottex = 'book'
-roottex = 'akp7_5x9_25'
+#roottex = 'akp7_5x9_25'
+roottex = 'akp6x9'
 
 styfiles = '''
 ../akp/akpbook
@@ -27,6 +28,7 @@ chapter11
 ../akp/front
 ../akp/preface
 ../akp/akp7_5x9_25
+../akp/akp6x9
 '''.split()
 
 cmds = [

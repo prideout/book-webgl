@@ -19,9 +19,9 @@ WebGL has another ancestor that is arguably just as influential as IrisGL: the R
 \section{Building Giza}
 \summary{Describes our coding conventions and the \code{giza} library that is developed over the course of the book.}
 
-This is not just a book, it's a library.  Many of the code listings in the book are lifted directly from the giza library, named after the city in ancient Egypt.  The skyline of the Giza Necropolis is composed of triangles, the fundamental drawing primitive in computer graphics.  The pyramid shape also describes a \term{viewing frustum}, a spatial region that encompasses everything within a certain vantage point in a 3D graphics program.
+This is not just a book, it's a library.  Many of the code listings on these pages are lifted directly from the giza library, named after the Egyptian city known for its pyramids.  The pyramids form a skyline of triangles, which are the fundamental drawing primitive in computer graphics.  The pyramid shape also describes a \term{viewing frustum}, a spatial region that encompasses everything within a certain vantage point in a 3D graphics program.
 
-As a design philosphy, giza never calls methods on the WebGL context object -- that's your job!  We made this rule of thumb to ensure that we cover every detail of the API in the book, and to differentiate giza from higher-level libraries such as ThreeJS.  Instead of providing an abstraction of WebGL, giza provides utilities for performing vector math, constructing buffers of mesh data, and more.
+As a design philosphy, giza never calls methods on the WebGL context object -- that's your job!  This differentiates giza from higher-level libraries such as ThreeJS.  Instead of providing an abstraction of WebGL, giza is utility layer; it provides help with vector math, constructing buffers of mesh data, and so on.
 
 All giza methods belong to a global object called \code{GIZA}, following the namespace convention common in JavaScript.  For example, here's how we define a small utility function that merges all attributes from object \code{b} into object \code{a}:
 
@@ -35,7 +35,7 @@ GIZA.merge = function (a, b) {
 };
 \end{lstlisting}
 
-The first line allows clients to include a subset of Giza's source files by creating a \code{GIZA} namespace only if it doesn't already exist.  This isn't necessary when using giza in minified form, since the entire library is included in that case.
+The first line allows clients to include a subset of giza's source files by creating a \code{GIZA} namespace only if it doesn't already exist.  This isn't necessary when using giza in minified form, since the entire library is included in that case.
 
 Other than \code{GIZA}, the only other global variables that we ever set are \code{COMMON} and \code{gl}.  The \code{gl} variable is the context object that exposes the entire WebGL API, which we'll learn about in Section~\ref{sec:context}.  We made this a global for terseness, since we make a huge number of calls to the context object.
 
@@ -73,7 +73,7 @@ There's nothing wrong with the above approach for simple applications.  It's com
 If you assume that device pixels are 1:1 with CSS pixels, you might see blurriness in your WebGL canvas due to upscaling.
 \end{sidenote}
 
-To get around these issues, \code{GIZA.init} (Listing~\ref{lst:GIZA:init1}) examines the \code{devicePixelRatio} window property to check how much upscaling is active.  It also examines the \code{clientWidth} \index{\code{clientWidth}, \code{clientHeight}} and \code{clientHeight} properties of the canvas element to obtain the finalized display area.
+To get around these issues, \code{GIZA.init} (Listing~\ref{lst:GIZA:init1}) examines the \linebreak \code{devicePixelRatio} window property to check how much upscaling is active.  It also examines the \code{clientWidth} \index{\code{clientWidth}, \code{clientHeight}} and \code{clientHeight} properties of the canvas element to obtain the finalized display area.
 
 \begin{lstlisting}[
     caption={Adjusting the canvas size.},
@@ -111,7 +111,7 @@ It's also common to adjust the WebGL \term{viewport} and \term{projection matrix
 \subsection{Getting a Context}
 \label{sec:context}
 
-The entire WebGL API is exposed through an object of type \index{\code{WebGLRenderingContext}} \code{WebGLRenderingContext}, commonly known as the \index{draw context} \term{draw context}.  It's obtained by calling \code{getContext} \index{\code{getContext} method} on a canvas element, like so:
+The entire WebGL API is exposed through a \code{WebGLRenderingContext} \index{\code{WebGLRenderingContext}} object, commonly known as the \index{draw context} \term{draw context}.  It's obtained by calling \code{getContext} \index{\code{getContext} method} on a canvas element, like so:
 
 \begin{lstlisting}[language=JavaScript]
   gl = canvas.getContext('experimental-webgl', {antialias: true});
