@@ -58,11 +58,16 @@ def build(args):
     print colored('Success!', 'green')
     if not args.index:
         print "To include the index, build again with -index."
+    if args.refresh:
+        os.system('osascript ../refresh.scpt')
 
 def trim(args):
     texfiles.append('trim')
     cmds.append('pdflatex -jobname=trimmed trim.tex')
     build(args)
+
+def refresh(args):
+    os.system('osascript refresh.scpt')
 
 def view(args):
     fileToOpen = os.path.join(buildpath, args.file)
@@ -81,6 +86,10 @@ parser_build.add_argument(
     '-index',
     help = 'include the index',
     action = 'store_true')
+parser_build.add_argument(
+    '-refresh',
+    help = 'refresh OS X preview window',
+    action = 'store_true')
 parser_build.set_defaults(func = build)
 
 # Create the parser for the "clean" command.
@@ -98,6 +107,10 @@ parser_view.add_argument(
     help = 'specifies an alternate file',
     default = '%s.pdf' % roottex)
 parser_view.set_defaults(func = view)
+
+# Create the parser for the "refresh" command.
+parser_refresh = subparsers.add_parser('refresh')
+parser_refresh.set_defaults(func = refresh)
 
 # Parse and execute!
 args = parser.parse_args()

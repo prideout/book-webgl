@@ -16,14 +16,21 @@ WebGL's ancestry actually lies not in VRML (which did give rise to X3D and other
 WebGL has another ancestor that is arguably just as influential as IrisGL: the Renderman Shading Language (RSL) developed by Pixar inspired much of the syntax in the language that WebGL provides for authoring \index{shaders} \term{shaders}, relatively small routines executed with massive parallelism.  Shaders have the final say in the 3D position of every vertex, and the RGB color of every rasterized pixel.  We'll learn more about shaders in Chapter 2.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{figure}[htb]\centering
+  \includegraphics[width=70mm]{All_Gizah_Pyramids.jpg}
+  \caption{The silhouette of the Giza pyramids is composed of triangles, the fundamental drawing primitive in real-time graphics. (Ricardo Liberato)}
+  \label{fig:Giza}
+\end{figure}
+
 \section{Building Giza}
 \summary{Describes our coding conventions and the \code{giza} library that is developed over the course of the book.}
 
-This is not just a book, it's a library.  Many of the code listings on these pages are lifted directly from the giza library, named after the Egyptian city known for its pyramids.  The pyramids form a skyline of triangles, which are the fundamental drawing primitive in computer graphics.  The pyramid shape also describes a \term{viewing frustum}, a spatial region that encompasses everything within a certain vantage point in a 3D graphics program.
+This is not just a book, it's a library.  Many of the code listings on these pages are lifted directly from the giza library, named after the ancient Egyptian city.  The Giza pyramids form a skyline of triangles, which are the primary drawing primitive in WebGL.  The pyramid shape also describes a \term{viewing frustum}, a spatial region that encompasses everything within a certain vantage point in a 3D graphics program.
 
-As a design philosphy, giza never calls methods on the WebGL context object -- that's your job!  This differentiates giza from higher-level libraries such as ThreeJS.  Instead of providing an abstraction of WebGL, giza is utility layer; it provides help with vector math, constructing buffers of mesh data, and so on.
+As a design philosphy, giza never calls methods on the WebGL context object -- that's your job!  This differentiates it from higher-level libraries such as ThreeJS.  Instead of providing an abstraction of WebGL, giza offers a set of utility layers that help with vector math, building buffers of mesh data, and so on.
 
-\subsection{Coding Conventions}
+\subsection{Code Conventions}
 
 All giza methods belong to a global object called \code{GIZA}, following the namespace convention common in JavaScript.  For example, here's how we define a small utility function that merges all attributes from object \code{b} into object \code{a}:
 
@@ -39,7 +46,7 @@ GIZA.merge = function (a, b) {
 
 The first line is repeated at the top of all giza files.  This allows clients to include a subset of giza because it creates a new \code{GIZA} namespace only if it doesn't already exist.
 
-Other than \code{GIZA}, the only global variable that we set is \code{COMMON}.  This is where we place a small handful of WebGL helpers that can be called from any of our sample apps.  Unlike methods in \code{GIZA} (which has no dependencies on third-party libraries), methods in \code{COMMON} are allowed to call jQuery functions and WebGL methods.
+Other than \code{GIZA}, the only global variable that we create is \code{COMMON}.  This is where we place a small handful of WebGL helpers that can be called from any of our sample apps.  Unlike methods in \code{GIZA} (which have no dependencies on third-party libraries), methods in \code{COMMON} are allowed to call jQuery functions and WebGL methods.
 
 To reduce code verbosity, we'll often create short-named aliases at the top of a scope.  For example:
 
@@ -62,13 +69,13 @@ For access to the full source code to giza, or to download the minified library,
 
 \notetoself{http://to.be.filled.in.com}
 
-The github project also contains the code for all the samples in this book, including HTML and CSS source (and the \code{COMMON} layer).
+The github project also contains code for all the samples in this book, including HTML and CSS source (and the \code{COMMON} layer).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{The Canvas Element}
 \summary{Explains the \code{width} and \code{height} attributes and how to handle high-dpi displays (e.g., Apple Retina).}
 
-The canvas element \index{\code{<canvas>} element} is one of the cornerstones of the HTML5 platform.  It provides rich drawing APIs for both 2D and 3D graphics.  The 2D API will not be discussed much in this book (except briefly in Chapter 8), and the 3D API is, of course, WebGL.
+The canvas element \index{\code{<canvas>} element} is one of the cornerstones of the HTML5 platform.  It provides rich drawing APIs for both 2D and 3D graphics.  The 2D API will not be discussed much in this book (except briefly in \notetoself{CHAPTER}), and the 3D API is, of course, WebGL.
 
 \subsection{Dealing with Size}
 
@@ -87,7 +94,7 @@ It's tempting to simply set the content and display sizes to the same dimensions
 There's nothing wrong with the above approach for simple applications.  It's common, however, to use CSS to specify a dynamic display area (e.g., \code{width:100\%}).  Moreover CSS pixels don't necessarily correspond to actual device pixels.  This is especially true on displays with a high pixel density, where browsers typically upscale CSS pixels by 2x.
 
 \begin{sidenote}%
-If you assume that device pixels are 1:1 with CSS pixels, you might see bluriness in your WebGL canvas due to upscaling.
+Watch out!  If you assume that device pixels are 1:1 with CSS pixels, some users might see bluriness in the WebGL canvas due to upscaling.
 \end{sidenote}
 
 To get around these issues, \code{GIZA.init} (Listing~\ref{lst:GIZA:init1}) examines the \linebreak \code{devicePixelRatio} window property to check how much upscaling is active.  It also examines the \code{clientWidth} \index{\code{clientWidth}, \code{clientHeight}} and \code{clientHeight} properties of the canvas element to obtain the finalized display area.
@@ -119,11 +126,14 @@ GIZA.init = function(canvasElement) {
   window.onresize = adjustSize;
 \end{lstlisting} \index{\code{GIZA.init}}
 
-In Listing~\ref{lst:GIZA:init1}, we adjust the canvas width and height not only during initialization, but also in response to the window's \index{\code{onresize} event} \code{onresize} event.
+In Listing~\ref{lst:GIZA:init1}, we adjust the canvas width and height not only during initialization, but also in response to the window's \index{\code{onresize} event} \code{onresize} event.  (It's also common to adjust the WebGL \term{viewport} and \term{projection matrix} during a resize event, but we'll learn more about that in future chapters.)
 
-\begin{sidenote}
-It's also common to adjust the WebGL \term{viewport} and \term{projection matrix} during a resize event.  More on this in future chapters.
-\end{sidenote}
+By using the above initialization strategy, the HTML side of your app can skip setting the explicit \code{width} and \code{height} attributes, opting instead for a purely CSS-based approach:
+
+\begin{lstlisting}[language=HTML]
+<canvas style="width:100%; height:360px">
+</canvas>
+\end{lstlisting}
 
 \subsection{Getting a Context}
 \label{sec:context}
@@ -155,20 +165,20 @@ The second argument is a set of optional attributes, as specified in Table~\ref{
   \label{tab:ContextAttributes}
 \end{table}
 
-We'll examine the attributes in Table~\ref{tab:ContextAttributes} in greater detail in the next section.
+We'll examine these attributes in greater detail in the next section.
 
 \notetoself{Add references to future sections in the book that deal with context loss and image capture.}
 
 \subsection{Clearing the Canvas}
 
-The only WebGL functions we're discussing in this chapter are the first two methods listed in Table~\ref{tab:Clearing}.
+The only WebGL functions discussed in this chapter are the first two methods listed in Table~\ref{tab:Clearing}.
 
 \begin{table}[htb]\centering
   \begin{tabular}{ll}
     \hline
     Method & Argument Types \\
     \hline
-    clear(mask) & logical ``or'' of values in Table~\ref{tab:ClearBit} \\
+    clear(mask) & logical ``or'' of values from Table~\ref{tab:ClearBit} \\
     clearColor(red, green, blue, alpha)  & floating point numbers in [0,1] \\
     clearDepth(value) & floating point number in [0,1] \\
     clearStencil(mask) & integer \\
@@ -178,15 +188,15 @@ The only WebGL functions we're discussing in this chapter are the first two meth
   \label{tab:Clearing}
 \end{table}
 
-The \code{clear} command changes the pixels in the canvas, while \code{clearColor}, \code{clearDepth}, and \code{clearStencil} are simply configuring the WebGL state machine.  Most of the WebGL API consists of state-setting commands; in fact there are only three methods in the entire API that can draw pixels into your canvas:
+The \code{clear} command resets all the pixels in the canvas, while \code{clearColor}, \code{clearDepth}, and \code{clearStencil} are simply configuring the WebGL state machine.  Most of the WebGL API consists of state-setting commands; in fact there are only three methods in the entire API that can actually paint pixels:
 
 \begin{description}
-\item[clear] Fill the color buffer (or depth/stencil).
-\item[drawArrays] Draw 3D geometry defined by a sequential list of vertices.
-\item[drawElements] Draw 3D geometry defined by a list of indices into a vertex buffer.
+\item[\code{clear}] Fills the color buffer (or depth/stencil).
+\item[\code{drawArrays}] Draws 3D geometry defined by a sequential list of vertices.
+\item[\code{drawElements}] Draws 3D geometry defined by a list of indices into a vertex buffer.
 \end{description}
 
-We'll learn more about \code{drawArrays} and \code{drawElements} in the next chapter.  Listing~\ref{lst:ClearCanvas} shows a usage example for the \code{clear} method.  It filles the canvas with a solid yellow color.
+We'll learn more about \code{drawArrays} and \code{drawElements} in the next chapter.  Listing~\ref{lst:ClearCanvas} shows a usage example for the \code{clear} method.  It fills the canvas with solid yellow.
 
 \begin{lstlisting}[
     caption={Clearing the canvas.},

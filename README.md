@@ -1,7 +1,5 @@
 # master
 
-- http://commons.wikimedia.org/wiki/File:All_Gizah_Pyramids.jpg
-
 - Compositor Sample background
   http://en.wikipedia.org/wiki/File:BYR_color_wheel.svg
 
