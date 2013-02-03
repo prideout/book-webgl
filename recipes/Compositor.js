@@ -3,7 +3,7 @@ var main = function() {
   var options = {};
   COMMON.bindOptions(options, '#checks');
 
-  var pma = false; // default is TRUE
+  var pma = true; // default is TRUE
   $(".tagline").text("premultipliedAlpha = " + pma);
 
   GIZA.init(null, {
@@ -23,7 +23,7 @@ var main = function() {
   };
 
   var init = function() {
-    gl.clearColor(1, 1, 1, 0.5);
+    gl.clearColor(1, 0, 0, 0.5);
   }
 
   var draw = function(currentTime) {
