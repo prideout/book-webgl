@@ -53,7 +53,7 @@ var main = function() {
     gl.clearColor(34 / 255, 74 / 255, 116 / 255, 1);
     gl.enable(gl.DEPTH_TEST);
 
-    var lod = 64;
+    var lod = 96;
 
     var flags = function() {
       var f = GIZA.surfaceFlags;
@@ -120,12 +120,12 @@ var main = function() {
     var cameraIndex = Math.floor((currentTime / speed) % ptCount);
     var camera = function(t) {
       t = t / (speed * ptCount);
-      //console.info(t - Math.floor(t));
       var p = GIZA.equations.grannyKnot(t);
       return p;
     };
     var eye = camera(currentTime);
     var target = camera(currentTime + 50);
+    var lightPosition = camera(currentTime + 1000);
     var direction = V3.normalize(V3.subtract(eye, target));
     var up = V3.perp(direction);
     var mv = M4.lookAt(eye, target, up);
@@ -146,9 +146,13 @@ var main = function() {
     gl.useProgram(program);
     gl.uniformMatrix4fv(program.projection, false, proj);
     gl.uniformMatrix4fv(program.modelview, false, mv);
-    gl.uniform4f(program.lightPosition, 0.75, .25, 1, 1);
+    gl.uniform3fv(program.lightPosition, target);
+    gl.uniform3fv(program.lightPosition, lightPosition);
+    gl.uniform1f(program.lightAttenuation, 2);
     gl.uniform3f(program.ambientMaterial, 0.2, 0.1, 0.1);
+    gl.uniform3f(program.specularMaterial, 0.7, 0.7, 0.7);
     gl.uniform4f(program.diffuseMaterial, 1, 209/255, 54/255, 1);
+    gl.uniform1f(program.shininess, 16);
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.tubeCoords);
     gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 24, 0);
     gl.vertexAttribPointer(attribs.NORMAL, 3, gl.FLOAT, false, 24, 12);
@@ -160,11 +164,11 @@ var main = function() {
 
     var program = programs.nonlit;
     var numIndices = 2 * buffers.wireframe.lineCount;
-    gl.lineWidth(4);
+    gl.lineWidth(1);
     gl.useProgram(program);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-    gl.uniform4f(program.color, 1, 1, 1, 0.125);
+    gl.uniform4f(program.color, 0, 0, 0, 1);
     gl.uniformMatrix4fv(program.projection, false, proj);
     gl.uniformMatrix4fv(program.modelview, false, mv);
     gl.drawElements(gl.LINES, numIndices, gl.UNSIGNED_SHORT, 0)

@@ -31,13 +31,16 @@
       attribute vec4 Position;
       attribute vec3 Normal;
       varying vec3 vNormal;
+      varying vec3 vPosition;
+
       uniform mat4 modelview;
       uniform mat4 projection;
+
       void main(void)
       {
           vNormal = mat3(modelview) * Normal;
-          vec4 p = Position;
-          gl_Position = projection * modelview * p;
+          vPosition = mat3(modelview) * Position.xyz;
+          gl_Position = projection * modelview * Position;
           gl_PointSize = 10.0;
       }
     </script>
@@ -47,20 +50,40 @@
       precision highp vec3;
       uniform vec4 color;
       varying vec3 vNormal;
+      varying vec3 vPosition;
 
-      uniform vec4 lightPosition;
+      uniform float lightAttenuation;
+      uniform vec3 lightPosition;
       uniform vec3 ambientMaterial;
       uniform vec4 diffuseMaterial;
+      uniform vec3 specularMaterial;
       uniform mat4 modelview;
-        
+      uniform float shininess;
+
       void main()
       {
-          vec3 N = normalize(vNormal);
-          vec3 L = normalize((lightPosition).xyz);
+          vec3 L = mat3(modelview) * lightPosition.xyz;
+          vec3 V = vPosition; // Vertex position in eye space
           vec3 Eye = vec3(0, 0, 1);
-          vec3 H = normalize(L + Eye);
-          float df = max(0.0, dot(N, L));
-          vec3 color = ambientMaterial + df*diffuseMaterial.rgb;
+          vec3 Vp = normalize(L - V);
+          vec3 H = normalize(Vp + Eye);
+
+          vec3 N = normalize(vNormal);
+          if (!gl_FrontFacing) {
+              N = -N;
+          }
+
+          float df = max(0.0, dot(N, Vp));
+          float sf = pow(max(0.0, dot(N, H)), shininess);
+
+          vec3 a = L - V;
+          float att = 1.0 / (1.0 + lightAttenuation * dot(a,a));
+
+          vec3 color = ambientMaterial;
+          color += df * diffuseMaterial.rgb;
+          color += sf * specularMaterial;
+          color *= att;
+      
           gl_FragColor = vec4(color, diffuseMaterial.a);
       }
     </script>
