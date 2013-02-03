@@ -284,7 +284,7 @@ http://stackoverflow.com/questions/9491417/when-webgl-decide-to-update-the-displ
 \section{Animation Timing}
 \summary{How to periodically trigger draw events.}
 
-You wouldn't be learning WebGL unless you were interested in animation.  WebGL applications generally issue all rendering commands for a given 3D scene in a \term{draw cycle}.  The easiest but also most naive way of doing this in JavaScript is \code{setInterval}:
+You wouldn't be learning WebGL unless you were interested in animation.  WebGL applications generally issue all rendering commands for a given 3D scene in a \term{draw cycle}.  The easiest but most naive way of doing this in JavaScript is \code{setInterval}:
 
 \begin{lstlisting}[language=JavaScript]
 // Call myDrawFunc() every 60th of a second
@@ -292,9 +292,9 @@ var delay = 1 / 60;
 window.setInterval(myDrawFunc, delay / 1000);
 \end{lstlisting}
 
-The above approach isn't ideal for high-performing 3D graphics -- it's preferable to hook in to the browser's native rendering loop.  This allows your animation routine to become idle if the browser has no need to draw itself (e.g., if the window is minimized), saving precious battery life and CPU cycles.  It also aligns animation with the refresh rate of the monitor, preventing chopiness.
+The above approach is hardly ideal for high-performing 3D graphics -- it's preferable to hook in to the browser's native rendering loop.  This allows your animation routine to become idle if the browser has no need to draw itself (e.g., if the window is minimized), saving precious battery life and CPU cycles.  It also aligns your animation with the refresh rate of the monitor, preventing chopiness.
 
-At the time of this writing, all major browsers supply a method on \code{window} exactly for this purpose, although it has a vendor-specific prefix until it becomes fully standardized.  Giza's \code{init} function handles this for you, as seen in Listing~\ref{lst:GIZA:init2}
+At the time of this writing, all major browsers supply a method on \code{window} exactly for this purpose, although it has a vendor-specific prefix until it becomes fully standardized.  Giza's \code{init} function handles this for you, as seen in Listing~\ref{lst:GIZA:init2}.
 
 \begin{lstlisting}[
     caption={Initializing \code{requestAnimationFrame}.},
@@ -311,7 +311,7 @@ GIZA.init = function(canvasElement) {
     window.msRequestAnimationFrame;
 \end{lstlisting} \index{\code{GIZA.init}}
 
-It's important to note that \code{requestAnimationFrame} is actually more like \code{setTimeout} than \code{setInterval} in that you need to call it again if you wish another draw cycle to occur.  We provide a function in the \code{COMMON} namespace that can be called at the end of your function to request another draw cycle, and to check the WebGL error state.  This is good practice to ensure clean, error-free code.  See Listing~\ref{lst:COMMON:endFrame}.
+Note that \code{requestAnimationFrame} is actually more like \code{setTimeout} than \code{setInterval} because it doesn't automatically repeat itself.  Our \code{COMMON} layer provides a function that can be called at the end of your draw function to request the next animation cycle.  It also checks the WebGL error state, and halts animation if an error occurs.  This is good practice to maintain clean, error-free code.  See Listing~\ref{lst:COMMON:endFrame}.
 
 \begin{lstlisting}[
     caption={Common end-of-frame tasks.},
@@ -374,7 +374,7 @@ While giza has no dependencies on any JavaScript libraries, the \code{COMMON} la
 \item[jQuery] John Resig's ``write less do more'' library.
 \end{description}
 
-HeadJS helps us make each recipe-specific HTML file very simple by sharing a list of JavaScript libraries in \code{common.js}, instead of including a huge number of \code{<script>} tags in every HTML file.  It also has the benefit of loading scripts asynchronously for better performance.  See Listing~\ref{lst:COMMON:file} for \code{common.js}.  We'll extend this file in future chapters by adding some small utilities for loading textures, compiling shaders, etc.
+HeadJS enables us to simplify our HTML by sharing a list of JavaScript libraries in \code{common.js}, instead of duplicating a large set of \code{<script>} tags in every HTML file.  It also has the benefit of loading scripts asynchronously for better performance.  See Listing~\ref{lst:COMMON:file} for \code{common.js}.  We'll extend this file in future chapters by adding some small utilities for loading textures, compiling shaders, etc.
 
 \begin{lstlisting}[
     caption={\code{common.js}},
@@ -402,11 +402,10 @@ head.js(
 head.ready(main);
 
 // Define various utility methods:
-
 COMMON.endFrame = ...; // see %\color{purple}Listing~\ref{lst:COMMON:endFrame}.%
 \end{lstlisting} \index{\code{common.js}}
 
-Each recipe in the book consists of two files: \code{RecipeName.html} and \code{RecipeName.js}.  The latter defines a function \code{main} which we pass to \code{head.ready} to ensure that it executes after all libraries are loaded and the document is ready.
+Each recipe in the book consists of two files: \code{RecipeName.html} and \code{RecipeName.js}.  The latter defines a function \code{main}, which we pass to \code{head.ready} to ensure that it executes after all libraries are loaded.
 
 \begin{comment}
 {RecipeName}.js
@@ -418,7 +417,7 @@ lib/giza.min.js
 lib/stats.min.js
 \end{comment}
 
-Next let's take a look at the \code{main} function for the Strobe Light in  recipe.  See Listing~\ref{lst:StrobeLight2}.
+Next let's take a look at the \code{main} function for the Strobe Light recipe.  See Listing~\ref{lst:StrobeLight2}.
 
 \begin{lstlisting}[
     caption={\code{StrobeLight.js}},
@@ -427,7 +426,7 @@ Next let's take a look at the \code{main} function for the Strobe Light in  reci
     language=JavaScript]
 var main = function() {
 
-  GIZA.init(); // see %\color{purple}Listing~\ref{lst:GIZA:init1} and \ref{lst:GIZA:init2}%
+  GIZA.init(); // see %\color{purple}Listings~\ref{lst:GIZA:init1} and \ref{lst:GIZA:init2}%
   var gl = GIZA.context;
 
   var draw = function(currentTime) {
@@ -443,12 +442,12 @@ var main = function() {
 };
 \end{lstlisting} \index{\code{StrobeLight.js}}
 
-By now you should understand everything in Listing~\ref{lst:StrobeLight2}.  
+By now you should understand everything in Listing~\ref{lst:StrobeLight2}, but just in case here's what's happening:
 
 \begin{enumerate}
-\item Call \code{GIZA.init()} and fetch the context object that it extracted from the \code{<canvas>} element.
-\item Define a draw function that applies a sine function to the current time (in milliseconds) to modulate the background between amber and yellow colors.  It calls \code{COMMON.endFrame} at the end so that another animation frame is always requested, unless a WebGL error occurs.
+\item Call \code{GIZA.init()} and create an alias to the context object that was extracted from the \code{<canvas>} element.
+\item Define a draw function that applies a sine function to the current time (in milliseconds), using it to modulate the background color between amber and yellow.  It calls \code{COMMON.endFrame} at the end so that another animation frame is always requested, unless a WebGL error occurs.
 \item Finally, call \code{draw(0)} to kick off the infinite animation.
 \end{enumerate}
 
-This was a rather boring example, but it was just a ``Hello world'' -- we'll start drawing actual 3D geometry in the chapter.
+This was a rather boring example, but it was just a Hello World.  We'll start drawing actual 3D geometry in the next chapter.

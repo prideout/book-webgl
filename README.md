@@ -1,8 +1,5 @@
 # master
 
-- Compositor Sample background.
-  My explanation of premultiplied alpha sucks.
-
 - Update nodejitsu server and mail Nagle
 
 - Mail stuff to publishers, perhaps through my nodejitsu site?
@@ -33,6 +30,9 @@
   - degenerate triangle
   - Move eval into a worker?
   
+- My explanation of premultiplied alpha sucks.
+  There's a twitter link to a NVIDIA post about this.
+
 - pycollada -> King Tut
 
 # server 

@@ -17,6 +17,7 @@ var singleWidth = 0;
 var totalWidth = 0;
 var maxHeight = 0;
 var padding = 50;
+var stripTop = 0; // 260
 
 var combine = function() {
 
@@ -27,7 +28,7 @@ var combine = function() {
     args = [
       srcFiles[i],
       '-gravity', 'South',
-      '-crop', singleWidth + 'x' + (maxHeight - 260) + '+0+0',
+      '-crop', singleWidth + 'x' + (maxHeight - stripTop) + '+0+0',
       genFile,
     ];
     im.convert(args, function() {

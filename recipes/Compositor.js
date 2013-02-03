@@ -3,8 +3,8 @@ var main = function() {
   var options = {};
   COMMON.bindOptions(options, '#checks');
 
-  var pma = true; // default is TRUE
-  $(".tagline").text("premultipliedAlpha = " + pma);
+  var pma = false; // default is TRUE
+  $("h1").text("premultipliedAlpha = " + pma);
 
   GIZA.init(null, {
     preserveDrawingBuffer: false,
