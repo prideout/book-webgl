@@ -35,9 +35,9 @@ GIZA.merge = function (a, b) {
 };
 \end{lstlisting}
 
-The first line allows clients to include a subset of giza's source files by creating a \code{GIZA} namespace only if it doesn't already exist.  This isn't necessary when using giza in minified form, since the entire library is included in that case.
+The first line is repeated at the top of all giza files.  This allows clients to include a subset of giza because it creates a new \code{GIZA} namespace only if it doesn't already exist.  This isn't necessary when using giza in minified form, since the entire library is included in that case.
 
-Other than \code{GIZA}, the only other global variables that we ever set are \code{COMMON} and \code{gl}.  The \code{gl} variable is the context object that exposes the entire WebGL API, which we'll learn about in Section~\ref{sec:context}.  We made this a global for terseness, since we make a huge number of calls to the context object.
+Other than \code{GIZA}, the only global variables that we set are \code{COMMON} and \code{gl}.  The \code{gl} variable is the context object that exposes the entire WebGL API, which we'll learn about in Section~\ref{sec:context}.  We made it a global for terseness, since we make a huge number of calls to the context object.
 
 The \code{COMMON} namespace is reserved for a few utility methods used in our recipes that don't belong to giza.  So, we came up with \code{COMMON} as a place to put a small handful of WebGL helpers that can be called from any recipe.  Unlike methods in \code{GIZA}, methods in \code{COMMON} are allowed to call jQuery functions and WebGL methods.
 
