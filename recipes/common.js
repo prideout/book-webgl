@@ -5,6 +5,9 @@ var COMMON = {}
 // Path to a content delivery network for jQuery etc.
 COMMON.cdn = "http://ajax.googleapis.com/ajax/libs/";
 
+// Actually, don't use a CDN just yet while we're developing.
+COMMON.cdn = "lib/";
+
 // Strip off the .html extension from the URL.
 COMMON.basepath = window.location.toString().slice(0, -5)
 
