@@ -13,6 +13,7 @@ var main = function() {
     premultipliedAlpha: pma,
   });
 
+  var gl = GIZA.context;
   var M4 = GIZA.Matrix4;
   var V3 = GIZA.Vector3;
 

@@ -4,7 +4,6 @@
 // library.
 
 var GIZA = GIZA || { REVISION : '0' };
-var gl;
 
 GIZA.init = function(canvas, options) {
 
@@ -32,7 +31,7 @@ GIZA.init = function(canvas, options) {
     preserveDrawingBuffer: false,
     antialias: true
   };
-  gl = canvas.getContext('experimental-webgl', options);
+  var gl = canvas.getContext('experimental-webgl', options);
 
   if (!gl) {
     var msg = document.createElement('p');
@@ -43,6 +42,7 @@ GIZA.init = function(canvas, options) {
   }
 
   // Publish some globally-accessible properties.
+  GIZA.context = gl;
   GIZA.pixelScale = pixelScale;
   GIZA.canvas = canvas;
   GIZA.aspect = aspect;

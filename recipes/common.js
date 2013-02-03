@@ -87,6 +87,7 @@ head.ready(function() {
 // Requests the next animation frame.  Also prevents cascading errors
 // by halting animation after a GL error.
 COMMON.endFrame = function(drawFunc) {
+  var gl = GIZA.context;
   err = gl.getError();
   if (err != gl.NO_ERROR) {
     console.error("WebGL error during draw cycle: ", err);
@@ -107,6 +108,7 @@ COMMON.endFrame = function(drawFunc) {
 // Simple texture loader for point sprite textures etc.
 COMMON.loadTexture = function (filename, onLoaded) {
 
+  var gl = GIZA.context;
   var tex = gl.createTexture();
   tex.image = new Image();
   tex.image.onload = function() {
@@ -143,6 +145,7 @@ COMMON.compilePrograms = function(shaders) {
 
 COMMON.compileProgram = function(vNames, fNames, attribs) {
   var fShader, key, numUniforms, program, status, u, uniforms, vShader, value, _i, _len;
+  var gl = GIZA.context;
   vShader = COMMON.compileShader(vNames, gl.VERTEX_SHADER);
   fShader = COMMON.compileShader(fNames, gl.FRAGMENT_SHADER);
   program = gl.createProgram();
@@ -174,6 +177,7 @@ COMMON.compileProgram = function(vNames, fNames, attribs) {
 };
 
 COMMON.compileShader = function(names, type) {
+  var gl = GIZA.context;
   var handle, id, source, status;
   source = ((function() {
     var _i, _len, _results;

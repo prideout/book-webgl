@@ -4,6 +4,7 @@ var main = function() {
   COMMON.bindOptions(options, '#checks');
   
   GIZA.init();
+  var gl = GIZA.context;
   var M4 = GIZA.Matrix4;
 
   var attribs = {

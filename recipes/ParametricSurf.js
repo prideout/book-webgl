@@ -1,6 +1,7 @@
 var main = function() {
 
   GIZA.init();
+  var gl = GIZA.context;
   var M4 = GIZA.Matrix4;
 
   var attribs = {

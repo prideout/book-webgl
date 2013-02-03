@@ -1,15 +1,13 @@
 # master
 
-- In the section on globals...
-
-GIZA.init();
-var M4 = GIZA.Matrix4;
-var gl = GIZA.context;
+- http://commons.wikimedia.org/wiki/File:All_Gizah_Pyramids.jpg
 
 - Compositor Sample background
   http://en.wikipedia.org/wiki/File:BYR_color_wheel.svg
 
-- Update nodejitsu server
+- Update nodejitsu server and mail Nagle
+
+- Mail stuff to publishers, perhaps through my nodejitsu site?
 
 - Jump into Chapter 3 demos (TexCoords, Ribbons and Tubes)
   Use a superellipsoid Mobius shape for demo purposes

@@ -23,6 +23,8 @@ This is not just a book, it's a library.  Many of the code listings on these pag
 
 As a design philosphy, giza never calls methods on the WebGL context object -- that's your job!  This differentiates giza from higher-level libraries such as ThreeJS.  Instead of providing an abstraction of WebGL, giza is utility layer; it provides help with vector math, constructing buffers of mesh data, and so on.
 
+\subsection{Coding Conventions}
+
 All giza methods belong to a global object called \code{GIZA}, following the namespace convention common in JavaScript.  For example, here's how we define a small utility function that merges all attributes from object \code{b} into object \code{a}:
 
 \begin{lstlisting}[language=JavaScript]
@@ -35,17 +37,32 @@ GIZA.merge = function (a, b) {
 };
 \end{lstlisting}
 
-The first line is repeated at the top of all giza files.  This allows clients to include a subset of giza because it creates a new \code{GIZA} namespace only if it doesn't already exist.  This isn't necessary when using giza in minified form, since the entire library is included in that case.
+The first line is repeated at the top of all giza files.  This allows clients to include a subset of giza because it creates a new \code{GIZA} namespace only if it doesn't already exist.
 
-Other than \code{GIZA}, the only global variables that we set are \code{COMMON} and \code{gl}.  The \code{gl} variable is the context object that exposes the entire WebGL API, which we'll learn about in Section~\ref{sec:context}.  We made it a global for terseness, since we make a huge number of calls to the context object.
+Other than \code{GIZA}, the only global variable that we set is \code{COMMON}.  This is where we place a small handful of WebGL helpers that can be called from any of our sample apps.  Unlike methods in \code{GIZA} (which has no dependencies on third-party libraries), methods in \code{COMMON} are allowed to call jQuery functions and WebGL methods.
 
-The \code{COMMON} namespace is reserved for a few utility methods used in our recipes that don't belong to giza.  So, we came up with \code{COMMON} as a place to put a small handful of WebGL helpers that can be called from any recipe.  Unlike methods in \code{GIZA}, methods in \code{COMMON} are allowed to call jQuery functions and WebGL methods.
+To reduce code verbosity, we'll often create short-named aliases at the top of a scope.  For example:
+
+\begin{lstlisting}[language=JavaScript]
+var V3 = GIZA.Vector3;
+var gl = GIZA.context;
+...
+gl.clear(gl.COLOR_BUFFER_BIT);
+var p = V3.subtract(a, V3.normalized(b));
+\end{lstlisting}
+
+Note that we capitalize namespace objects, and we use lowercase for instanced variables.  You'll agree that the above code is preferable to:
+
+\begin{lstlisting}[language=JavaScript]
+GIZA.context.clear(GIZA.context.COLOR_BUFFER_BIT);
+var p = GIZA.Vector3.subtract(a, GIZA.Vector3.normalized(b));
+\end{lstlisting}
 
 For access to the full source code to giza, or to download the minified library, refer to our github site:
 
 \notetoself{http://to.be.filled.in.com}
 
-Our github project also contains the code for all the recipes in this book, including the HTML and CSS source (and the \code{COMMON} layer).
+The github project also contains the code for all the samples in this book, including HTML and CSS source (and the \code{COMMON} layer).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{The Canvas Element}
@@ -401,6 +418,7 @@ Next let's take a look at the \code{main} function for the Strobe Light in  reci
 var main = function() {
 
   GIZA.init(); // see %\color{purple}Listing~\ref{lst:GIZA:init1} and \ref{lst:GIZA:init2}%
+  var gl = GIZA.context;
 
   var draw = function(currentTime) {
     var x = 0.5 + 0.5 * Math.sin(currentTime / 100);
@@ -418,7 +436,7 @@ var main = function() {
 By now you should understand everything in Listing~\ref{lst:StrobeLight2}.  
 
 \begin{enumerate}
-\item Call \code{GIZA.init()} to creat the global \code{gl} object, which is extracted from the \code{<canvas>} element.
+\item Call \code{GIZA.init()} and fetch the context object that it extracted from the \code{<canvas>} element.
 \item Define a draw function that applies a sine function to the current time (in milliseconds) to modulate the background between amber and yellow colors.  It calls \code{COMMON.endFrame} at the end so that another animation frame is always requested, unless a WebGL error occurs.
 \item Finally, call \code{draw(0)} to kick off the infinite animation.
 \end{enumerate}
