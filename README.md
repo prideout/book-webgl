@@ -1,19 +1,18 @@
 # master
 
-- Integrate the style files that they sent, trying to keep the custom paper size.
-  Make sure the listings look good -- for inspiration look at Production Volume
-  Rendering and Insights.
-  
-  \term instead of \emph so that we can color it
-  \code should perhaps be bold
+- In the section on globals...
+
+GIZA.init();
+var M4 = GIZA.Matrix4;
+var gl = GIZA.context;
+
+- Compositor Sample background
+  http://en.wikipedia.org/wiki/File:BYR_color_wheel.svg
 
 - Update nodejitsu server
 
-- Consider changing the background for the premult example to:
-  http://en.wikipedia.org/wiki/File:BYR_color_wheel.svg
-
-- positional lighting for TunnelFlight
-  every screenshot in the book should be beautiful!
+- Jump into Chapter 3 demos (TexCoords, Ribbons and Tubes)
+  Use a superellipsoid Mobius shape for demo purposes
 
 # later
 

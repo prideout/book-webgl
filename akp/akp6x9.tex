@@ -38,6 +38,7 @@
 \usepackage{color}
 \usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
 \usepackage{verbatim}
+\usepackage{framed}
 \usepackage[scaled]{beramono}
 \usepackage[T1]{fontenc}
 %---END AUTHOR EDIT---
@@ -81,7 +82,14 @@
 \newcommand{\term}[1]{\textcolor{BrickRed}{\emph{#1}}}
 \newcommand{\code}[1]{\texttt{#1}}
 \newcommand{\notetoself}[1]{\textcolor{red}{#1}}
-\newenvironment{sidenote}{\color{NavyBlue}}{\ignorespacesafterend}
+
+\definecolor{sidenotecolor}{rgb}{.8,.85,.9}
+
+\newenvironment{sidenote}{%
+   \def\FrameCommand{\vrule width 3pt \hspace{10pt} \colorbox{sidenotecolor}}%
+   \MakeFramed{\noindent\advance\hsize-\width \FrameRestore}}%
+{\endMakeFramed}
+
 \newcommand{\summary}[1]{\addtocontents{toc}{
     \setlength{\leftskip}{15pt} \noindent  \footnotesize
     \textcolor{Gray}{#1}\normalsize\protect\par}
