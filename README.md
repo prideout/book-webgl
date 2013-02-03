@@ -1,7 +1,7 @@
 # master
 
-- Compositor Sample background
-  http://en.wikipedia.org/wiki/File:BYR_color_wheel.svg
+- Compositor Sample background.
+  My explanation of premultiplied alpha sucks.
 
 - Update nodejitsu server and mail Nagle
 
