@@ -1,16 +1,10 @@
 var main = function() {
 
-  // Maintain a global list of lighting components obtained from
-  // checkboxes.
-  var comps;
-  var updateComps = function() {
-    var getid = function() { return $(this).attr('id'); };
-    comps = $("input:checked").map(getid).get();
-  };
-  updateComps();
-  $("#checks").buttonset().change(updateComps);
+  var options = {};
+  COMMON.bindOptions(options, '#checks');
   
   GIZA.init();
+  var gl = GIZA.context;
   var M4 = GIZA.Matrix4;
 
   var attribs = {
@@ -78,7 +72,7 @@ var main = function() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     
     var mv = M4.lookAt(
-      [0,0,20], // eye
+      [0,0,-20], // eye
       [0,0,0],  // target
       [0,1,0]); // up
 
@@ -96,26 +90,26 @@ var main = function() {
     gl.uniformMatrix4fv(program.projection, false, proj);
     gl.uniform4f(program.lightPosition, 0.75, .25, 1, 1);
 
-    if (comps.indexOf("ambient") > -1) {
+    if (options.ambient) {
       gl.uniform3f(program.ambientMaterial, 0.2, 0.1, 0.1);
     } else {
       gl.uniform3f(program.ambientMaterial, 0, 0, 0);
     }
 
-    if (comps.indexOf("diffuse") > -1) {
+    if (options.diffuse) {
       gl.uniform4f(program.diffuseMaterial, 1, 209/255, 54/255, 1);
     } else {
       gl.uniform4f(program.diffuseMaterial, 0, 0, 0, 1);
     }
 
     gl.uniform1f(program.shininess, 180.0);
-    if (comps.indexOf("specular") > -1) {
+    if (options.specular) {
       gl.uniform3f(program.specularMaterial, 0.8, 0.8, 0.7);
     } else {
       gl.uniform3f(program.specularMaterial, 0, 0, 0);
     }
 
-    if (comps.indexOf("fresnel") > -1) {
+    if (options.fresnel) {
       gl.uniform1f(program.fresnel, 0.01);
     } else {
       gl.uniform1f(program.fresnel, 0);

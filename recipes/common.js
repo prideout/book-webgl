@@ -1,6 +1,15 @@
 // Create a COMMON namespace for a small handful of helper functions
-// and properties.
-var COMMON = {cdn: "http://ajax.googleapis.com/ajax/libs/"};
+// and constants.
+var COMMON = {}
+
+// Path to a content delivery network for jQuery etc.
+COMMON.cdn = "http://ajax.googleapis.com/ajax/libs/";
+
+// Strip off the .html extension from the URL.
+COMMON.basepath = window.location.toString().slice(0, -5)
+
+// Extract the name of the recipe from the basepath.
+COMMON.recipe = COMMON.basepath.split('/').pop();
 
 // Use HeadJS to load scripts asynchronously, but execute them
 // synchronously.  After we have a build process in place, we'll
@@ -14,7 +23,8 @@ head.js(
   "../giza/Turtle.js",
   "lib/stats.min.js",
   COMMON.cdn + "jquery/1.8.0/jquery.min.js",
-  COMMON.cdn + "jqueryui/1.9.2/jquery-ui.min.js");
+  COMMON.cdn + "jqueryui/1.9.2/jquery-ui.min.js",
+  COMMON.basepath + ".js");
 
 // After all scripts have been loaded AND after the document is
 // "Ready", do this:
@@ -77,10 +87,15 @@ head.ready(function() {
 // Requests the next animation frame.  Also prevents cascading errors
 // by halting animation after a GL error.
 COMMON.endFrame = function(drawFunc) {
-  if (gl.getError() != gl.NO_ERROR) {
-    console.error("GL error during draw cycle.");
+  var gl = GIZA.context;
+  err = gl.getError();
+  if (err != gl.NO_ERROR) {
+    console.error("WebGL error during draw cycle: ", err);
   } else {
     var wrappedDrawFunc = function(time) {
+
+      COMMON.now = time;
+
       // Clear out the GL error state at the beginning of the next frame.
       // This is a workaround for a Safari bug.
       gl.getError();
@@ -93,6 +108,7 @@ COMMON.endFrame = function(drawFunc) {
 // Simple texture loader for point sprite textures etc.
 COMMON.loadTexture = function (filename, onLoaded) {
 
+  var gl = GIZA.context;
   var tex = gl.createTexture();
   tex.image = new Image();
   tex.image.onload = function() {
@@ -129,6 +145,7 @@ COMMON.compilePrograms = function(shaders) {
 
 COMMON.compileProgram = function(vNames, fNames, attribs) {
   var fShader, key, numUniforms, program, status, u, uniforms, vShader, value, _i, _len;
+  var gl = GIZA.context;
   vShader = COMMON.compileShader(vNames, gl.VERTEX_SHADER);
   fShader = COMMON.compileShader(fNames, gl.FRAGMENT_SHADER);
   program = gl.createProgram();
@@ -160,6 +177,7 @@ COMMON.compileProgram = function(vNames, fNames, attribs) {
 };
 
 COMMON.compileShader = function(names, type) {
+  var gl = GIZA.context;
   var handle, id, source, status;
   source = ((function() {
     var _i, _len, _results;
@@ -187,11 +205,30 @@ COMMON.compileShader = function(names, type) {
 // If you wish the store your shaders in a separate HTML file,
 // include this at the bottom of your main page body:
 //
-//     <iframe src="ResizeTest-Shaders.html" width="0" height="0" />
+//   <iframe src="ResizeTest-Shaders.html" width="0" height="0" />
 //
 // This function will extract the spec and attribs for you.
 COMMON.initFrame = function() {
   eval($('iframe').contents().find('#shaders').text());
   COMMON.programs = COMMON.compilePrograms(spec);
   COMMON.attribs = attribs;
-}
+};
+
+// If you have a div with radio buttons inside, this function will
+// synchronize a given dictionary of attributes to the radio button
+// states.  For example:
+//
+//  var options = {};
+//  COMMON.syncOptions(options, '#checks');
+//
+COMMON.bindOptions = function(options, divid) {
+  var updateOptions = function() {
+    $(divid + " > input").each(function() {
+      var id = $(this).attr('id');
+      var checked = $(this).attr('checked') ? true : false;
+      options[id] = checked;
+    });
+  };
+  updateOptions();
+  $(divid).buttonset().change(updateOptions);
+};

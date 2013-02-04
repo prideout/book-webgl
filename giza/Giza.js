@@ -4,41 +4,18 @@
 // library.
 
 var GIZA = GIZA || { REVISION : '0' };
-var gl;
 
-GIZA.init = function(canvasElement) {
+GIZA.init = function(canvas, options) {
 
-  // First, ensure that "window" has requestAnimationFrame and cancelAnimationFrame.
-  // Cribbed from code by Erik Möller, Paul Irish, and Tino Zijdel
-  //   http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-  //   http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
-  var lastTime = 0;
-  var vendors = [ 'ms', 'moz', 'webkit', 'o' ];
-  for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-	window.requestAnimationFrame = window[ vendors[ x ] + 'RequestAnimationFrame' ];
-	window.cancelAnimationFrame =
-      window[ vendors[ x ] + 'CancelAnimationFrame' ] ||
-      window[ vendors[ x ] + 'CancelRequestAnimationFrame' ];
-  }
-  if (window.requestAnimationFrame === undefined) {
-	window.requestAnimationFrame = function (callback, element) {
-	  var currTime = Date.now(), timeToCall = Math.max( 0, 16 - ( currTime - lastTime ) );
-	  var id = window.setTimeout( function() { callback( currTime + timeToCall ); }, timeToCall );
-	  lastTime = currTime + timeToCall;
-	  return id;
-	};
-  }
-  window.cancelAnimationFrame = window.cancelAnimationFrame || function (id) {
-    window.clearTimeout(id);
-  };
+  window.requestAnimationFrame = window.requestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.msRequestAnimationFrame;
 
-  // Next, find the canvas element if it wasn't given to us
-  var canvas;
-  if (canvasElement == null) {
-    canvas = document.getElementsByTagName('canvas')[0];
-  }
+  // Find a canvas element if it wasn't specified.
+  canvas = canvas || document.getElementsByTagName('canvas')[0];
 
-  // Gather various information about the canvas
+  // Gather information about the canvas.
   var pixelScale = window.devicePixelRatio || 1;
   var width = canvas.clientWidth;
   var height = canvas.clientHeight;
@@ -49,8 +26,12 @@ GIZA.init = function(canvasElement) {
   canvas.width = width * pixelScale;
   canvas.height = height * pixelScale;
 
-  // Set up the WebGL context
-  gl = canvas.getContext('experimental-webgl', {antialias: true});
+  // Set up the WebGL context.
+  options = options || {
+    preserveDrawingBuffer: false,
+    antialias: true
+  };
+  var gl = canvas.getContext('experimental-webgl', options);
 
   if (!gl) {
     var msg = document.createElement('p');
@@ -60,12 +41,13 @@ GIZA.init = function(canvasElement) {
     return;
   }
 
-  // Publish some globally-accessible properties
+  // Publish some globally-accessible properties.
+  GIZA.context = gl;
   GIZA.pixelScale = pixelScale;
   GIZA.canvas = canvas;
   GIZA.aspect = aspect;
 
-  // Handle resize events appropriately
+  // Handle resize events appropriately.
   window.onresize = function() {
     width = canvas.clientWidth;
     height = canvas.clientHeight;

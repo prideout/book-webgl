@@ -46,6 +46,42 @@ GIZA.equations.torus = function(minor, major) {
   };
 };
 
+GIZA.equations.tube = function(curve, radius) {
+  var V3 = GIZA.Vector3;
+  var V4 = GIZA.Vector4;
+  var M4 = GIZA.Matrix4;
+  return function(u, v) {
+
+    // Compute three basis vectors:
+    var p1 = curve(u);
+    var p2 = curve(u + 0.01);
+    var a = V3.normalize(V3.subtract(p1, p2));
+    var b = V3.perp(a);
+    var c = V3.normalize(V3.cross(a, b));
+    var m = M4.makeBasis(c, b, a);
+
+    // Rotate the Z-plane circle appropriately:
+    var spokeVector = V4.make(
+      Math.cos(Math.PI * 4.0 * v),
+      Math.sin(Math.PI * 4.0 * v),
+      0, 0);
+    spokeVector = M4.multiply(m, spokeVector);
+    spokeVector = V4.scale(spokeVector, radius);
+
+    // Add the spoke vector to the center to obtain the rim position:
+    return V3.add(spokeVector, p1);
+  };
+};
+
+GIZA.equations.grannyKnot = function(t) {
+  t = 2 * Math.PI * t;
+  var cos = Math.cos, sin = Math.sin;
+  var x = -0.22 * cos(t) - 1.28 * sin(t) - 0.44 * cos(3 * t) - 0.78 * sin(3 * t);
+  var y = -0.1 * cos(2 * t) - 0.27 * sin(2 * t) + 0.38 * cos(4 * t) + 0.46 * sin(4 * t);
+  var z = 0.7 * cos(3 * t) - 0.4 * sin(3 * t);
+  return GIZA.Vector3.make(x, y, z);
+};
+
 GIZA.surfaceFlags = {
   POSITIONS: 1,
   COLORS: 2,
@@ -159,12 +195,13 @@ GIZA.surface = function(equation, rows, cols, flags) {
       for (var row = 0; row < rows; row++) {
         for (var col = 0; col < cols; col++) {
           var i = row * pointsPerRow + col;
+          triangles[triIndex++] = i+pointsPerRow;
+          triangles[triIndex++] = i+1;
           triangles[triIndex++] = i;
-          triangles[triIndex++] = i+1;
-          triangles[triIndex++] = i+pointsPerRow;
-          triangles[triIndex++] = i+pointsPerRow;
-          triangles[triIndex++] = i+1;
+
           triangles[triIndex++] = i+pointsPerRow+1;
+          triangles[triIndex++] = i+1;
+          triangles[triIndex++] = i+pointsPerRow;
         }
       }
       return triangles;
