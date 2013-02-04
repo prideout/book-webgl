@@ -9,7 +9,9 @@ Files can be copied from the master branch like this (but I think it doesn't tak
     git checkout master giza/*.js
     git checkout master recipes/*.html
     git checkout master recipes/*.js
-        Note that this will NOT check out newly created files!
+        Note that this will not always check out newly created files!
+
+Also modify timestamp in views/index.html
 
 In the server branch, I usually modify style.css and common.js to use CDN.
 
