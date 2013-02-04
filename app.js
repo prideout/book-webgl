@@ -70,15 +70,9 @@ app.get('/recipes', ensureAuthenticated, function(request, response) {
         {root: __dirname, maxAge: null});
 });
 
-app.get('/recipes/:file', ensureAuthenticated, function(request, response) {
+app.get('/recipes/*', ensureAuthenticated, function(request, response) {
     response.sendfile(
-        'recipes/' + request.params.file,
-        {root: __dirname, maxAge: null});
-});
-
-app.get('/recipes/:folder/:file', ensureAuthenticated, function(request, response) {
-    response.sendfile(
-        'recipes/' + request.params.folder + '/' + request.params.file,
+        'recipes/' + request.params[0],
         {root: __dirname, maxAge: null});
 });
 
