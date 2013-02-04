@@ -9,11 +9,11 @@
 
 Why has WebGL left other 3D web technologies in the dust?  For one, it came along at just the right time; JavaScript only recently attained status as a serious platform for application development.  Sophisticated tools like Google's V8 \index{V8} engine  and John Resig's jQuery \index{jQuery} library have legitimized JavaScript in the eyes of developers coming from traditional desktop development.
 
-WebGL has plenty of merits that make it more attractive than other browser-based 3D APIs.  Almost all popular browsers support it natively, freeing users from the overhead of plug-ins.  WebGL is also ``close to the metal'' -- by providing low-level access to graphics hardware, developers can maximize performance like never before.
+WebGL has plenty of merits that make it more attractive than other browser-based 3D APIs.  Most desktop browsers support it natively, freeing users from the overhead of plug-ins.  WebGL is also ``close to the metal'' -- by providing low-level access to graphics hardware, developers can maximize performance like never before.
 
-WebGL's ancestry actually lies not in VRML (which did give rise to X3D and other standards) but in a low-level graphics API for C developed by Silicon Graphics in the early 90's.  They initially named their API \term{IrisGL}, which evolved to \term{OpenGL} when they released it as an industry standard.   With the rise of mobile platforms, OpenGL spawned \term{OpenGL~ES}, which encompasses almost the same feature set of WebGL.  In a sense, WebGL is simply a JavaScript binding for OpenGL ES 2.0.
+WebGL's ancestry actually lies not in VRML (which did give rise to X3D and other standards) but in a C-based graphics API created by Silicon Graphics in the early 90's.  They initially named their API \term{IrisGL}, which evolved to \term{OpenGL} when they released it as an industry standard.   With the rise of mobile platforms, OpenGL spawned \term{OpenGL~ES}, which encompasses almost the same feature set of WebGL.  In a sense, WebGL is simply a JavaScript binding for OpenGL ES 2.0.
 
-WebGL has another ancestor that is arguably just as influential as IrisGL: the Renderman Shading Language (RSL) developed by Pixar inspired much of the syntax in the language that WebGL provides for authoring \index{shaders} \term{shaders}, relatively small routines executed with massive parallelism.  Shaders have the final say in the 3D position of every vertex, and the RGB color of every rasterized pixel.  We'll learn more about shaders in Chapter 2.
+Not long after Silicon Graphics released the first version of OpenGL to the world, a team of graphics scientists at Pixar were cooking up the \index{Renderman Shading Language}\term{Renderman Shading Language} to describe the materials used in their films.  RSL inspired much of the syntax in \term{GLSL}, the shading language added into OpenGL in the mid 2000's.  This is the same language that WebGL provides today for authoring shaders.  In the context of real-time graphics, \index{shaders}\term{shaders} are relatively small routines that get executed with massive parallelism.  Shaders have the final say in the 3D position of every vertex, and the RGB color of every rasterized pixel.  We'll learn more about shaders in Chapter 2.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -28,7 +28,7 @@ WebGL has another ancestor that is arguably just as influential as IrisGL: the R
 
 This is not just a book, it's a library.  Many of the code listings on these pages are lifted directly from the giza library, named after the ancient Egyptian city.  The Giza pyramids form a skyline of triangles, which are the primary drawing primitive in WebGL.  The pyramid shape also describes a \term{viewing frustum}, a spatial region that encompasses everything within a certain vantage point in a 3D graphics program.
 
-As a design philosphy, giza never calls methods on the WebGL context object -- that's your job!  This differentiates it from higher-level libraries such as ThreeJS.  Instead of providing an abstraction of WebGL, giza offers a set of utility layers that help with vector math, building buffers of mesh data, and so on.
+As a design philosphy, giza never calls methods on the WebGL context object -- that's your job!  This differentiates it from higher-level libraries such as ThreeJS.  Instead of providing an abstraction of WebGL, giza offers a set of utility layers that help with vector algebra, building mesh data, and implementing 3D manipulator widgets.
 
 \subsection{Code Conventions}
 
@@ -185,7 +185,7 @@ The only WebGL functions discussed in this chapter are the first two methods lis
     \hline
   \end{tabular}
   \caption{WebGL clear methods.}
-  \label{tab:Clearing}
+  \label{tab:Clearing}\index{\code{clear}}\index{\code{clearColor}}\index{\code{clearDepth}}\index{\code{clearStencil}}
 \end{table}
 
 The \code{clear} method resets all the pixels in the canvas.  The \code{clearColor}, \code{clearDepth}, and \code{clearStencil} methods are used to configure subsequent calls to \code{clear}.  In other words, they are \term{state-setting methods}.  Most of the WebGL API consists of state-setting methods; in fact there are only three methods in the entire API that actually paint pixels rather than setting state:
@@ -242,7 +242,7 @@ One side effect of double-buffering is that that the existing pixels you're over
 
 In some situations you want the existing pixels to exactly match the previously-drawn frame.  For example, you might need to read color values from the canvas (the \index{\code{readPixels}} \code{readPixels} method will be discussed in \notetoself{CHAPTER}), or your application might intentionally update only certain regions of the canvas for performance reasons.  This is why \code{preserveDrawingBuffer} exists; it allows you to mimic \index{single-buffering} single-buffering.
 
-You might be thinking: ``Okay, so the canvas isn't immediately updated when I call \code{clear} or \code{drawPixels}, but the \emph{backbuffer} is!''  Nope -- the web browser and the graphics driver are actually buffering up WebGL commands and executing them later.  If you'd like, you can tell WebGL to wait till the buffer is done executing by calling the \index{finish} \code{finish} method.  You'll rarely need this however, so don't use it unless you know you need it.
+You might be thinking: ``Okay, so the canvas isn't immediately updated when I call \code{clear} or \code{drawPixels}, but the \emph{backbuffer} is!''  Nope -- the web browser and the graphics driver are actually buffering up WebGL commands and executing them later.  If you'd like, you can tell WebGL to wait till the buffer is done executing by calling the \index{\code{finish}} \code{finish} method.  You'll rarely need this however, so don't use it unless you know you need it.
 
 \subsection{Alpha Compositing}
 
