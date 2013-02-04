@@ -69,7 +69,7 @@
           vec3 H = normalize(Vp + Eye);
 
           vec3 N = normalize(vNormal);
-          if (!gl_FrontFacing) {
+          if (true || !gl_FrontFacing) { // intel workaround
               N = -N;
           }
 
