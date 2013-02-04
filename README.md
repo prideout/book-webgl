@@ -45,6 +45,10 @@
 
 # Notes
 
+to escape inside a listing:
+escapechar=\%,
+// see %\color{purple}Listings~\ref{lst:GIZA:init1} and \ref{lst:GIZA:init2}%
+
 WebGL Best Practices
 https://developer.mozilla.org/en-US/docs/WebGL/WebGL_best_practices
 
