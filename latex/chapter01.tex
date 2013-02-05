@@ -91,7 +91,7 @@ It's tempting to simply set the content and display sizes to the same dimensions
 </canvas>
 \end{lstlisting}
 
-There's nothing wrong with the above approach for simple applications.  It's common, however, to use CSS to specify a dynamic display area (e.g., \code{width:100\%}).  Moreover CSS pixels don't necessarily correspond to actual device pixels.  This is especially true on displays with a high pixel density, where browsers typically upscale CSS pixels by 2x.
+There's nothing wrong with the above approach for simple applications.  It's common, however, to specify a dynamic display area (e.g., \code{width:100\%}).  Moreover CSS pixels don't necessarily correspond to actual device pixels.  This is especially true on displays with a high pixel density, where browsers typically upscale CSS pixels by 2x.
 
 \begin{sidenote}%
 Watch out!  If you assume that device pixels are 1:1 with CSS pixels, some users might see bluriness in the WebGL canvas due to upscaling.
