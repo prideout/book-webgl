@@ -32,6 +32,7 @@
     </style>
     <script src="../recipes/lib/ejs_production.js" type="text/javascript">
     </script>
+
     <script>
       window.onload = function() {
         var data = {
@@ -45,11 +46,14 @@
             ParametricSurf: "Parametric Surface",
             Rule2: null,
             BasicLighting: "Basic Lighting",
+            Rule3: null,
+            Trackball: "(Trackball)",
         };
         var ejs = new EJS({element: "recipe-template"});
         ejs.update("recipe-list", {recipes: data});
       };
     </script>
+
   </head>
   <body>
     <ul id="recipe-list">
