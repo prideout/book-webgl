@@ -34,13 +34,6 @@ var main = function() {
   init();
   draw(0);
 
-  $(document).keydown(function(e) {
-    if (e.keyCode == 83) {
-      draw(COMMON.now);
-      var imgUrl = GIZA.canvas.toDataURL("image/png");
-      window.open(imgUrl, '_blank');
-      window.focus();
-    }
-  });
+  COMMON.enableScreenshot(draw);
 
 };

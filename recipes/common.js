@@ -24,6 +24,7 @@ head.js(
   "../giza/Polygon.js",
   "../giza/Surface.js",
   "../giza/Turtle.js",
+  "../giza/Trackball.js",
   "lib/stats.min.js",
   COMMON.cdn + "jquery/1.8.0/jquery.min.js",
   COMMON.cdn + "jqueryui/1.9.2/jquery-ui.min.js",
@@ -234,4 +235,60 @@ COMMON.bindOptions = function(options, divid) {
   };
   updateOptions();
   $(divid).buttonset().change(updateOptions);
+};
+
+// Returns a relative mouse position inside the given element,
+// which is usually a canvas.  It's tempting to use offsetX
+// instead, but that's not safe across browsers.
+COMMON.getMouse = function(event, element) {
+  var p = $(element).position();
+  var x = event.pageX - p.left;
+  var y = event.pageY - p.top;
+  return GIZA.Vector2.make(x, y);
+};
+
+// Create an event handler that listens for a screenshot key.
+// When pressed, a new tab opens up with the PNG image.
+COMMON.enableScreenshot = function(drawFunc, triggerKey) {
+
+  // By default, the 's' key takes a screenshot.
+  triggerKey = triggerKey || 83;
+
+  $(document).keydown(function(e) {
+    if (e.keyCode == triggerKey) {
+      drawFunc(COMMON.now);
+      var imgUrl = GIZA.canvas.toDataURL("image/png");
+      window.open(imgUrl, '_blank');
+      window.focus();
+    }
+  });
+
+};
+
+COMMON.Trackball = function(canvas) {
+
+  // Allow clients to skip the "new"
+  if (!(this instanceof COMMON.Trackball)) {
+    return new COMMON.Trackball(canvas);
+  }
+
+  canvas = canvas || $('canvas');
+
+  var trackball = new GIZA.Trackball();
+
+  canvas.mousedown(function(e) {
+    var pos = COMMON.getMouse(e, this);
+    trackball.startDrag(pos);
+  });
+
+  canvas.mouseup(function(e) {
+    var pos = COMMON.getMouse(e, this);
+    trackball.endDrag(pos);
+  });
+
+  canvas.mousemove(function(e) {
+    var pos = COMMON.getMouse(e, this);
+    trackball.updateDrag(pos);
+  });
+
 };

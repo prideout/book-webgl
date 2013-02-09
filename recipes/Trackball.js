@@ -103,4 +103,7 @@ var main = function() {
   init();
   draw(0);
 
+  COMMON.enableScreenshot(draw);
+  var trackball = new COMMON.Trackball();
+
 };
