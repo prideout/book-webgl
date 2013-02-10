@@ -125,7 +125,7 @@ var main = function() {
     trackball.drawCircle(attribs.POSITION);
     gl.disableVertexAttribArray(attribs.POSITION);
 
-    //COMMON.endFrame(draw);
+    COMMON.endFrame(draw);
   }
 
   init();
