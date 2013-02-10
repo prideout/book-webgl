@@ -78,7 +78,7 @@ GIZA.Trackball = function(center, radius) {
     var axis = V3.cross(a, b);
     var radians = Math.acos(V3.dot(a, b));
     var activeSpin = M3.rotateAxis(M3.identity(), axis, radians);
-    return M3.multiply(currentSpin, activeSpin);
+    return M3.multiply(activeSpin, currentSpin);
   };
 
 };
