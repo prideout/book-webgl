@@ -178,7 +178,6 @@ GIZA.Matrix4 = {
       var bc3 = this.column(v, 3);
 
       var V4 = GIZA.Vector4;
-
       var m = GIZA.Matrix4.make(
         V4.dot(ar0, bc0), V4.dot(ar0, bc1), V4.dot(ar0, bc2), V4.dot(ar0, bc3),
         V4.dot(ar1, bc0), V4.dot(ar1, bc1), V4.dot(ar1, bc2), V4.dot(ar1, bc3),
@@ -188,7 +187,7 @@ GIZA.Matrix4 = {
       return this.transposed(m);
 
     } else {
-      throw new Error("Multiplying a M4 with something other than a V4 or a M4");
+      throw new Error("I can only multiply a M4 with a V4 or a M4");
     }
   },
 
@@ -429,10 +428,15 @@ GIZA.Matrix3 = {
     return dest;
   },
 
-  // TODO Check if "v" is length 3 or length 9.
-  //      Throw for anything else.
-  //
-  // Multiplies a matrix with a column vector:
+  row: function(m, i) {
+    return GIZA.Vector3.make(m[i], m[i+3], m[i+6]);
+  },
+
+  column: function(m, i) {
+    return GIZA.Vector3.make(m[i*3], m[i*3+1], m[i*3+2]);
+  },
+
+  // If 'v' is a V3, this multiplies a matrix with a column vector:
   //
   // V' =  M * V
   //
@@ -444,10 +448,31 @@ GIZA.Matrix3 = {
   // with transpose = false.
   //
   multiply: function(m, v) {
-    return GIZA.Vector3.make(
-      m[0]*v[0] + m[3]*v[1] + m[6]*v[2],
-      m[1]*v[0] + m[4]*v[1] + m[7]*v[2],
-      m[2]*v[0] + m[5]*v[1] + m[8]*v[2]);
+    if (v.length == 3) {
+      return GIZA.Vector3.make(
+        m[0]*v[0] + m[3]*v[1] + m[6]*v[2],
+        m[1]*v[0] + m[4]*v[1] + m[7]*v[2],
+        m[2]*v[0] + m[5]*v[1] + m[8]*v[2]);
+    } else if (v.length == 9) {
+      var ar0 = this.row(m, 0);
+      var ar1 = this.row(m, 1);
+      var ar2 = this.row(m, 2);
+
+      var bc0 = this.column(v, 0);
+      var bc1 = this.column(v, 1);
+      var bc2 = this.column(v, 2);
+
+      var V3 = GIZA.Vector3;
+      var m = GIZA.Matrix3.make(
+        V3.dot(ar0, bc0), V3.dot(ar0, bc1), V3.dot(ar0, bc2),
+        V3.dot(ar1, bc0), V3.dot(ar1, bc1), V3.dot(ar1, bc2),
+        V3.dot(ar2, bc0), V3.dot(ar2, bc1), V3.dot(ar2, bc2));
+
+      return this.transposed(m);
+
+    } else {
+      throw new Error("I can only multiply a M3 with a V3 or a M3");
+    }
   },
 
   // TODO: impl & test.  also add rotatedAxis

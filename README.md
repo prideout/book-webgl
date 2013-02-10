@@ -1,6 +1,8 @@
 # master
 
 - Trackball
+  M3.multiply
+  commonjs: move mouseup and mousemove to window or page objects?
 
 - Load an OSD-divided model, work this into the Tumble example
 

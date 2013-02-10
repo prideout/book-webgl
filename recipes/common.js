@@ -246,6 +246,7 @@ COMMON.getMouse = function(event, element) {
   var x = event.pageX - p.left;
   var y = event.pageY - p.top;
   var s = GIZA.pixelScale;
+  y = $(element).height() - y;
   return GIZA.Vector2.make(x * s, y * s);
 };
 

@@ -13,11 +13,15 @@ GIZA.Trackball = function(center, radius) {
 
   center.push(0);
 
+  // TODO this can be private state too, right?
   this.startPosition = null;
   this.endPosition = null;
   this.currentPosition = null;
 
+  // Private state
   var inCircle = false;
+  var isDragging = false;
+  var currentSpin = M3.identity();
 
   // Private function that projects a 2D screen-space point down to a
   // 3D sphere and returns the new position.
@@ -31,7 +35,7 @@ GIZA.Trackball = function(center, radius) {
     if (distanceSquared > r * r) {
       inCircle = false;
       p2d = V2.add(center2d, V2.scaled(
-        V2.direction(p2d, center2d),
+        V2.direction(center2d, p2d),
         r));
     } else {
       inCircle = true;
@@ -48,6 +52,7 @@ GIZA.Trackball = function(center, radius) {
     if (!inCircle) {
       return;
     }
+    isDragging = true;
     this.startPosition = start;
     this.currentPosition = this.startPosition;
   };
@@ -55,7 +60,9 @@ GIZA.Trackball = function(center, radius) {
   // Ideally this isn't even used, since trackpads can occur a delay,
   // and since the mouse can be dragged off-window.
   this.endDrag = function(position) {
-    this.endPosition = project(position);
+    this.currentPosition = project(position);
+    currentSpin = this.getSpin();
+    isDragging = false;
   };
 
   this.updateDrag = function(position) {
@@ -63,18 +70,15 @@ GIZA.Trackball = function(center, radius) {
   };
 
   this.getSpin = function() {
-
-    if (!this.startPosition) {
-      return M3.identity();
+    if (!isDragging) {
+      return currentSpin;
     }
-
-    var a = V3.direction(this.startPosition, center);
-    var b = V3.direction(this.currentPosition, center);
+    var a = V3.direction(this.currentPosition, center);
+    var b = V3.direction(this.startPosition, center);
     var axis = V3.cross(a, b);
     var radians = Math.acos(V3.dot(a, b));
-    var retval = M3.rotateAxis(M3.identity(), axis, radians);
-
-    return retval;
+    var activeSpin = M3.rotateAxis(M3.identity(), axis, radians);
+    return M3.multiply(currentSpin, activeSpin);
   };
 
 };
