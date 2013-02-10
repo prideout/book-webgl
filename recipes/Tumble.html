@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Trackball</title>
+    <title>Tumble</title>
     <meta charset="utf-8">
     <meta name="author" content="Philip Rideout">
     <link href="css/style.css" rel="stylesheet">
@@ -9,7 +9,7 @@
     <script src="common.js"></script>
   </head>
   <body>
-    <h1>Trackball</h1>
+    <h1>Tumble</h1>
     <div class="tagline">
       Drag a virtual sphere to spin the model
     </div>
@@ -18,7 +18,7 @@
     <div id="button-bar">
     </div>
     
-    <script id="solidvs" type="x-shader/x-vertex">
+    <script id="genericvs" type="x-shader/x-vertex">
       attribute vec4 Position;
       attribute vec3 Normal;
       varying vec3 vNormal;
@@ -32,7 +32,7 @@
       }
     </script>
 
-    <script id="solidfs" type="x-shader/x-fragment">
+    <script id="litfs" type="x-shader/x-fragment">
       precision highp float;
       precision highp vec3;
       uniform vec4 color;
@@ -67,6 +67,16 @@
                        ff;
     
           gl_FragColor = vec4(color, diffuseMaterial.a);
+      }
+    </script>
+
+    <script id="solidfs" type="x-shader/x-fragment">
+      precision highp float;
+      precision highp vec3;
+      uniform vec4 color;
+      void main()
+      {
+          gl_FragColor = color;
       }
     </script>
 

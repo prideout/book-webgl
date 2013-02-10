@@ -10,12 +10,19 @@ var main = function() {
   };
 
   var programs = COMMON.compilePrograms({
-    solid: {
-      vs: ['solidvs'],
-      fs: ['solidfs'],
+    lit: {
+      vs: ['genericvs'],
+      fs: ['litfs'],
       attribs: {
         Position: attribs.POSITION,
         Normal: attribs.NORMAL
+      }
+    },
+    solid: {
+      vs: ['genericvs'],
+      fs: ['solidfs'],
+      attribs: {
+        Position: attribs.POSITION,
       }
     }
   });
@@ -25,11 +32,11 @@ var main = function() {
     mesh: gl.createBuffer()
   };
 
+  var trackball = new COMMON.Trackball();
+
   var init = function() {
 
     gl.clearColor(34 / 255, 74 / 255, 116 / 255, 1);
-    gl.enable(gl.DEPTH_TEST);
-    gl.enable(gl.CULL_FACE);
 
     var lod = 64;
 
@@ -73,8 +80,10 @@ var main = function() {
     gl.enableVertexAttribArray(attribs.POSITION);
     gl.enableVertexAttribArray(attribs.NORMAL);
 
-    var program = programs.solid;
+    var program = programs.lit;
     gl.useProgram(program);
+    gl.enable(gl.DEPTH_TEST);
+    gl.enable(gl.CULL_FACE);
     gl.uniformMatrix4fv(program.projection, false, proj);
     gl.uniform4f(program.lightPosition, 0.75, .25, 1, 1);
     gl.uniform3f(program.ambientMaterial, 0.2, 0.1, 0.1);
@@ -82,9 +91,6 @@ var main = function() {
     gl.uniform1f(program.shininess, 180.0);
     gl.uniform3f(program.specularMaterial, 0.8, 0.8, 0.7);
     gl.uniform1f(program.fresnel, 0.01);
-
-    var previous = M4.copy(mv);
-
     gl.uniformMatrix4fv(program.modelview, false, mv);
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.torusCoords);
     gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 24, 0);
@@ -93,9 +99,29 @@ var main = function() {
                     3 * buffers.mesh.triangleCount,
                     gl.UNSIGNED_SHORT,
                     0)
-
     gl.disableVertexAttribArray(attribs.POSITION);
     gl.disableVertexAttribArray(attribs.NORMAL);
+
+
+    proj = M4.orthographic(
+      0, GIZA.canvas.width,
+      0, GIZA.canvas.height,
+      0, 10);
+
+    mv = M4.make(trackball.getSpin());
+
+    gl.disable(gl.DEPTH_TEST);
+    gl.disable(gl.CULL_FACE);
+
+    program = programs.solid;
+    gl.lineWidth(2);
+    gl.useProgram(program);
+    gl.uniformMatrix4fv(program.projection, false, proj);
+    gl.uniformMatrix4fv(program.modelview, false, mv);
+    gl.uniform4f(program.color, 0, 0, 0.3, 1);
+    gl.enableVertexAttribArray(attribs.POSITION);
+    trackball.drawCircle(attribs.POSITION);
+    gl.disableVertexAttribArray(attribs.POSITION);
 
     COMMON.endFrame(draw);
   }
@@ -104,6 +130,5 @@ var main = function() {
   draw(0);
 
   COMMON.enableScreenshot(draw);
-  var trackball = new COMMON.Trackball();
 
 };

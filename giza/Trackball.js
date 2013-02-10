@@ -2,10 +2,14 @@ var GIZA = GIZA || {};
 
 GIZA.Trackball = function(center, radius) {
 
+  var M3 = GIZA.Matrix3;
+
   // Allow clients to skip the "new"
   if (!(this instanceof GIZA.Trackball)) {
     return new GIZA.Trackball(center, radius);
   }
+
+  console.info(center, radius);
 
   this.startPosition = null;
   this.endPosition = null;
@@ -29,8 +33,7 @@ GIZA.Trackball = function(center, radius) {
   };
 
   this.getSpin = function() {
-    var M3 = GIZA.Matrix3;
-    return null; // M3.make(...);
+    return M3.identity();
   };
 
 };

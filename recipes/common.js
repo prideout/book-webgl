@@ -24,6 +24,7 @@ head.js(
   "../giza/Polygon.js",
   "../giza/Surface.js",
   "../giza/Turtle.js",
+  "../giza/Path.js",
   "../giza/Trackball.js",
   "lib/stats.min.js",
   COMMON.cdn + "jquery/1.8.0/jquery.min.js",
@@ -244,16 +245,15 @@ COMMON.getMouse = function(event, element) {
   var p = $(element).position();
   var x = event.pageX - p.left;
   var y = event.pageY - p.top;
-  return GIZA.Vector2.make(x, y);
+  var s = GIZA.pixelScale;
+  return GIZA.Vector2.make(x * s, y * s);
 };
 
-// Create an event handler that listens for a screenshot key.
-// When pressed, a new tab opens up with the PNG image.
+// Create an event handler that listens for a chosen screenshot key,
+// which is 's' if unspecified.  When pressed, a new tab opens with
+// the PNG image.
 COMMON.enableScreenshot = function(drawFunc, triggerKey) {
-
-  // By default, the 's' key takes a screenshot.
   triggerKey = triggerKey || 83;
-
   $(document).keydown(function(e) {
     if (e.keyCode == triggerKey) {
       drawFunc(COMMON.now);
@@ -265,30 +265,59 @@ COMMON.enableScreenshot = function(drawFunc, triggerKey) {
 
 };
 
-COMMON.Trackball = function(canvas) {
-
-  // Allow clients to skip the "new"
+// 'canvas' is the canvas element you wish to tumble on;
+// 'extent' is a percentage in [0,1] that defines the radius.
+COMMON.Trackball = function(canvas, extent) {
+  var V2 = GIZA.Vector2;
+  var V3 = GIZA.Vector3;
+  var gl = GIZA.context;
   if (!(this instanceof COMMON.Trackball)) {
     return new COMMON.Trackball(canvas);
   }
-
   canvas = canvas || $('canvas');
+  extent = extent || 0.8;
 
-  var trackball = new GIZA.Trackball();
+  var w = GIZA.canvas.width, h = GIZA.canvas.height;
+  var center = V2.make(w / 2, h / 2);
+  var radius = (radius || 0.8) * Math.min(w, h / 2);
+  var trackball = new GIZA.Trackball(center, radius);
+  this.getSpin = trackball.getSpin;
+
+  var isDown = false;
 
   canvas.mousedown(function(e) {
     var pos = COMMON.getMouse(e, this);
     trackball.startDrag(pos);
+    isDown = true;
   });
 
   canvas.mouseup(function(e) {
     var pos = COMMON.getMouse(e, this);
     trackball.endDrag(pos);
+    isDown = false;
   });
 
   canvas.mousemove(function(e) {
     var pos = COMMON.getMouse(e, this);
     trackball.updateDrag(pos);
   });
+
+  var center = V3.make(center[0], center[1], 0);
+  var normal = V3.make(0, 0, 1);
+  var path = new GIZA.Path.Circle(center, radius, normal);
+  var numPoints = 128;
+
+  var typedArray = path.tessellate(numPoints);
+  var circleBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, circleBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, typedArray, gl.STATIC_DRAW);
+
+  this.drawCircle = function(attrib) {
+    if (isDown) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, circleBuffer);
+      gl.vertexAttribPointer(attrib || 0, 3, gl.FLOAT, false, 12, 0);
+      gl.drawArrays(gl.LINE_LOOP, 0, numPoints);
+    }
+  };
 
 };
