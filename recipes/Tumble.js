@@ -66,10 +66,13 @@ var main = function() {
     
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     
-    var mv = M4.lookAt(
+    var view = M4.lookAt(
       [0,0,-15], // eye
       [0,0,0],  // target
       [0,1,0]); // up
+
+    var model = M4.make(trackball.getSpin());
+    var mv = M4.multiply(view, model);
 
     var proj = M4.perspective(
       10,       // fov in degrees
@@ -102,13 +105,12 @@ var main = function() {
     gl.disableVertexAttribArray(attribs.POSITION);
     gl.disableVertexAttribArray(attribs.NORMAL);
 
-
     proj = M4.orthographic(
       0, GIZA.canvas.width,
       0, GIZA.canvas.height,
       0, 10);
 
-    mv = M4.make(trackball.getSpin());
+    mv = M4.identity();
 
     gl.disable(gl.DEPTH_TEST);
     gl.disable(gl.CULL_FACE);
@@ -123,7 +125,7 @@ var main = function() {
     trackball.drawCircle(attribs.POSITION);
     gl.disableVertexAttribArray(attribs.POSITION);
 
-    COMMON.endFrame(draw);
+    //COMMON.endFrame(draw);
   }
 
   init();

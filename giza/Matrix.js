@@ -139,10 +139,15 @@ GIZA.Matrix4 = {
     return m;
   },
 
-  // TODO Check if "v" is length 4 or length 16.
-  //      Throw for anything else.
-  //
-  // Multiplies a matrix with a column vector:
+  row: function(m, i) {
+    return GIZA.Vector4.make(m[i], m[i+4], m[i+8], m[i+12]);
+  },
+
+  column: function(m, i) {
+    return GIZA.Vector4.make(m[i*4], m[i*4+1], m[i*4+2], m[i*4+3]);
+  },
+
+  // If 'v' is a V4, then this multiplies a matrix with a column vector:
   //
   // V' =  M * V
   //
@@ -154,11 +159,37 @@ GIZA.Matrix4 = {
   // with transpose = false.
   //
   multiply: function(m, v) {
-    return GIZA.Vector4.make(
-      m[0]*v[0] + m[4]*v[1] + m[8]*v[2]  + m[12]*v[3],
-      m[1]*v[0] + m[5]*v[1] + m[9]*v[2]  + m[13]*v[3],
-      m[2]*v[0] + m[6]*v[1] + m[10]*v[2] + m[14]*v[3],
-      m[3]*v[0] + m[7]*v[1] + m[11]*v[2] + m[15]*v[3]);
+    if (v.length == 4) {
+      return GIZA.Vector4.make(
+        m[0]*v[0] + m[4]*v[1] + m[8]*v[2]  + m[12]*v[3],
+        m[1]*v[0] + m[5]*v[1] + m[9]*v[2]  + m[13]*v[3],
+        m[2]*v[0] + m[6]*v[1] + m[10]*v[2] + m[14]*v[3],
+        m[3]*v[0] + m[7]*v[1] + m[11]*v[2] + m[15]*v[3]);
+    } else if (v.length == 16) {
+      
+      var ar0 = this.row(m, 0);
+      var ar1 = this.row(m, 1);
+      var ar2 = this.row(m, 2);
+      var ar3 = this.row(m, 3);
+
+      var bc0 = this.column(v, 0);
+      var bc1 = this.column(v, 1);
+      var bc2 = this.column(v, 2);
+      var bc3 = this.column(v, 3);
+
+      var V4 = GIZA.Vector4;
+
+      var m = GIZA.Matrix4.make(
+        V4.dot(ar0, bc0), V4.dot(ar0, bc1), V4.dot(ar0, bc2), V4.dot(ar0, bc3),
+        V4.dot(ar1, bc0), V4.dot(ar1, bc1), V4.dot(ar1, bc2), V4.dot(ar1, bc3),
+        V4.dot(ar2, bc0), V4.dot(ar2, bc1), V4.dot(ar2, bc2), V4.dot(ar2, bc3),
+        V4.dot(ar3, bc0), V4.dot(ar3, bc1), V4.dot(ar3, bc2), V4.dot(ar3, bc3));
+
+      return this.transposed(m);
+
+    } else {
+      throw new Error("Multiplying a M4 with something other than a V4 or a M4");
+    }
   },
 
   rotateX: function(m, radians) {
@@ -230,7 +261,7 @@ GIZA.Matrix4 = {
 
   // TODO: impl & test.  also add rotatedAxis
   rotateAxis: function (m, axis, radians) {
-	var x = axis.x, y = axis.y, z = axis.z;
+	var x = axis[0], y = axis[1], z = axis[2];
 	var n = Math.sqrt(x * x + y * y + z * z);
 	x /= n;
 	y /= n;
@@ -269,17 +300,23 @@ GIZA.Matrix4 = {
 	m[9] = r13 * m21 + r23 * m22 + r33 * m23;
 	m[10] = r13 * m31 + r23 * m32 + r33 * m33;
 	m[11] = r13 * m41 + r23 * m42 + r33 * m43;
-	return this;
+	return m;
   },
 
-  // TODO impl & test
-  scale: function(m, sOrxOrArray, y, z) {
-	var x = v.x, y = v.y, z = v.z;
-	m[0] *= x; m[4] *= y; m[8] *= z;
-	m[1] *= x; m[5] *= y; m[9] *= z;
-	m[2] *= x; m[6] *= y; m[10] *= z;
-	m[3] *= x; m[7] *= y; m[11] *= z;
-	return m;
+  scale: function(s) {
+    var x, y, z;
+    if (s.length == 3) {
+      x = s[0];
+      y = s[1];
+      z = s[2];
+    } else {
+      x = y = z = s;
+    }
+    return this.make(
+      x, 0, 0, 0,
+      0, y, 0, 0,
+      0, 0, z, 0,
+      0, 0, 0, 1);
   },
 
   translated: function(m, xOrArray, y, z) {
@@ -415,7 +452,7 @@ GIZA.Matrix3 = {
 
   // TODO: impl & test.  also add rotatedAxis
   rotateAxis: function (m, axis, radians) {
-	var x = axis.x, y = axis.y, z = axis.z;
+	var x = axis[0], y = axis[1], z = axis[2];
 	var n = Math.sqrt(x * x + y * y + z * z);
 	x /= n;
 	y /= n;
@@ -451,23 +488,24 @@ GIZA.Matrix3 = {
 	m[6] = r13 * m11 + r23 * m12 + r33 * m13;
 	m[7] = r13 * m21 + r23 * m22 + r33 * m23;
 	m[8] = r13 * m31 + r23 * m32 + r33 * m33;
-	return this;
-  },
-
-  // TODO impl & test
-  scale: function(m, sOrxOrArray, y, z) {
-	var x = v.x, y = v.y, z = v.z;
-	m[0] *= x; m[3] *= y; m[6] *= z;
-	m[1] *= x; m[4] *= y; m[7] *= z;
-	m[2] *= x; m[5] *= y; m[8] *= z;
 	return m;
   },
 
-  scaled: function(m, sOrxOrArray, y, z) {
-    var retval = this.copy(m);
-    return this.scale(retval, sOrxOrArray, y, z);
+  scale: function(s) {
+    var x, y, z;
+    if (s.length == 3) {
+      x = s[0];
+      y = s[1];
+      z = s[2];
+    } else {
+      x = y = z = s;
+    }
+    return this.make(
+      x, 0, 0,
+      0, y, 0,
+      0, 0, z);
   },
-  
+
   transpose: function(m) {
     var n = this.transposed(m);
     this.set(m, n);
