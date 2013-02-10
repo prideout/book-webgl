@@ -1,8 +1,12 @@
 # master
 
-- Update nodejitsu server and mail Nagle
+- Trackball
 
-- Mail stuff to publishers, perhaps through my nodejitsu site?
+- Load an OSD-divided model, work this into the Tumble example
+
+- Facet normals with WebGL using inverse DrawElements
+
+- Address feedback
 
 - Jump into Chapter 3 demos (TexCoords, Ribbons and Tubes)
   Use a superellipsoid Mobius shape for demo purposes

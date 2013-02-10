@@ -13,6 +13,10 @@ GIZA.Vector2 = {
     return [x, y];
   },
 
+  direction: function(src, dest) {
+    return this.normalized(this.subtract(dest, src));
+  },
+
   equivalent: function(a, b, epsilon) {
     epsilon = epsilon || 1e-6;
     return this.distanceSquared(a, b) < epsilon;
@@ -156,6 +160,10 @@ GIZA.Vector3 = {
 
   make: function(x, y, z) {
     return [x, y, z];
+  },
+
+  direction: function(src, dest) {
+    return this.normalized(this.subtract(dest, src));
   },
 
   equivalent: function(a, b, epsilon) {

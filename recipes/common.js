@@ -281,7 +281,10 @@ COMMON.Trackball = function(canvas, extent) {
   var center = V2.make(w / 2, h / 2);
   var radius = (radius || 0.8) * Math.min(w, h / 2);
   var trackball = new GIZA.Trackball(center, radius);
-  this.getSpin = trackball.getSpin;
+
+  this.getSpin = function() {
+    return trackball.getSpin();
+  };
 
   var isDown = false;
 

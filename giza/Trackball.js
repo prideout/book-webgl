@@ -11,6 +11,8 @@ GIZA.Trackball = function(center, radius) {
     return new GIZA.Trackball(center, radius);
   }
 
+  center.push(0);
+
   this.startPosition = null;
   this.endPosition = null;
   this.currentPosition = null;
@@ -29,7 +31,7 @@ GIZA.Trackball = function(center, radius) {
     if (distanceSquared > r * r) {
       inCircle = false;
       p2d = V2.add(center2d, V2.scaled(
-        V2.normalized(V2.subtract(p2d, center2d)),
+        V2.direction(p2d, center2d),
         r));
     } else {
       inCircle = true;
@@ -47,32 +49,29 @@ GIZA.Trackball = function(center, radius) {
       return;
     }
     this.startPosition = start;
-    console.info("prideout mouse drag started at ", position, start);
+    this.currentPosition = this.startPosition;
   };
 
   // Ideally this isn't even used, since trackpads can occur a delay,
   // and since the mouse can be dragged off-window.
   this.endDrag = function(position) {
     this.endPosition = project(position);
-    console.info("prideout mouse drag ended at ", position, this.endPosition);
   };
 
   this.updateDrag = function(position) {
-    //console.info("prideout mouse drag currently at ", position);
     this.currentPosition = project(position);
   };
 
   this.getSpin = function() {
 
-    var start = V3.make(0,0,1);
-    var end = V3.make(1,0,0);
-    var center = V3.make(0,0,0);
+    if (!this.startPosition) {
+      return M3.identity();
+    }
 
-    var a = V3.subtract(start, center);
-    var b = V3.subtract(end, center);
-    var axis = V3.normalized(V3.cross(a, b));
+    var a = V3.direction(this.startPosition, center);
+    var b = V3.direction(this.currentPosition, center);
+    var axis = V3.cross(a, b);
     var radians = Math.acos(V3.dot(a, b));
-
     var retval = M3.rotateAxis(M3.identity(), axis, radians);
 
     return retval;
