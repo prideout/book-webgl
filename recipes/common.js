@@ -303,6 +303,14 @@ COMMON.Trackball = function(canvas, extent) {
 
   canvas.mousemove(function(e) {
     var pos = COMMON.getMouse(e, this);
+
+    // Handle the case where the mouse was released off-canvas
+    if (isDown && !e.which) {
+      trackball.endDrag(pos);
+      isDown = false;
+      return;
+    }
+
     trackball.updateDrag(pos);
   });
 
