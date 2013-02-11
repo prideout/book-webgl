@@ -31,7 +31,7 @@ GIZA.Trackball = function(center, radius) {
 
     // First snap the point to the circle that is an epsilon smaller
     // than the sphere's silhouette.
-    var r = radius * 0.9;
+    var r = radius * 0.99;
     if (distanceSquared > r * r) {
       inCircle = false;
       p2d = V2.add(center2d, V2.scaled(

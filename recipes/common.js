@@ -276,7 +276,7 @@ COMMON.Trackball = function(canvas, extent) {
     return new COMMON.Trackball(canvas);
   }
   canvas = canvas || $('canvas');
-  extent = extent || 0.8;
+  extent = extent || 0.9;
 
   var w = GIZA.canvas.width, h = GIZA.canvas.height;
   var center = V2.make(w / 2, h / 2);
