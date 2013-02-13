@@ -45,6 +45,12 @@ ul {
     margin-bottom:10px;
 }
 
+.status {
+    color:#333;
+    margin-bottom:10px;
+    font-size: 10px;
+}
+
 iframe {
     border:0;
 }

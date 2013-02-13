@@ -88,3 +88,26 @@ GIZA.merge = function (a, b) {
     a[attrname] = b[attrname];
   }
 };
+
+// Kinda like jQuery's get function, except that dataType can be
+// either "binary" or "json".
+GIZA.get = function(url, successFunc, dataType) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url, true);
+  if (dataType == 'json') {
+    var onloadFunc = function() {
+      if (xhr.responseText) {
+        successFunc(JSON.parse(xhr.responseText));
+      }
+    };
+  } else {
+    xhr.responseType = 'arraybuffer';
+    var onloadFunc = function() {
+      if (xhr.response) {
+        successFunc(xhr.response);
+      }
+    };
+  }
+  xhr.onload = onloadFunc;
+  xhr.send(null);
+};
