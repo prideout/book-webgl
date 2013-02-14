@@ -31,52 +31,75 @@ var main = function() {
     torusCoords: gl.createBuffer(),
     mesh: gl.createBuffer(),
     modelVerts: gl.createBuffer(),
-    modelQuads: gl.createBuffer()
+    modelEdges: gl.createBuffer()
   };
-  var arrays = {
-    quads: null,
-    lines: null,
-    coords: null
-  };
+
+  var quadArray = null;
   var prims = [];
-
   var numPendingLoadTasks = 3;
-
   var trackball = new COMMON.Trackball();
 
   var onArrival = function(userdata) {
+
+    // Give a status update on what's been downloaded so far.
     if ($('.status').text().length) {
       $('.status').append(" ~ ");
     }
     $('.status').append(userdata);
     numPendingLoadTasks--;
+
+    // Leave early if we're not done downloading all items.
     if (numPendingLoadTasks != 0) {
         return;
     }
     console.info("Done loading", prims.length, "prims.");
 
-    lines = []
+    var lines = [];
+    var lineOffset = 0;
     for (var i = 0; i < prims.length; i++) {
       var prim = prims[i];
-      var quads = arrays.quads.subarray(
+
+      // Create a subarray view and convert it to wireframe.
+      var quads = quadArray.subarray(
         prim.quadsOffset, prim.quadsOffset + prim.quadsCount);
-      lines.push(GIZA.quadsToLines(quads));
+      lineArray = GIZA.quadsToLines(quads);
+      lines.push(lineArray);
+
+      // Annotate the prim's metadata.
+      prim.lineOffset = lineOffset;
+      prim.lineCount = lineArray.length / 2;
+      lineOffset += prim.lineCount;
     }
-    arrays.lines = GIZA.join(lines);
+
+    // Aggregate the buffers into a monolithic VBO.
+    lines = GIZA.join(lines);
+
+    // Add to the indices so that they index into the correct region
+    // of the coordinates buffer.  This work should probably be moved
+    // to the server.
+    var offset = 0, k = 0;
+    for (var i = 0; i < prims.length; i++) {
+      var prim = prims[i];
+      for (var j = 0; j < 2 * prim.lineCount; j++) {
+        lines[j + k] += offset;
+      }
+      offset += prim.vertsCount;
+      k += 2 * prim.lineCount;
+    }
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.modelEdges);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, lines, gl.STATIC_DRAW);
     console.info("Done converting quads to lines.");
   };
 
   var onCoords = function(data) {
-    arrays.coords = new Float32Array(data);
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.modelVerts);
     gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
     onArrival('coords');
   };
 
   var onQuads = function(data) {
-    arrays.quads = new Uint32Array(data);
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.modelQuads);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, data, gl.STATIC_DRAW);
+    quadArray = new Uint32Array(data);
     onArrival('quads');
   };
 
@@ -97,11 +120,14 @@ var main = function() {
 
   var init = function() {
 
+    gl.getExtension('OES_element_index_uint');
+
     GIZA.get('media/Clock.coords.bin', onCoords, 'binary');
     GIZA.get('media/Clock.quads.bin', onQuads, 'binary');
     GIZA.get('media/Clock.meta.json', onMeta, 'json');
       
     gl.clearColor(34 / 255, 74 / 255, 116 / 255, 1);
+    //gl.lineWidth(2);
 
     var lod = 64;
 
@@ -128,7 +154,16 @@ var main = function() {
   }
 
   var drawPrim = function(prim, program, mv) {
-      // TODO: set color, set mv, issue drawElements
+
+    var color = prim.displayColor.slice(0).concat(1);
+    gl.uniform4fv(program.color, color);
+    gl.uniformMatrix4fv(program.modelview, false, mv);
+
+    gl.drawElements(
+      gl.LINES,
+      prim.lineCount * 2,
+      gl.UNSIGNED_INT,
+      4 * prim.lineOffset * 2);
   };
 
   var draw = function(currentTime) {
@@ -136,7 +171,7 @@ var main = function() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     
     var view = M4.lookAt(
-      [0,0,-15], // eye
+      [0,0,-80], // eye
       [0,0,0],  // target
       [0,1,0]); // up
 
@@ -146,42 +181,49 @@ var main = function() {
     var proj = M4.perspective(
       10,       // fov in degrees
       GIZA.aspect,
-      3, 200);  // near and far
-
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.mesh)
-    gl.enableVertexAttribArray(attribs.POSITION);
-    gl.enableVertexAttribArray(attribs.NORMAL);
-
-    var program = programs.lit;
-    gl.useProgram(program);
-    gl.enable(gl.DEPTH_TEST);
-    gl.enable(gl.CULL_FACE);
-    gl.uniformMatrix4fv(program.projection, false, proj);
-    gl.uniformMatrix4fv(program.modelview, false, mv);
-    gl.uniform4f(program.lightPosition, 0.75, .25, 1, 1);
-    gl.uniform3f(program.ambientMaterial, 0.2, 0.1, 0.1);
-    gl.uniform4f(program.diffuseMaterial, 1, 209/255, 54/255, 1);
-    gl.uniform1f(program.shininess, 180.0);
-    gl.uniform3f(program.specularMaterial, 0.8, 0.8, 0.7);
-    gl.uniform1f(program.fresnel, 0.01);
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffers.torusCoords);
-    gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 24, 0);
-    gl.vertexAttribPointer(attribs.NORMAL, 3, gl.FLOAT, false, 24, 12);
-    gl.drawElements(gl.TRIANGLES,
-                    3 * buffers.mesh.triangleCount,
-                    gl.UNSIGNED_SHORT,
-                    0)
-    gl.disableVertexAttribArray(attribs.POSITION);
-    gl.disableVertexAttribArray(attribs.NORMAL);
+      3, 2000);  // near and far
 
     if (numPendingLoadTasks == 0) {
-        program = programs.solid;
-        gl.useProgram(program);    
-        gl.uniformMatrix4fv(program.projection, false, proj);
-        gl.uniformMatrix4fv(program.modelview, false, mv);
-        gl.enableVertexAttribArray(attribs.POSITION);
-        prims.forEach(drawPrim, program, mv);
-        gl.disableVertexAttribArray(attribs.POSITION);
+      var program = programs.solid;
+      gl.useProgram(program);    
+      gl.uniformMatrix4fv(program.projection, false, proj);
+      gl.uniformMatrix4fv(program.modelview, false, mv);
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.modelEdges);
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffers.modelVerts);
+      gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 12, 0);
+      gl.enableVertexAttribArray(attribs.POSITION);
+      for (var i = 0; i < prims.length; i++) {
+        drawPrim(prims[i], program, mv);
+      }
+      gl.disableVertexAttribArray(attribs.POSITION);
+
+    } else {
+      var program = programs.lit;
+    
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.mesh);
+      gl.enableVertexAttribArray(attribs.POSITION);
+      gl.enableVertexAttribArray(attribs.NORMAL);
+
+      gl.useProgram(program);
+      gl.enable(gl.DEPTH_TEST);
+      gl.enable(gl.CULL_FACE);
+      gl.uniformMatrix4fv(program.projection, false, proj);
+      gl.uniformMatrix4fv(program.modelview, false, mv);
+      gl.uniform4f(program.lightPosition, 0.75, .25, 1, 1);
+      gl.uniform3f(program.ambientMaterial, 0.2, 0.1, 0.1);
+      gl.uniform4f(program.diffuseMaterial, 1, 209/255, 54/255, 1);
+      gl.uniform1f(program.shininess, 180.0);
+      gl.uniform3f(program.specularMaterial, 0.8, 0.8, 0.7);
+      gl.uniform1f(program.fresnel, 0.01);
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffers.torusCoords);
+      gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 24, 0);
+        gl.vertexAttribPointer(attribs.NORMAL, 3, gl.FLOAT, false, 24, 12);
+      gl.drawElements(gl.TRIANGLES,
+                      3 * buffers.mesh.triangleCount,
+                      gl.UNSIGNED_SHORT,
+                      0)
+      gl.disableVertexAttribArray(attribs.POSITION);
+      gl.disableVertexAttribArray(attribs.NORMAL);
     }
 
     proj = M4.orthographic(
@@ -195,7 +237,6 @@ var main = function() {
     gl.disable(gl.CULL_FACE);
 
     program = programs.solid;
-    gl.lineWidth(2);
     gl.useProgram(program);
     gl.uniformMatrix4fv(program.projection, false, proj);
     gl.uniformMatrix4fv(program.modelview, false, mv);

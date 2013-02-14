@@ -89,6 +89,8 @@ GIZA.merge = function (a, b) {
   }
 };
 
+// Convert an index buffer of 4-tuples (quad mesh) into an index
+// buffer of 2-tuples (wireframe) without duplicating edges.
 GIZA.quadsToLines = function(quadsArray, destType) {
   destType = destType || quadsArray.constructor;
   edgeList = {};
