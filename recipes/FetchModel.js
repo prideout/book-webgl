@@ -61,7 +61,8 @@ var main = function() {
 
       // Create a subarray view and convert it to wireframe.
       var quads = quadArray.subarray(
-        prim.quadsOffset, prim.quadsOffset + prim.quadsCount);
+        4 * prim.quadsOffset,
+        4 * (prim.quadsOffset + prim.quadsCount));
       lineArray = GIZA.quadsToLines(quads);
       lines.push(lineArray);
 

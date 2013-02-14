@@ -105,7 +105,7 @@ GIZA.quadsToLines = function(quadsArray, destType) {
     }
   };
 
-  for (var q = 0; q < quadsArray.length / 4;) {
+  for (var q = 0; q < quadsArray.length;) {
     var i0 = quadsArray[q++]; var i1 = quadsArray[q++];
     var i2 = quadsArray[q++]; var i3 = quadsArray[q++];
     addEdge(i0, i1); addEdge(i1, i2);
