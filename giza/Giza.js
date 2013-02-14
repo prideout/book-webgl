@@ -89,6 +89,29 @@ GIZA.merge = function (a, b) {
   }
 };
 
+GIZA.quadsToLines = function(quadsArray, destType) {
+  destType = destType || quadsArray.constructor;
+  // TODO
+  return quadsArray;
+};
+
+// Aggregate a list of typed arrays by pre-allocating a giant array
+// and blitting into it.  Another idea is to create a Blob which you
+// then pass to a FileReader.  This seems more straightforward though.
+GIZA.join = function(arrays, destType) {
+  destType = destType || arrays[0].constructor;
+  var totalSize = arrays.reduce(function(prev, curr) {
+    return prev + curr.length;
+  }, 0);
+  var dest = new destType(totalSize);
+  var offset = 0;
+  for (var i = 0; i < arrays.length; i++) {
+    dest.set(arrays[i], offset);
+    offset += arrays[i].length;
+  }
+  return dest;
+};
+
 // Kinda like jQuery's get function, except that dataType can be
 // either "binary" or "json".
 GIZA.get = function(url, successFunc, dataType) {

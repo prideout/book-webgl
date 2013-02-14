@@ -53,45 +53,28 @@ var main = function() {
     if (numPendingLoadTasks != 0) {
         return;
     }
-    for (var i = 0; i < prims.length; i++) {
-        var prim = prims[i];
-        if (prim.vertsCount >= (1 << 16)) {
-            console.info(prim.name, " has ", prim.vertsCount, " verts, which exceeds 16 bits");
-        }
-    }
-    console.info("Done loading ", prims.length, " models.");
-    // TODO
+    console.info("Done loading", prims.length, "prims.");
+
     lines = []
     for (var i = 0; i < prims.length; i++) {
-        var prim = prims[i];
-        var quads = arrays.quads.subarray(prim.quadsOffset, prim.quadsCount);
-        lines.push(GIZA.quadsToLines(quads, Uint16Array));
-        //             a.constructor == Uint32Array
+      var prim = prims[i];
+      var quads = arrays.quads.subarray(
+        prim.quadsOffset, prim.quadsOffset + prim.quadsCount);
+      lines.push(GIZA.quadsToLines(quads));
     }
     arrays.lines = GIZA.join(lines);
-    // StackOverflow time...
-/*
-// Another idea is to create a Blob which you then pass to a FileReader.
-// This seems more straightfotward though.
-GIZA.join(bufs){
-  var sum=function(a){return a.reduce(function(a,b){return a+b;},0);};
-  var lens=bufs.map(function(a){return a.length;});
-  var aout=new Uint8Array(sum(lens));
-  for (var i=0;i<bufs.length;++i) aout.set(bufs[i],sum(lens.slice(0,i)));
-  return aout;
-};
-*/
+    console.info("Done converting quads to lines.");
   };
 
   var onCoords = function(data) {
-    arrays.coords = data;
+    arrays.coords = new Float32Array(data);
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.modelVerts);
     gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
     onArrival('coords');
   };
 
   var onQuads = function(data) {
-    arrays.quads = data;
+    arrays.quads = new Uint32Array(data);
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.modelQuads);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, data, gl.STATIC_DRAW);
     onArrival('quads');
