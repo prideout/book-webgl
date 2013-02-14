@@ -91,8 +91,35 @@ GIZA.merge = function (a, b) {
 
 GIZA.quadsToLines = function(quadsArray, destType) {
   destType = destType || quadsArray.constructor;
-  // TODO
-  return quadsArray;
+
+  edgeList = {};
+  
+  var addEdge = function(i0, i1) {
+    var h0 = ("0000" + i0.toString(16)).slice(-4);
+    var h1 = ("0000" + i1.toString(16)).slice(-4);
+    if (i0 < i1) {
+      edgeList[h0+h1] = [i0,i1];
+    } else {
+      edgeList[h1+h0] = [i1,i0];
+    }
+  };
+
+  for (var q = 0; q < quadsArray.length / 4;) {
+    var i0 = quadsArray[q++]; var i1 = quadsArray[q++];
+    var i2 = quadsArray[q++]; var i3 = quadsArray[q++];
+    addEdge(i0, i1); addEdge(i1, i2);
+    addEdge(i2, i3); addEdge(i3, i0);
+  }
+
+  var keys = Object.keys(edgeList).sort();
+  var linesArray = new Uint32Array(keys.length * 2);
+  var a = 0, b = 0;
+  for (var i = 0; i < keys.length; i++) {
+    var edge = edgeList[keys[i]];
+    linesArray[a++] = edge[0];
+    linesArray[b++] = edge[1];
+  }
+  return linesArray;
 };
 
 // Aggregate a list of typed arrays by pre-allocating a giant array
