@@ -91,7 +91,6 @@ GIZA.merge = function (a, b) {
 
 GIZA.quadsToLines = function(quadsArray, destType) {
   destType = destType || quadsArray.constructor;
-
   edgeList = {};
   
   var addEdge = function(i0, i1) {
@@ -113,11 +112,11 @@ GIZA.quadsToLines = function(quadsArray, destType) {
 
   var keys = Object.keys(edgeList).sort();
   var linesArray = new Uint32Array(keys.length * 2);
-  var a = 0, b = 0;
-  for (var i = 0; i < keys.length; i++) {
-    var edge = edgeList[keys[i]];
-    linesArray[a++] = edge[0];
-    linesArray[b++] = edge[1];
+  var i = 0, j = 0;
+  while (i < keys.length) {
+    var edge = edgeList[keys[i++]];
+    linesArray[j++] = edge[0];
+    linesArray[j++] = edge[1];
   }
   return linesArray;
 };
