@@ -30,43 +30,86 @@ var main = function() {
   var buffers = {
     torusCoords: gl.createBuffer(),
     mesh: gl.createBuffer(),
-
     modelVerts: gl.createBuffer(),
     modelQuads: gl.createBuffer()
   };
+  var arrays = {
+    quads: null,
+    lines: null,
+    coords: null
+  };
+  var prims = [];
+
+  var numPendingLoadTasks = 3;
 
   var trackball = new COMMON.Trackball();
 
-  var showArrival = function(userdata) {
+  var onArrival = function(userdata) {
     if ($('.status').text().length) {
       $('.status').append(" ~ ");
     }
     $('.status').append(userdata);
+    numPendingLoadTasks--;
+    if (numPendingLoadTasks != 0) {
+        return;
+    }
+    for (var i = 0; i < prims.length; i++) {
+        var prim = prims[i];
+        if (prim.vertsCount >= (1 << 16)) {
+            console.info(prim.name, " has ", prim.vertsCount, " verts, which exceeds 16 bits");
+        }
+    }
+    console.info("Done loading ", prims.length, " models.");
+    // TODO
+    lines = []
+    for (var i = 0; i < prims.length; i++) {
+        var prim = prims[i];
+        var quads = arrays.quads.subarray(prim.quadsOffset, prim.quadsCount);
+        lines.push(GIZA.quadsToLines(quads, Uint16Array));
+        //             a.constructor == Uint32Array
+    }
+    arrays.lines = GIZA.join(lines);
+    // StackOverflow time...
+/*
+// Another idea is to create a Blob which you then pass to a FileReader.
+// This seems more straightfotward though.
+GIZA.join(bufs){
+  var sum=function(a){return a.reduce(function(a,b){return a+b;},0);};
+  var lens=bufs.map(function(a){return a.length;});
+  var aout=new Uint8Array(sum(lens));
+  for (var i=0;i<bufs.length;++i) aout.set(bufs[i],sum(lens.slice(0,i)));
+  return aout;
+};
+*/
   };
 
   var onCoords = function(data) {
-    showArrival('coords');
+    arrays.coords = data;
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.modelVerts);
     gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+    onArrival('coords');
   };
 
   var onQuads = function(data) {
-    showArrival('quads');
+    arrays.quads = data;
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.modelQuads);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, data, gl.STATIC_DRAW);
+    onArrival('quads');
   };
 
   var onMeta = function(data) {
-    showArrival('meta');
     for (var name in data) {
-      var displayColor = data[name][0];
-      var transform = data[name][1];
-      var vertsOffset = data[name][2];
-      var vertsCount = data[name][3];
-      var quadsOffset = data[name][4];
-      var quadsCount = data[name][5];
-      console.info(name, displayColor);
+      prim = {};
+      prim.name = name;
+      prim.displayColor = data[name][0];
+      prim.transform = data[name][1];
+      prim.vertsOffset = data[name][2];
+      prim.vertsCount = data[name][3];
+      prim.quadsOffset = data[name][4];
+      prim.quadsCount = data[name][5];
+      prims.push(prim);
     }
+    onArrival('meta');
   };
 
   var init = function() {
@@ -101,6 +144,10 @@ var main = function() {
     }
   }
 
+  var drawPrim = function(prim, program, mv) {
+      // TODO: set color, set mv, issue drawElements
+  };
+
   var draw = function(currentTime) {
     
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -127,13 +174,13 @@ var main = function() {
     gl.enable(gl.DEPTH_TEST);
     gl.enable(gl.CULL_FACE);
     gl.uniformMatrix4fv(program.projection, false, proj);
+    gl.uniformMatrix4fv(program.modelview, false, mv);
     gl.uniform4f(program.lightPosition, 0.75, .25, 1, 1);
     gl.uniform3f(program.ambientMaterial, 0.2, 0.1, 0.1);
     gl.uniform4f(program.diffuseMaterial, 1, 209/255, 54/255, 1);
     gl.uniform1f(program.shininess, 180.0);
     gl.uniform3f(program.specularMaterial, 0.8, 0.8, 0.7);
     gl.uniform1f(program.fresnel, 0.01);
-    gl.uniformMatrix4fv(program.modelview, false, mv);
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.torusCoords);
     gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 24, 0);
     gl.vertexAttribPointer(attribs.NORMAL, 3, gl.FLOAT, false, 24, 12);
@@ -143,6 +190,16 @@ var main = function() {
                     0)
     gl.disableVertexAttribArray(attribs.POSITION);
     gl.disableVertexAttribArray(attribs.NORMAL);
+
+    if (numPendingLoadTasks == 0) {
+        program = programs.solid;
+        gl.useProgram(program);    
+        gl.uniformMatrix4fv(program.projection, false, proj);
+        gl.uniformMatrix4fv(program.modelview, false, mv);
+        gl.enableVertexAttribArray(attribs.POSITION);
+        prims.forEach(drawPrim, program, mv);
+        gl.disableVertexAttribArray(attribs.POSITION);
+    }
 
     proj = M4.orthographic(
       0, GIZA.canvas.width,
