@@ -104,6 +104,7 @@ var main = function() {
   };
 
   var onMeta = function(data) {
+    var vertsCount = 0;
     for (var name in data) {
       prim = {};
       prim.name = name;
@@ -114,7 +115,9 @@ var main = function() {
       prim.quadsOffset = data[name][4];
       prim.quadsCount = data[name][5];
       prims.push(prim);
+      vertsCount += prim.vertsCount;
     }
+    console.info('Total vert count =', vertsCount);
     onArrival('meta');
   };
 
@@ -128,8 +131,7 @@ var main = function() {
     GIZA.get('media/Clock.quads.bin', onQuads, 'binary');
     GIZA.get('media/Clock.meta.json', onMeta, 'json');
       
-    gl.clearColor(34 / 255, 74 / 255, 116 / 255, 1);
-    //gl.lineWidth(2);
+    gl.clearColor(0, 0, 0, 1);
 
     var lod = 64;
 
@@ -173,9 +175,9 @@ var main = function() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     
     var view = M4.lookAt(
-      [0,0,-80], // eye
-      [0,0,0],  // target
-      [0,1,0]); // up
+      [0,-240,20], // eye
+      [0,0,17],  // target
+      [0,0,1]); // up
 
     var model = M4.make(trackball.getSpin());
     var mv = M4.multiply(view, model);
@@ -188,6 +190,7 @@ var main = function() {
     if (numPendingLoadTasks == 0) {
       var program = programs.solid;
       gl.useProgram(program);    
+      gl.enable(gl.DEPTH_TEST);
       gl.uniformMatrix4fv(program.projection, false, proj);
       gl.uniformMatrix4fv(program.modelview, false, mv);
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.modelEdges);
