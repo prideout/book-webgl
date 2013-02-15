@@ -18,6 +18,8 @@ GIZA.Turntable = function(config) {
     allowSpin = true,
     spinFriction = 0.5, // 0 means no friction (infinite spin) while 1 means no inertia
     epsilon = 3, // distance (in pixels) to wait before deciding if a drag is a Tilt or a Spin
+    bounceTilt = false, // if true, returns the tilt to the "home" angle after a mouse release
+    boundSpin = false, // if true, returns to the startSpin state after a mouse release
   };
 
   config = GIZA.merge(defaults, config || {});
