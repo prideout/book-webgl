@@ -61,7 +61,7 @@ var main = function() {
       var quads = quadArray.subarray(
         4 * prim.quadsOffset,
         4 * (prim.quadsOffset + prim.quadsCount));
-      lineArray = GIZA.quadsToLines(quads);
+      lineArray = GIZA.Topo.quadsToLines(quads);
       lines.push(lineArray);
 
       // Annotate the prim's metadata.
