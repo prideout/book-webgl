@@ -127,9 +127,14 @@ GIZA.Matrix4 = {
 	return this.frustum(xmin, xmax, ymin, ymax, near, far);
   },
   
+  translation: function(xOrArray, y, z) {
+    return this.translated(
+      this.identity(), xOrArray, y, z);
+  },
+
   translate: function(m, xOrArray, y, z) {
     var v = xOrArray;
-    if (y) {
+    if (typeof(y) != 'undefined') {
       v = [xOrArray, y, z];
     }
     m[12] = m[0]*v[0] + m[4]*v[1] + m[8]*v[2] + m[12];
@@ -139,6 +144,11 @@ GIZA.Matrix4 = {
     return m;
   },
 
+  translated: function(m, xOrArray, y, z) {
+    var retval = this.copy(m);
+    return this.translate(retval, xOrArray, y, z);
+  },
+  
   row: function(m, i) {
     return GIZA.Vector4.make(m[i], m[i+4], m[i+8], m[i+12]);
   },
@@ -318,11 +328,6 @@ GIZA.Matrix4 = {
       0, 0, 0, 1);
   },
 
-  translated: function(m, xOrArray, y, z) {
-    var retval = this.copy(m);
-    return this.translate(retval, xOrArray, y, z);
-  },
-  
   scaled: function(m, sOrxOrArray, y, z) {
     var retval = this.copy(m);
     return this.scale(retval, sOrxOrArray, y, z);

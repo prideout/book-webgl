@@ -28,8 +28,6 @@ var main = function() {
   });
 
   var buffers = {
-    torusCoords: gl.createBuffer(),
-    mesh: gl.createBuffer(),
     modelVerts: gl.createBuffer(),
     modelEdges: gl.createBuffer()
   };
@@ -110,35 +108,10 @@ var main = function() {
   };
 
   var init = function() {
-
     GIZA.get('media/Clock.coords.bin', onCoords, 'binary');
     GIZA.get('media/Clock.quads.bin', onQuads, 'binary');
     GIZA.get('media/Clock.meta.json', onMeta, 'json');
-      
-    gl.clearColor(0, 0, 0, 1);
-
-    var lod = 64;
-
-    var flags = function() {
-      var f = GIZA.surfaceFlags;
-      return f.POSITIONS | f.NORMALS | f.WRAP_COLS | f.WRAP_ROWS;
-    }();
-
-    var torus = function() {
-      var equation = GIZA.equations.torus(.25, 1);
-      var surface = GIZA.surface(equation, lod, lod, flags);
-      gl.bindBuffer(gl.ARRAY_BUFFER, buffers.torusCoords);
-      gl.bufferData(gl.ARRAY_BUFFER, surface.points(), gl.STATIC_DRAW);
-      return surface;
-    }();
-
-    buffers.mesh.triangleCount = torus.triangleCount();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.mesh);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, torus.triangles(), gl.STATIC_DRAW);
-
-    if (gl.getError() !== gl.NO_ERROR) {
-      console.error('Error when trying to create VBOs');
-    }
+    gl.clearColor(0.9, 0.9, 0.9, 1);
   }
 
   var drawPrim = function(prim, program, mv) {
@@ -164,11 +137,14 @@ var main = function() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     
     var view = M4.lookAt(
-      [0,-240,20], // eye
-      [0,0,17],  // target
-      [0,0,1]); // up
+      [0,0,-240], // eye
+      [0,0,0],  // target
+      [0,1,0]); // up
 
-    var model = M4.make(trackball.getSpin());
+    var orient = M4.rotateZ(M4.rotateX(M4.identity(), -Math.PI / 2), Math.PI);
+    var center = M4.translation(0, 0, -16);
+    var spin = M4.make(trackball.getSpin());
+    var model = M4.multiply(spin, M4.multiply(orient, center));
     var mv = M4.multiply(view, model);
 
     var proj = M4.perspective(
@@ -189,34 +165,6 @@ var main = function() {
         drawPrim(prims[i], program, mv);
       }
       gl.disableVertexAttribArray(attribs.POSITION);
-
-    } else {
-      var program = programs.lit;
-    
-      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.mesh);
-      gl.enableVertexAttribArray(attribs.POSITION);
-      gl.enableVertexAttribArray(attribs.NORMAL);
-
-      gl.useProgram(program);
-      gl.enable(gl.DEPTH_TEST);
-      gl.enable(gl.CULL_FACE);
-      gl.uniformMatrix4fv(program.projection, false, proj);
-      gl.uniformMatrix4fv(program.modelview, false, mv);
-      gl.uniform4f(program.lightPosition, 0.75, .25, 1, 1);
-      gl.uniform3f(program.ambientMaterial, 0.2, 0.1, 0.1);
-      gl.uniform4f(program.diffuseMaterial, 1, 209/255, 54/255, 1);
-      gl.uniform1f(program.shininess, 180.0);
-      gl.uniform3f(program.specularMaterial, 0.8, 0.8, 0.7);
-      gl.uniform1f(program.fresnel, 0.01);
-      gl.bindBuffer(gl.ARRAY_BUFFER, buffers.torusCoords);
-      gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 24, 0);
-        gl.vertexAttribPointer(attribs.NORMAL, 3, gl.FLOAT, false, 24, 12);
-      gl.drawElements(gl.TRIANGLES,
-                      3 * buffers.mesh.triangleCount,
-                      gl.UNSIGNED_SHORT,
-                      0)
-      gl.disableVertexAttribArray(attribs.POSITION);
-      gl.disableVertexAttribArray(attribs.NORMAL);
     }
 
     proj = M4.orthographic(
