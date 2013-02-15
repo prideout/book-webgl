@@ -63,7 +63,7 @@ var main = function() {
       var quads = quadArray.subarray(
         4 * prim.quadsOffset,
         4 * (prim.quadsOffset + prim.quadsCount));
-      lineArray = GIZA.quadsToLines(quads, Uint32Array);
+      lineArray = GIZA.quadsToLines(quads);
       lines.push(lineArray);
 
       // Annotate the prim's metadata.
@@ -74,18 +74,6 @@ var main = function() {
 
     // Aggregate the buffers into a monolithic VBO.
     lines = GIZA.join(lines);
-
-    // Add to the indices so that they index into the correct region
-    // of the coordinates buffer.
-    var offset = 0, k = 0;
-    for (var i = 0; i < prims.length; i++) {
-      var prim = prims[i];
-      for (var j = 0; j < 2 * prim.lineCount; j++) {
-        lines[j + k] += offset;
-      }
-      offset += prim.vertsCount;
-      k += 2 * prim.lineCount;
-    }
 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.modelEdges);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, lines, gl.STATIC_DRAW);
@@ -123,10 +111,6 @@ var main = function() {
 
   var init = function() {
 
-    if (!gl.getExtension('OES_element_index_uint')) {
-      console.error('32-bit indices are not supported via OES_element_index_uint');
-    }
-
     GIZA.get('media/Clock.coords.bin', onCoords, 'binary');
     GIZA.get('media/Clock.quads.bin', onQuads, 'binary');
     GIZA.get('media/Clock.meta.json', onMeta, 'json');
@@ -163,11 +147,16 @@ var main = function() {
     gl.uniform4fv(program.color, color);
     gl.uniformMatrix4fv(program.modelview, false, mv);
 
+    // This is in bytes:
+    var offset = prim.vertsOffset * 3 * 4;
+
+    gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 0, offset);
+
     gl.drawElements(
       gl.LINES,
       prim.lineCount * 2,
-      gl.UNSIGNED_INT,
-      4 * prim.lineOffset * 2);
+      gl.UNSIGNED_SHORT,
+      2 * prim.lineOffset * 2);
   };
 
   var draw = function(currentTime) {
@@ -195,7 +184,6 @@ var main = function() {
       gl.uniformMatrix4fv(program.modelview, false, mv);
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.modelEdges);
       gl.bindBuffer(gl.ARRAY_BUFFER, buffers.modelVerts);
-      gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 12, 0);
       gl.enableVertexAttribArray(attribs.POSITION);
       for (var i = 0; i < prims.length; i++) {
         drawPrim(prims[i], program, mv);

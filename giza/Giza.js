@@ -113,7 +113,7 @@ GIZA.quadsToLines = function(quadsArray, destType) {
   }
 
   var keys = Object.keys(edgeList).sort();
-  var linesArray = new Uint32Array(keys.length * 2);
+  var linesArray = new destType(keys.length * 2);
   var i = 0, j = 0;
   while (i < keys.length) {
     var edge = edgeList[keys[i++]];
