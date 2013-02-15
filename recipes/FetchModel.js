@@ -121,7 +121,9 @@ var main = function() {
 
   var init = function() {
 
-    gl.getExtension('OES_element_index_uint');
+    if (!gl.getExtension('OES_element_index_uint')) {
+      console.error('32-bit indices are not supported via OES_element_index_uint');
+    }
 
     GIZA.get('media/Clock.coords.bin', onCoords, 'binary');
     GIZA.get('media/Clock.quads.bin', onQuads, 'binary');
