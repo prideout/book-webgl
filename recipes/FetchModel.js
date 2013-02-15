@@ -63,7 +63,7 @@ var main = function() {
       var quads = quadArray.subarray(
         4 * prim.quadsOffset,
         4 * (prim.quadsOffset + prim.quadsCount));
-      lineArray = GIZA.quadsToLines(quads);
+      lineArray = GIZA.quadsToLines(quads, Uint32Array);
       lines.push(lineArray);
 
       // Annotate the prim's metadata.
@@ -76,8 +76,7 @@ var main = function() {
     lines = GIZA.join(lines);
 
     // Add to the indices so that they index into the correct region
-    // of the coordinates buffer.  This work should probably be moved
-    // to the server.
+    // of the coordinates buffer.
     var offset = 0, k = 0;
     for (var i = 0; i < prims.length; i++) {
       var prim = prims[i];
@@ -100,7 +99,7 @@ var main = function() {
   };
 
   var onQuads = function(data) {
-    quadArray = new Uint32Array(data);
+    quadArray = new Uint16Array(data);
     onArrival('quads');
   };
 
