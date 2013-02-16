@@ -8,33 +8,33 @@ GIZA.Turntable = function(config) {
   var V2 = GIZA.Vector2;
   
   // Allow clients to skip the "new"
-  if (!(this instanceof GIZA.Trackball)) {
-    return new GIZA.Trackball(center, radius);
+  if (!(this instanceof GIZA.Turntable)) {
+    return new GIZA.Turntable(config);
   }
 
   var defaults = {
-    startSpin = 0.5, // radians per second
-    allowTilt = true,
-    allowSpin = true,
-    spinFriction = 1, // 0.5, // 0 means no friction (infinite spin) while 1 means no inertia
-    epsilon = 3, // distance (in pixels) to wait before deciding if a drag is a Tilt or a Spin
-    radiansPerPixel = 0.01,
-    canvas = GIZA.canvas,
-    //bounceTilt = false, // if true, returns the tilt to the "home" angle after a mouse release
-    //boundSpin = false, // if true, returns to the startSpin state after a mouse release
+    startSpin: 0.5, // radians per second
+    allowTilt: true,
+    allowSpin: true,
+    spinFriction: 1, // 0.5, // 0 means no friction (infinite spin) while 1 means no inertia
+    epsilon: 3, // distance (in pixels) to wait before deciding if a drag is a Tilt or a Spin
+    radiansPerPixel: V2.make(0.01, -0.01),
+    canvas: GIZA.canvas,
+    //bounceTilt: false, // if true, returns the tilt to the "home" angle after a mouse release
+    //boundSpin: false, // if true, returns to the startSpin state after a mouse release
   };
 
-  config = GIZA.merge(defaults, config || {});
+  this.config = config = GIZA.merge(defaults, config || {});
 
   // diagram please!
   var state = {
-    Resting = 0,
-    SpinningStart = 1,
-    SpinningInertia = 2,
-    DraggingInit = 3,
-    DraggingSpin = 4,
-    DraggingTilt = 5,
-    ReturningHome = 6,
+    Resting: 0,
+    SpinningStart: 1,
+    SpinningInertia: 2,
+    DraggingInit: 3,
+    DraggingSpin: 4,
+    DraggingTilt: 5,
+    ReturningHome: 6,
   };
 
   this.startDrag = function(position) {};
@@ -43,9 +43,10 @@ GIZA.Turntable = function(config) {
   this.getRotation = function() {};
   this.returnHome = function() {};
 
-  var startPosition;
-  var currentPosition;
-  var currentRotation = M3.identity();
+  var startPosition = V2.make(0, 0);
+  var currentPosition = V2.make(0, 0);
+  var currentSpin = 0;
+  var currentTilt = 0;
   var currentState = config.startSpin ?
     state.SpinningStart : state.Resting;
 
@@ -56,7 +57,6 @@ GIZA.Turntable = function(config) {
 
   this.updateDrag = function(position) {
     var delta = V2.subtract(position, startPosition);
-
     // If we haven't decided yet, decide if we're spinning or tilting.
     if (currentState == state.DraggingInit) {
       if (Math.abs(delta[0]) > config.epsilon && config.allowSpin) {
@@ -67,27 +67,38 @@ GIZA.Turntable = function(config) {
         return;
       }
     }
-
     currentPosition = position.slice(0);
   };
 
-  this.getRotation = function() {
+  this.getAngles = function() {
+    var delta = V2.subtract(currentPosition, startPosition);
+    var spin = currentSpin;
+    var tilt = currentTilt;
     if (currentState == state.DraggingSpin) {
-      var radians = config.radiansPerPixel * delta[0];
-      return M3.rotateY(currentRotation, radians);
+      var radians = config.radiansPerPixel[0] * delta[0];
+      spin += radians;
     }
     if (currentState == state.DraggingTilt) {
-      var radians = config.radiansPerPixel * delta[1];
-      return M3.rotateX(currentRotation, radians);
+      var radians = config.radiansPerPixel[1] * delta[1];
+      tilt += radians;
     }
-    return currentRotation;
+    return [spin, tilt];
+  };
+
+  this.getRotation = function() {
+    var r = this.getAngles();
+    var spin = M3.rotationY(r[0]);
+    var tilt = M3.rotationX(r[1]);
+    return M3.multiply(spin, tilt);
   };
 
   // When releasing the mouse, capture the current rotation and change
   // the state machine back to 'Resting' or 'SpinningInertia'.
   this.endDrag = function(position) {
     currentPosition = position.slice(0);
-    currentRotation = this.getRotation();
+    var r = this.getAngles();
+    currentSpin = r[0];
+    currentTilt = r[1];
     currentState = (config.spinFriction == 1) ?
       state.Resting : state.SpinningInertia;
   };

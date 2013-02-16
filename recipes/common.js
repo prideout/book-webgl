@@ -352,6 +352,7 @@ COMMON.Turntable = function(config) {
   };
 
   var isDown = false;
+  var canvas = $(turntable.config.canvas);
 
   canvas.mousedown(function(e) {
     var pos = COMMON.getMouse(e, this);
@@ -373,7 +374,9 @@ COMMON.Turntable = function(config) {
       isDown = false;
       return;
     }
-    turntable.updateDrag(pos);
+    if (isDown) {
+      turntable.updateDrag(pos);
+    }
   });
 
 };

@@ -87,6 +87,7 @@ GIZA.merge = function (a, b) {
   for (var attrname in b) {
     a[attrname] = b[attrname];
   }
+  return a;
 };
 
 // Aggregate a list of typed arrays by pre-allocating a giant array

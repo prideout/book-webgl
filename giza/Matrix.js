@@ -480,6 +480,33 @@ GIZA.Matrix3 = {
     }
   },
 
+  rotationX: function(radians) {
+	var c = Math.cos(radians);
+	var s = Math.sin(radians);
+    return this.make(
+      1, 0, 0,
+      0, c, -s,
+      0, s, c);
+  },
+
+  rotationY: function(radians) {
+	var c = Math.cos(radians);
+	var s = Math.sin(radians);
+    return this.make(
+      c, 0, s,
+      0, 1, 0,
+      -s, 0, c);
+  },
+
+  rotationZ: function(radians) {
+	var c = Math.cos(radians);
+	var s = Math.sin(radians);
+    return this.make(
+      c, -s, 0,
+      s, c, 0,
+      0, 0, 1);
+  },
+
   // TODO: impl & test.  also add rotatedAxis
   rotateAxis: function (m, axis, radians) {
 	var x = axis[0], y = axis[1], z = axis[2];
