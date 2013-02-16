@@ -335,3 +335,45 @@ COMMON.Trackball = function(canvas, extent) {
   };
 
 };
+
+COMMON.Turntable = function(config) {
+
+  var V2 = GIZA.Vector2;
+  var V3 = GIZA.Vector3;
+  var gl = GIZA.context;
+  if (!(this instanceof COMMON.Turntable)) {
+    return new COMMON.Turntable(config);
+  }
+
+  var turntable = new GIZA.Turntable(config);
+
+  this.getRotation = function() {
+    return turntable.getRotation();
+  };
+
+  var isDown = false;
+
+  canvas.mousedown(function(e) {
+    var pos = COMMON.getMouse(e, this);
+    turntable.startDrag(pos);
+    isDown = true;
+  });
+
+  canvas.mouseup(function(e) {
+    var pos = COMMON.getMouse(e, this);
+    turntable.endDrag(pos);
+    isDown = false;
+  });
+
+  canvas.mousemove(function(e) {
+    var pos = COMMON.getMouse(e, this);
+    // Handle the case where the mouse was released off-canvas
+    if (isDown && !e.which) {
+      turntable.endDrag(pos);
+      isDown = false;
+      return;
+    }
+    turntable.updateDrag(pos);
+  });
+
+};

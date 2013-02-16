@@ -35,7 +35,7 @@ var main = function() {
   var quadArray = null;
   var prims = [];
   var numPendingLoadTasks = 3;
-  var trackball = new COMMON.Trackball();
+  var turntable = new COMMON.Turntable();
 
   var onArrival = function(userdata) {
 
@@ -143,7 +143,7 @@ var main = function() {
 
     var orient = M4.rotateZ(M4.rotateX(M4.identity(), -Math.PI / 2), Math.PI);
     var center = M4.translation(0, 0, -16);
-    var spin = M4.make(trackball.getSpin());
+    var spin = M4.make(turntable.getRotation());
     var model = M4.multiply(spin, M4.multiply(orient, center));
     var mv = M4.multiply(view, model);
 
@@ -166,25 +166,6 @@ var main = function() {
       }
       gl.disableVertexAttribArray(attribs.POSITION);
     }
-
-    proj = M4.orthographic(
-      0, GIZA.canvas.width,
-      0, GIZA.canvas.height,
-      0, 10);
-
-    mv = M4.identity();
-
-    gl.disable(gl.DEPTH_TEST);
-    gl.disable(gl.CULL_FACE);
-
-    program = programs.solid;
-    gl.useProgram(program);
-    gl.uniformMatrix4fv(program.projection, false, proj);
-    gl.uniformMatrix4fv(program.modelview, false, mv);
-    gl.uniform4f(program.color, 0, 0, 0.3, 1);
-    gl.enableVertexAttribArray(attribs.POSITION);
-    trackball.drawCircle(attribs.POSITION);
-    gl.disableVertexAttribArray(attribs.POSITION);
 
     COMMON.endFrame(draw);
   }
