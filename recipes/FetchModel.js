@@ -139,12 +139,6 @@ var main = function() {
       [0,0,0],  // target
       [0,1,0]); // up
 
-    var orient = M4.rotateZ(M4.rotateX(M4.identity(), -Math.PI / 2), Math.PI);
-    var center = M4.translation(0, 0, -16);
-    var spin = M4.make(turntable.getRotation());
-    var model = M4.multiply(spin, M4.multiply(orient, center));
-    var mv = M4.multiply(view, model);
-
     var proj = M4.perspective(
       10,       // fov in degrees
       GIZA.aspect,
@@ -155,11 +149,16 @@ var main = function() {
       return;
     }
 
+    var orient = M4.rotateZ(M4.rotateX(M4.identity(), -Math.PI / 2), Math.PI);
+    var center = M4.translation(0, 0, -16);
+    var spin = M4.make(turntable.getRotation());
+    var group = M4.multiply(spin, M4.multiply(orient, center));
+
     var program = programs.solid;
     gl.useProgram(program);    
     gl.enable(gl.DEPTH_TEST);
+    gl.enable(gl.CULL_FACE);
     gl.uniformMatrix4fv(program.projection, false, proj);
-    gl.uniformMatrix4fv(program.modelview, false, mv);
 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, wireframe ?
                   buffers.modelEdges : buffers.modelTriangles);
@@ -171,8 +170,13 @@ var main = function() {
       var prim = prims[i];
       var color = prim.displayColor.slice(0).concat(1);
       gl.uniform4fv(program.color, color);
+    
+      var local = M4.make(prim.transform);
+      var model = M4.multiply(group, local);
+      var mv = M4.multiply(view, model);
+    
       gl.uniformMatrix4fv(program.modelview, false, mv);
-
+    
       // This is in bytes:
       var offset = prim.vertsOffset * 3 * 4;
 
@@ -185,11 +189,14 @@ var main = function() {
           gl.UNSIGNED_SHORT,
           2 * prim.lineOffset * 2);
       } else {
-        gl.drawElements(
-          gl.TRIANGLES,
-          prim.triCount * 3,
-          gl.UNSIGNED_SHORT,
-          3 * prim.triOffset * 2);
+    
+        if (-1 == prim.name.indexOf("Glass")) { // HACK
+          gl.drawElements(
+            gl.TRIANGLES,
+            prim.triCount * 3,
+            gl.UNSIGNED_SHORT,
+            3 * prim.triOffset * 2);
+        }
       }
 
     }

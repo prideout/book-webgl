@@ -41,12 +41,12 @@ GIZA.Topo = {
     for (var q = 0; q < quadsArray.length;) {
       var i0 = quadsArray[q++]; var i1 = quadsArray[q++];
       var i2 = quadsArray[q++]; var i3 = quadsArray[q++];
-      trianglesArray[t++] = i0;
+      trianglesArray[t++] = i2;
       trianglesArray[t++] = i1;
-      trianglesArray[t++] = i2;
-      trianglesArray[t++] = i2;
-      trianglesArray[t++] = i3;
       trianglesArray[t++] = i0;
+      trianglesArray[t++] = i0;
+      trianglesArray[t++] = i3;
+      trianglesArray[t++] = i2;
     }
 
     if (config.dereference) {
