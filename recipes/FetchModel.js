@@ -157,20 +157,27 @@ var main = function() {
     var spin = M4.make(turntable.getRotation());
     var group = M4.multiply(spin, M4.multiply(orient, center));
 
-    var program = programs.solid;
+    var program = programs.lit;
     gl.useProgram(program);    
     gl.enable(gl.DEPTH_TEST);
     gl.enable(gl.CULL_FACE);
     gl.uniformMatrix4fv(program.projection, false, proj);
+
+    gl.enableVertexAttribArray(attribs.POSITION);
+    gl.enableVertexAttribArray(attribs.NORMAL);
+
+    gl.uniform4f(program.lightPosition, 0.75, .25, 1, 1);
+    gl.uniform3f(program.ambientMaterial, 0.2, 0.1, 0.1);
+    gl.uniform4f(program.diffuseMaterial, 1, 209/255, 54/255, 1);
+    gl.uniform1f(program.shininess, 180.0);
+    gl.uniform3f(program.specularMaterial, 0.8, 0.8, 0.7);
+    gl.uniform1f(program.fresnel, 0.01);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.modelCoords);
     gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 0, 0);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.modelNormals);
     gl.vertexAttribPointer(attribs.NORMAL, 3, gl.FLOAT, false, 0, 0);
-
-    gl.enableVertexAttribArray(attribs.POSITION);
-    gl.enableVertexAttribArray(attribs.NORMAL);
 
     for (var i = 0; i < prims.length; i++) {
       var prim = prims[i];

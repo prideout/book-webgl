@@ -85,9 +85,11 @@ GIZA.Topo = {
           var u = V3.direction(a, b);
           var v = V3.direction(a, c);
           var n = V3.cross(u, v);
-          normalsArray[t++] = n[0];
-          normalsArray[t++] = n[1];
-          normalsArray[t++] = n[2];
+          for (var j = 0; j < 6; j++) {
+            normalsArray[t++] = n[0];
+            normalsArray[t++] = n[1];
+            normalsArray[t++] = n[2];
+          }
         }
       }
     }
