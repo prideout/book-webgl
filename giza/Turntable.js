@@ -16,7 +16,7 @@ GIZA.Turntable = function(config) {
     startSpin: 0.001, // radians per second
     allowTilt: true,
     allowSpin: true,
-    spinFriction: 1, // 0.5, // 0 means no friction (infinite spin) while 1 means no inertia
+    spinFriction: 0.125, // 0 means no friction (infinite spin) while 1 means no inertia
     epsilon: 3, // distance (in pixels) to wait before deciding if a drag is a Tilt or a Spin
     radiansPerPixel: V2.make(0.01, -0.01),
     canvas: GIZA.canvas,
@@ -50,6 +50,7 @@ GIZA.Turntable = function(config) {
   var currentState = config.startSpin ?
     state.SpinningStart : state.Resting;
   var previousTime = null;
+  var inertiaSpeed = 0;
 
   GIZA.drawHooks.push(function(time) {
     if (previousTime == null) {
@@ -59,8 +60,17 @@ GIZA.Turntable = function(config) {
     previousTime = time;
 
     if (currentState == state.SpinningStart) {
-      currentSpin += config.startSpin * deltaTime; 
+      currentSpin += config.startSpin * deltaTime;
+    } else if (currentState == state.SpinningInertia) {
+      currentSpin += inertiaSpeed * deltaTime;
+      inertiaSpeed *= (1 - config.spinFriction);
+      if (inertiaSpeed < 0.01) {
+        currentState = state.Resting;
+      }
+    } else if (currentState == state.DraggingSpin) {
+      // TODO trackpad has a delay
     }
+
   });
 
   this.startDrag = function(position) {
@@ -102,7 +112,7 @@ GIZA.Turntable = function(config) {
     var r = this.getAngles();
     var spin = M3.rotationY(r[0]);
     var tilt = M3.rotationX(r[1]);
-    return M3.multiply(spin, tilt);
+    return M3.multiply(tilt, spin);
   };
 
   // When releasing the mouse, capture the current rotation and change
@@ -110,10 +120,17 @@ GIZA.Turntable = function(config) {
   this.endDrag = function(position) {
     currentPosition = position.slice(0);
     var r = this.getAngles();
+    var spinDelta = r[0] - currentSpin;
     currentSpin = r[0];
     currentTilt = r[1];
-    currentState = (config.spinFriction == 1) ?
-      state.Resting : state.SpinningInertia;
+
+    if (config.spinFriction == 1) {
+      currentState = state.Resting;
+    } else {
+      currentState = state.SpinningInertia;
+      inertiaSpeed = 0.01 * spinDelta;
+    }
+
   };
 
 };

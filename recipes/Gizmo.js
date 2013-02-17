@@ -152,10 +152,7 @@ var main = function() {
       GIZA.aspect,
       3, 200);  // near and far
 
-    var orient = M4.rotateZ(M4.rotateX(M4.identity(), -Math.PI / 2), Math.PI);
-    var center = M4.translation(0, 0, -16);
     var spin = M4.make(turntable.getRotation());
-    var group = spin; // M4.multiply(spin, M4.multiply(orient, center));
 
     var program = programs.lit;
     gl.useProgram(program);    
@@ -190,7 +187,7 @@ var main = function() {
       gl.uniform4fv(program.color, color);
     
       var local = M4.make(prim.transform);
-      var model = M4.multiply(group, local);
+      var model = M4.multiply(spin, local);
       var mv = M4.multiply(view, model);
       gl.uniformMatrix4fv(program.modelview, false, mv);
     
