@@ -28,11 +28,11 @@ var main = function() {
   });
 
   var buffers = {
-    modelCoords: gl.createBuffer(),
+    modelVerts: gl.createBuffer(),
+    modelEdges: gl.createBuffer(),
   };
 
   var quadArray = null;
-  var quadPoints = null;
   var prims = [];
   var numPendingLoadTasks = 3;
   var turntable = new COMMON.Turntable();
@@ -52,46 +52,37 @@ var main = function() {
     }
     console.info("Done loading", prims.length, "prims.");
 
-    var tris = [];
-    var triOffset = 0;
-    var coords = [];
-    var coordOffset = 0;
+    var lines = [];
+    var lineOffset = 0;
 
     for (var i = 0; i < prims.length; i++) {
       var prim = prims[i];
 
-      // Create subarray views
+      // Create a subarray view and convert it to wireframe.
       var quads = quadArray.subarray(
         4 * prim.quadsOffset,
         4 * (prim.quadsOffset + prim.quadsCount));
+      lineArray = GIZA.Topo.quadsToLines(quads);
+      lines.push(lineArray);
 
-      var points = quadPoints.subarray(
-        3 * prim.vertsOffset,
-        3 * (prim.vertsOffset + prim.vertsCount));
-
-      // Now for the filled thingy.
-      var triMesh = GIZA.Topo.quadsToTriangles(quads, {
-        pointsArray: points,
-        dereference: true,
-      });
-
-      coords.push(triMesh.pointsArray);
-      prim.coordOffset = coordOffset;
-      prim.coordCount = triMesh.pointsArray.length / 3;
-      coordOffset += prim.coordCount;
+      // Annotate the prim's metadata.
+      prim.lineOffset = lineOffset;
+      prim.lineCount = lineArray.length / 2;
+      lineOffset += prim.lineCount;
     }
 
     // Aggregate the buffers into a monolithic VBO.
-    coords = GIZA.join(coords);
+    lines = GIZA.join(lines);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffers.modelCoords);
-    gl.bufferData(gl.ARRAY_BUFFER, coords, gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.modelEdges);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, lines, gl.STATIC_DRAW);
 
     console.info("Done processing quads.");
   };
 
   var onCoords = function(data) {
-    quadPoints = new Float32Array(data);
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffers.modelVerts);
+    gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
     onArrival('coords');
   };
 
@@ -129,11 +120,6 @@ var main = function() {
     
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     
-    if (numPendingLoadTasks != 0) {
-      COMMON.endFrame(draw);
-      return;
-    }
-
     var view = M4.lookAt(
       [0,0,-240], // eye
       [0,0,0],  // target
@@ -143,6 +129,11 @@ var main = function() {
       10,       // fov in degrees
       GIZA.aspect,
       3, 2000);  // near and far
+
+    if (numPendingLoadTasks != 0) {
+      COMMON.endFrame(draw);
+      return;
+    }
 
     var orient = M4.rotateZ(M4.rotateX(M4.identity(), -Math.PI / 2), Math.PI);
     var center = M4.translation(0, 0, -16);
@@ -155,30 +146,35 @@ var main = function() {
     gl.enable(gl.CULL_FACE);
     gl.uniformMatrix4fv(program.projection, false, proj);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffers.modelCoords);
-    gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 0, 0);
-
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.modelEdges);
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffers.modelVerts);
     gl.enableVertexAttribArray(attribs.POSITION);
 
     for (var i = 0; i < prims.length; i++) {
+
       var prim = prims[i];
-
-      if (-1 != prim.name.indexOf("Glass")) { // HACK
-        continue;
-      }
-
       var color = prim.displayColor.slice(0).concat(1);
       gl.uniform4fv(program.color, color);
     
       var local = M4.make(prim.transform);
       var model = M4.multiply(group, local);
       var mv = M4.multiply(view, model);
+    
       gl.uniformMatrix4fv(program.modelview, false, mv);
     
-      gl.drawArrays(gl.TRIANGLES, prim.coordOffset, prim.coordCount);
-    }
+      // This is in bytes:
+      var offset = prim.vertsOffset * 3 * 4;
 
+      gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 0, offset);
+
+      gl.drawElements(
+        gl.LINES,
+        prim.lineCount * 2,
+        gl.UNSIGNED_SHORT,
+        2 * prim.lineOffset * 2);
+    }
     gl.disableVertexAttribArray(attribs.POSITION);
+
     COMMON.endFrame(draw);
   }
 
