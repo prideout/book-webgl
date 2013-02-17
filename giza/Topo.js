@@ -25,6 +25,8 @@ GIZA.Topo = {
   //
   quadsToTriangles: function(quadsArray, config) {
 
+    var V3 = GIZA.Vector3;
+
     var defaults = {
       destIndexType: quadsArray.constructor,
       destPointsType: Float32Array,
@@ -62,12 +64,38 @@ GIZA.Topo = {
         pointsArray[p++] = config.pointsArray[i*3+1];
         pointsArray[p++] = config.pointsArray[i*3+2];
       }
+
+      var getPoint = function(i) {
+        var x = config.pointsArray[i*3+0];
+        var y = config.pointsArray[i*3+1];
+        var z = config.pointsArray[i*3+2];
+        return V3.make(x, y, z);
+      };
+
+      var normalsArray = null;
+      if (config.normals == GIZA.Topo.FACET) {
+        normalsArray = new Float32Array(pointsArray.length);
+        var t = 0;
+        for (var q = 0; q < quadsArray.length;) {
+          var i0 = quadsArray[q++]; var i1 = quadsArray[q++];
+          var i2 = quadsArray[q++]; var i3 = quadsArray[q++];
+          var a = getPoint(i0);
+          var b = getPoint(i1);
+          var c = getPoint(i2);
+          var u = V3.direction(a, b);
+          var v = V3.direction(a, c);
+          var n = V3.cross(u, v);
+          normalsArray[t++] = n[0];
+          normalsArray[t++] = n[1];
+          normalsArray[t++] = n[2];
+        }
+      }
     }
 
     return {
       indexArray: trianglesArray,
       pointsArray: pointsArray,
-      normalsArray: null,
+      normalsArray: normalsArray,
     };
 
   },

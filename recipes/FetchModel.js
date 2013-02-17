@@ -29,6 +29,7 @@ var main = function() {
 
   var buffers = {
     modelCoords: gl.createBuffer(),
+    modelNormals: gl.createBuffer(),
   };
 
   var quadArray = null;
@@ -56,6 +57,7 @@ var main = function() {
     var triOffset = 0;
     var coords = [];
     var coordOffset = 0;
+    var normals = [];
 
     for (var i = 0; i < prims.length; i++) {
       var prim = prims[i];
@@ -73,8 +75,10 @@ var main = function() {
       var triMesh = GIZA.Topo.quadsToTriangles(quads, {
         pointsArray: points,
         dereference: true,
+        normals: GIZA.Topo.FACET,
       });
 
+      normals.push(triMesh.normalsArray);
       coords.push(triMesh.pointsArray);
       prim.coordOffset = coordOffset;
       prim.coordCount = triMesh.pointsArray.length / 3;
@@ -83,9 +87,13 @@ var main = function() {
 
     // Aggregate the buffers into a monolithic VBO.
     coords = GIZA.join(coords);
+    normals = GIZA.join(normals);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.modelCoords);
     gl.bufferData(gl.ARRAY_BUFFER, coords, gl.STATIC_DRAW);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffers.modelNormals);
+    gl.bufferData(gl.ARRAY_BUFFER, normals, gl.STATIC_DRAW);
 
     console.info("Done processing quads.");
   };
@@ -158,7 +166,11 @@ var main = function() {
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.modelCoords);
     gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 0, 0);
 
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffers.modelNormals);
+    gl.vertexAttribPointer(attribs.NORMAL, 3, gl.FLOAT, false, 0, 0);
+
     gl.enableVertexAttribArray(attribs.POSITION);
+    gl.enableVertexAttribArray(attribs.NORMAL);
 
     for (var i = 0; i < prims.length; i++) {
       var prim = prims[i];
@@ -179,6 +191,7 @@ var main = function() {
     }
 
     gl.disableVertexAttribArray(attribs.POSITION);
+    gl.disableVertexAttribArray(attribs.NORMAL);
     COMMON.endFrame(draw);
   }
 
