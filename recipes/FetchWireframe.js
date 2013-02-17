@@ -131,7 +131,7 @@ var main = function() {
       3, 2000);  // near and far
 
     if (numPendingLoadTasks != 0) {
-      COMMON.endFrame(draw);
+      GIZA.endFrame(draw);
       return;
     }
 
@@ -175,7 +175,7 @@ var main = function() {
     }
     gl.disableVertexAttribArray(attribs.POSITION);
 
-    COMMON.endFrame(draw);
+    GIZA.endFrame(draw);
   }
 
   init();

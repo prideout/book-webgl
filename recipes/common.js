@@ -91,27 +91,6 @@ head.ready(function() {
 
 });
 
-// Requests the next animation frame.  Also prevents cascading errors
-// by halting animation after a GL error.
-COMMON.endFrame = function(drawFunc) {
-  var gl = GIZA.context;
-  err = gl.getError();
-  if (err != gl.NO_ERROR) {
-    console.error("WebGL error during draw cycle: ", err);
-  } else {
-    var wrappedDrawFunc = function(time) {
-
-      COMMON.now = time;
-
-      // Clear out the GL error state at the beginning of the next frame.
-      // This is a workaround for a Safari bug.
-      gl.getError();
-      drawFunc(time);
-    };
-    window.requestAnimationFrame(wrappedDrawFunc, GIZA.canvas);
-  }
-};
-
 // Simple texture loader for point sprite textures etc.
 COMMON.loadTexture = function (filename, onLoaded) {
 

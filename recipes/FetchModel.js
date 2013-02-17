@@ -138,7 +138,7 @@ var main = function() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     
     if (numPendingLoadTasks != 0) {
-      COMMON.endFrame(draw);
+      GIZA.endFrame(draw);
       return;
     }
 
@@ -199,7 +199,7 @@ var main = function() {
 
     gl.disableVertexAttribArray(attribs.POSITION);
     gl.disableVertexAttribArray(attribs.NORMAL);
-    COMMON.endFrame(draw);
+    GIZA.endFrame(draw);
   }
 
   init();

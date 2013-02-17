@@ -86,7 +86,7 @@ var main = function() {
     gl.uniform4f(program.color, 0, 0.125, 0.5, 1);
     gl.drawArrays(gl.LINE_LOOP, 0, numPoints);
 
-    COMMON.endFrame(draw);
+    GIZA.endFrame(draw);
   };
 
   init();

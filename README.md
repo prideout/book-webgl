@@ -1,19 +1,40 @@
 # master
 
-- Trackball
-  M3.multiply
-  commonjs: move mouseup and mousemove to window or page objects?
 
-- Load an OSD-divided model, work this into the Tumble example
+Turntable
+   Inertia
 
-- Facet normals with WebGL using inverse DrawElements
+Derby Projects Site
 
-- Address feedback
+Blog Entry -- after I get GFX card
+
+----
+
+Ch 1 Changes
+
+  New template
+  never -> rarely
+  COMMON.endFrame -> GIZA.endFrame
+  Requirements section
+
+Ch 2 Verbiage
+
+Create GIZA.FX
+   move functionality out of common
+
+# later
+
+- Turntable
+  - HomePosition
+  - Pan / Zoom / DisableAxisLock (make it similar to tdsview controls)
+
+- Move COMMON.Turntable into GIZA
+  - use raw DOM for mouse events instead of jQuery
+
+- Nuke Trackball
 
 - Jump into Chapter 3 demos (TexCoords, Ribbons and Tubes)
   Use a superellipsoid Mobius shape for demo purposes
-
-# later
 
 - http://webgl-bench.appspot.com/
 

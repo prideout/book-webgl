@@ -143,7 +143,7 @@ var main = function() {
     gl.disableVertexAttribArray(attribs.POSITION);
     gl.disableVertexAttribArray(attribs.NORMAL);
 
-    COMMON.endFrame(draw);
+    GIZA.endFrame(draw);
   }
 
   init();

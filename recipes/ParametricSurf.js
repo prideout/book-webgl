@@ -100,7 +100,7 @@ var main = function() {
     gl.drawElements(gl.LINES, 2 * buffers.wireframe.lineCount, gl.UNSIGNED_SHORT, 0)
 
     gl.disableVertexAttribArray(attribs.POSITION);
-    COMMON.endFrame(draw);
+    GIZA.endFrame(draw);
   }
 
   init();

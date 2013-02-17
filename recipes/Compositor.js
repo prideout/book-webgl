@@ -28,7 +28,7 @@ var main = function() {
 
   var draw = function(currentTime) {
     gl.clear(gl.COLOR_BUFFER_BIT);
-    COMMON.endFrame(draw);
+    GIZA.endFrame(draw);
   }
 
   init();

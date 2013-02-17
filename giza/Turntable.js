@@ -13,7 +13,7 @@ GIZA.Turntable = function(config) {
   }
 
   var defaults = {
-    startSpin: 0.5, // radians per second
+    startSpin: 0.001, // radians per second
     allowTilt: true,
     allowSpin: true,
     spinFriction: 1, // 0.5, // 0 means no friction (infinite spin) while 1 means no inertia
@@ -49,6 +49,19 @@ GIZA.Turntable = function(config) {
   var currentTilt = 0;
   var currentState = config.startSpin ?
     state.SpinningStart : state.Resting;
+  var previousTime = null;
+
+  GIZA.drawHooks.push(function(time) {
+    if (previousTime == null) {
+      previousTime = time;
+    }
+    var deltaTime = time - previousTime;
+    previousTime = time;
+
+    if (currentState == state.SpinningStart) {
+      currentSpin += config.startSpin * deltaTime; 
+    }
+  });
 
   this.startDrag = function(position) {
     startPosition = position.slice(0);

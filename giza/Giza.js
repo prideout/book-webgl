@@ -129,3 +129,33 @@ GIZA.get = function(url, successFunc, dataType) {
   xhr.onload = onloadFunc;
   xhr.send(null);
 };
+
+// Requests the next animation frame.  Also prevents cascading errors
+// by halting animation after a GL error.
+GIZA.endFrame = function(drawFunc) {
+  var gl = GIZA.context;
+  err = gl.getError();
+  if (err != gl.NO_ERROR) {
+    console.error("WebGL error during draw cycle: ", err);
+  } else {
+    var wrappedDrawFunc = function(time) {
+
+      GIZA.now = time;
+
+      // Clear out the GL error state at the beginning of the next frame.
+      // This is a workaround for a Safari bug.
+      gl.getError();
+
+      // Before drawing the main frame, execute all draw hooks.
+      for (var i = 0; i < GIZA.drawHooks.length; i++) {
+        GIZA.drawHooks[i](time);
+      }
+
+      // Finally, draw the main frame.
+      drawFunc(time);
+    };
+    window.requestAnimationFrame(wrappedDrawFunc, GIZA.canvas);
+  }
+};
+
+GIZA.drawHooks = []

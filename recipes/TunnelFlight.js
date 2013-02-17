@@ -203,7 +203,7 @@ var main = function() {
     gl.disable(gl.BLEND);
     gl.disableVertexAttribArray(attribs.POSITION);
 
-    COMMON.endFrame(draw);
+    GIZA.endFrame(draw);
   }
 
   init();

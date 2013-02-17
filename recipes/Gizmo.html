@@ -9,10 +9,14 @@
     <script src="common.js"></script>
   </head>
   <body>
-    <canvas style="width:850px;height:650px">
+    <h1>Gizmo</h1>
+    <div class="tagline">
+      Loads some quad meshes and compute normals
+    </div>
+    <canvas style="width:640;height:360px">
     </canvas>
-    <div class="status"></div>
-    <div class="tagline"></div>
+    <div id="button-bar">
+    </div>
     
     <script id="genericvs" type="x-shader/x-vertex">
       attribute vec4 Position;

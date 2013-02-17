@@ -8,7 +8,7 @@ var main = function() {
     x = 0.25 + x * 0.5;
     gl.clearColor(x, x, 0, 1);
     gl.clear(gl.COLOR_BUFFER_BIT);
-    COMMON.endFrame(draw);
+    GIZA.endFrame(draw);
   };
 
   draw(0);

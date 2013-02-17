@@ -147,7 +147,7 @@ var main = function() {
     gl.disableVertexAttribArray(attribs.COLOR);
 
     stats.end();
-    COMMON.endFrame(draw);
+    GIZA.endFrame(draw);
   }
 
   init();
