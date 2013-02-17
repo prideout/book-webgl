@@ -347,6 +347,7 @@ COMMON.Turntable = function(config) {
 
   canvas.mousemove(function(e) {
     var pos = COMMON.getMouse(e, this);
+
     // Handle the case where the mouse was released off-canvas
     if (isDown && !e.which) {
       turntable.endDrag(pos);

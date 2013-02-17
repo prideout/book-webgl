@@ -1,9 +1,5 @@
 # master
 
-
-Turntable
-   Inertia
-
 Derby Projects Site
 
 Blog Entry -- after I get GFX card

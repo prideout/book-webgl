@@ -20,6 +20,7 @@ GIZA.Turntable = function(config) {
     epsilon: 3, // distance (in pixels) to wait before deciding if a drag is a Tilt or a Spin
     radiansPerPixel: V2.make(0.01, -0.01),
     canvas: GIZA.canvas,
+    trackpad : true,
     //bounceTilt: false, // if true, returns the tilt to the "home" angle after a mouse release
     //boundSpin: false, // if true, returns to the startSpin state after a mouse release
   };
@@ -44,13 +45,20 @@ GIZA.Turntable = function(config) {
   this.returnHome = function() {};
 
   var startPosition = V2.make(0, 0);
+
   var currentPosition = V2.make(0, 0);
+
+  // TODO make these into a "positionHistory"
+  var previousPosition = currentPosition.slice(0);
+  var previous2Position = currentPosition.slice(0);
+
   var currentSpin = 0;
   var currentTilt = 0;
   var currentState = config.startSpin ?
     state.SpinningStart : state.Resting;
   var previousTime = null;
   var inertiaSpeed = 0;
+  var initialInertia = 0.125;
 
   GIZA.drawHooks.push(function(time) {
     if (previousTime == null) {
@@ -67,9 +75,19 @@ GIZA.Turntable = function(config) {
       if (Math.abs(inertiaSpeed) < 0.0001) {
         currentState = state.Resting;
       }
-    } else if (currentState == state.DraggingSpin) {
-      // TODO trackpad has a delay
+
+    // Some trackpads have an intentional delay between fingers-up
+    // and the time we receive the mouseup event.  To accomodate this,
+    // we execute inertia even while we think the mouse is still down.
+    // This behavior can be disabled with the "trackpad" config option.
+    } else if (config.trackpad && currentState == state.DraggingSpin &&
+               V2.equivalent(currentPosition, previous2Position, 0)) {
+      currentSpin += inertiaSpeed * deltaTime;
+      inertiaSpeed *= (1 - config.spinFriction);
     }
+
+    previous2Position = previousPosition.slice(0);
+    previousPosition = currentPosition.slice(0);
 
   });
 
@@ -80,6 +98,7 @@ GIZA.Turntable = function(config) {
 
   this.updateDrag = function(position) {
     var delta = V2.subtract(position, startPosition);
+
     // If we haven't decided yet, decide if we're spinning or tilting.
     if (currentState == state.DraggingInit) {
       if (Math.abs(delta[0]) > config.epsilon && config.allowSpin) {
@@ -90,7 +109,13 @@ GIZA.Turntable = function(config) {
         return;
       }
     }
+
+    var previousSpin = this.getAngles()[0];
     currentPosition = position.slice(0);
+
+    // This is purely for trackpads:
+    var spinDelta = this.getAngles()[0] - previousSpin;
+    inertiaSpeed = initialInertia * spinDelta;
   };
 
   this.getAngles = function() {
@@ -130,7 +155,7 @@ GIZA.Turntable = function(config) {
       currentState = state.Resting;
     } else {
       currentState = state.SpinningInertia;
-      inertiaSpeed = 0.125 * spinDelta;
+      inertiaSpeed = initialInertia * spinDelta;
     }
 
   };

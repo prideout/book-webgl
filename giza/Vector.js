@@ -153,6 +153,16 @@ GIZA.Vector2 = {
     b = this.scaled(b, t);
     return this.add(a, b);
   },
+  
+  equivalent: function(a, b, e) {
+    if (Math.abs(a[0] - b[0]) > e) {
+      return false;
+    }
+    if (Math.abs(a[1] - b[1]) > e) {
+      return false;
+    }
+    return true;
+  },
 
 };
 
