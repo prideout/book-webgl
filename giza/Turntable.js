@@ -64,7 +64,7 @@ GIZA.Turntable = function(config) {
     } else if (currentState == state.SpinningInertia) {
       currentSpin += inertiaSpeed * deltaTime;
       inertiaSpeed *= (1 - config.spinFriction);
-      if (inertiaSpeed < 0.01) {
+      if (Math.abs(inertiaSpeed) < 0.0001) {
         currentState = state.Resting;
       }
     } else if (currentState == state.DraggingSpin) {
@@ -118,17 +118,19 @@ GIZA.Turntable = function(config) {
   // When releasing the mouse, capture the current rotation and change
   // the state machine back to 'Resting' or 'SpinningInertia'.
   this.endDrag = function(position) {
+    var previousSpin = this.getAngles()[0];
     currentPosition = position.slice(0);
     var r = this.getAngles();
-    var spinDelta = r[0] - currentSpin;
     currentSpin = r[0];
     currentTilt = r[1];
+
+    var spinDelta = currentSpin - previousSpin;
 
     if (config.spinFriction == 1) {
       currentState = state.Resting;
     } else {
       currentState = state.SpinningInertia;
-      inertiaSpeed = 0.01 * spinDelta;
+      inertiaSpeed = 0.125 * spinDelta;
     }
 
   };
