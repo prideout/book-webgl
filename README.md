@@ -1,31 +1,9 @@
 # master
 
-Create ColorWheel
-   
-   C4: set, hsvToRgb
-   Get ColorWheel working
-   Remove ResizeTest
-   Create GIZA.BufferView
-   
-------
-
-   var view = new GIZA.BufferView(myArray, {
-       position: [Float32Array, 3],
-       color: [Uint8Array, 4],
-   });
-   
-  vertexObject = view.getVertex(3); // returns a map of subarrays for the 3rd vertex
-  V3.set(vertexObject, [1,1,1]);
-  C4.set(vertexObject, [1,1,1,0]);
-   
-------
-
 Ch 2 Verbiage
 
-  Program Objects
-
-  Create GIZA.FX
-     move functionality out of common
+  Program Objects / GIZA.FX
+  BufferView
 
 # later
 

@@ -29,6 +29,7 @@ head.js(
   "../giza/Path.js",
   "../giza/Trackball.js",
   "../giza/Turntable.js",
+  "../giza/BufferView.js",
   "lib/stats.min.js",
   COMMON.cdn + "jquery/1.8.0/jquery.min.js",
   COMMON.cdn + "jqueryui/1.9.2/jquery-ui.min.js",

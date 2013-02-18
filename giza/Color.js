@@ -53,7 +53,6 @@ GIZA.Color3 = {
     else if (h < 4) { r = 0.0; g = x; b = c; }
     else if (h < 5) { r = x; g = 0.0; b = c; }
     else  { r = c; g = 0.0; b = x; }
-    console.info(r+m,g+m,b+m);
     return this.make(r+m,g+m,b+m);
   },
 
