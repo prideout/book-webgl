@@ -1,22 +1,17 @@
 # master
 
-Derby Projects Site
-
-Blog Entry -- after I get GFX card
-
-----
-
-Ch 1 Changes
-
-  New template
-  Requirements section
-
 Ch 2 Verbiage
+
+WebGL at 10,000 ft
 
 Create GIZA.FX
    move functionality out of common
 
 # later
+
+- If no response from Ricardo, find a public domain image of the pyramids.
+
+- De-jQeuerify the COMMON.getMouse and move to GIZA
 
 - Turntable
   - HomePosition

@@ -1,5 +1,5 @@
 %*******************************************************************************
-% Master TeX file for 7.5x9.25 books
+% Master TeX file for 6x9 books
 % Copyright A K Peters, Ltd.
 %
 % This is the main TeX file that is to be compiled.  Rename the file as needed.
@@ -12,16 +12,16 @@
 \usepackage[dvips,showcrop,letterpaper]{geometry}
 
 \geometry{
-  layouthoffset=0.5in,
-  layoutvoffset=0.875in,
+  layouthoffset=1.25in,
+  layoutvoffset=1in,
   layoutwidth=6in,
   layoutheight=9in,
   width=27pc,
-  height=45.5pc, % textheight + head + headsep = 45pc
-  headsep=20pt,
-  foot=26pt,
-  inner=0.75in, % gutter margin
-  top=0.75in, % head margin
+  height=45pc, % textheight + head + headsep = 45pc
+  headsep=12pt,
+  foot=24pt,
+  inner=0.875in, % 7/8 in. gutter margin
+  top=0.625in, % head margin
   includehead
 }
 
@@ -36,6 +36,7 @@
 %---BEGIN AUTHOR EDIT---
 \usepackage{listings}
 \usepackage{color}
+\usepackage[colorlinks=true,urlcolor=blue]{hyperref}
 \usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
 \usepackage{verbatim}
 \usepackage{framed}

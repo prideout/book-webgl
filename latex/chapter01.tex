@@ -17,14 +17,32 @@ Not long after Silicon Graphics released the first version of OpenGL to the worl
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\section{Requirements}
+
+In terms of development tools, WebGL has a low barrier to entry. You don't need to download a fancy IDE or grapple with installation of libraries and plug-ins.  It doesn't matter if you use a Mac, Windows, or Linux.  And, since WebGL is a subset of a native graphics API, you don't necessarily need a high-powered GPU either.  All you need is a text editor and a modern web browser!
+
+At the time of this writing, the latest versions of Firefox, Chrome, and Safari all support WebGL natively in their desktop variants.  We've tested Giza on all three of these browsers, but we found Chrome to have the best performance and extension support.
+
+Support for mobile platforms such as iOS and Android isn't quite here  yet, but that may change by the time you read this.
+
+With Safari, you may need to explicitly enable WebGL.  Go to \textbf{Safari > Preferences}.  In the Advanced tab, make sure the develop menu is enabled.  Now you should be able to select \textbf{Develop > Enable WebGL}.
+
+For those interested in supporting Internet Explorer, there's a plugin you can try:
+
+\url{http://iewebgl.com/}
+
+No matter which browser you use during development, your best friend will quickly become your browser's \term{Development Console}.  Find it and get acquainted if you're not already.  In our sample code, we tend to print errors using JavaScript's \code{console} object rather than calling the \code{alert} function, and these messages are only visible in the development console.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Building Giza}
+\summary{Describes our coding conventions and the \code{giza} library that is developed over the course of the book.}
+
 \begin{figure}[htb]\centering
   \includegraphics[width=70mm]{All_Gizah_Pyramids.jpg}
   \caption{The silhouette of the Giza pyramids is composed of triangles, the fundamental drawing primitive in real-time graphics. (Ricardo Liberato)}
   \label{fig:Giza}
 \end{figure}
-
-\section{Building Giza}
-\summary{Describes our coding conventions and the \code{giza} library that is developed over the course of the book.}
 
 This is not just a book, it's a library.  Many of the code listings on these pages are lifted directly from the giza library, named after the ancient Egyptian city.  The Giza pyramids form a skyline of triangles, which are the primary drawing primitive in WebGL.  The pyramid shape also describes a \term{viewing frustum}, a spatial region that encompasses everything within a certain vantage point in a 3D graphics program.
 
@@ -41,12 +59,13 @@ GIZA.merge = function (a, b) {
   for (var attrname in b) {
     a[attrname] = b[attrname];
   }
+  return a;
 };
 \end{lstlisting}
 
 The first line is repeated at the top of all giza files.  This allows clients to include a subset of giza because it creates a new \code{GIZA} namespace only if it doesn't already exist.
 
-Other than \code{GIZA}, the only global variable that we create is \code{COMMON}.  This is where we place a small handful of WebGL helpers that can be called from any of our sample apps.  Unlike methods in \code{GIZA} (which have no dependencies on third-party libraries), methods in \code{COMMON} are allowed to call jQuery functions and WebGL methods.
+Other than \code{GIZA}, the only global variable that we create is \code{COMMON}.  This is where we place a small handful of WebGL helpers.  Unlike methods in \code{GIZA} -- which have no dependencies on third-party libraries) -- methods in \code{COMMON} are allowed to call jQuery functions and WebGL methods.
 
 To reduce code verbosity, we'll often create short-named aliases at the top of a scope.  For example:
 
@@ -67,7 +86,7 @@ var p = GIZA.Vector3.subtract(a, GIZA.Vector3.normalized(b));
 
 For access to the full source code to giza, or to download the minified library, refer to our github site:
 
-\notetoself{http://to.be.filled.in.com}
+\notetoself{\url{http://to.be.filled.in.com}}
 
 The github project also contains code for all the samples in this book, including HTML and CSS source (and the \code{COMMON} layer).
 
@@ -395,7 +414,7 @@ While giza has no dependencies on any JavaScript libraries, the \code{COMMON} la
 \item[jQuery] John Resig's insanely popular ``write less do more'' library.
 \end{description}
 
-HeadJS enables us to simplify our HTML by sharing a list of JavaScript libraries in \code{common.js} instead of duplicating a large set of \code{<script>} tags in every HTML file.  It also has the benefit of loading scripts asynchronously for better performance.  See Listing~\ref{lst:COMMON:file} for \code{common.js}.  We'll extend this file in future chapters by adding some small utilities for loading textures, compiling shaders, etc.
+HeadJS enables us to simplify our HTML by sharing a list of JavaScript libraries in \code{common.js} instead of duplicating a large set of \code{<script>} tags in every HTML file.  It also has the benefit of loading scripts asynchronously for better performance.  See Listing~\ref{lst:COMMON:file} for \code{common.js}.
 
 \begin{lstlisting}[
     caption={\code{common.js}},
