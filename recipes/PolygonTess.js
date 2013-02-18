@@ -41,7 +41,7 @@ var main = function() {
 
   COMMON.loadTexture('media/PointSprite.png', function(i) {
     spriteTexture = i;
-    draw(0);
+    draw(GIZA.getTime());
   });
 
   var init = function() {

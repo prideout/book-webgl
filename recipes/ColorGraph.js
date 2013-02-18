@@ -151,6 +151,6 @@ var main = function() {
   }
 
   init();
-  draw(0);
+  draw(GIZA.getTime());
 
 };

@@ -11,6 +11,6 @@ var main = function() {
     GIZA.endFrame(draw);
   };
 
-  draw(0);
+  draw(GIZA.getTime());
 
 };

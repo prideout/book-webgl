@@ -135,7 +135,7 @@ var main = function() {
     }
 
     var view = M4.lookAt(
-      [0,0,-15], // eye
+      [0,0,-17], // eye
       [0,0,0],  // target
       [0,1,0]); // up
 

@@ -21,6 +21,7 @@ GIZA.Turntable = function(config) {
     radiansPerPixel: V2.make(0.01, -0.01),
     canvas: GIZA.canvas,
     trackpad : true,
+    homeTilt: 0.25,
     //bounceTilt: false, // if true, returns the tilt to the "home" angle after a mouse release
     //boundSpin: false, // if true, returns to the startSpin state after a mouse release
   };
@@ -53,7 +54,7 @@ GIZA.Turntable = function(config) {
   var previous2Position = currentPosition.slice(0);
 
   var currentSpin = 0;
-  var currentTilt = 0;
+  var currentTilt = config.homeTilt;
   var currentState = config.startSpin ?
     state.SpinningStart : state.Resting;
   var previousTime = null;

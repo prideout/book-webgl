@@ -329,7 +329,24 @@ GIZA.endFrame = function(drawFunc) {
 };
 \end{lstlisting} \index{\code{GIZA.endframe}}
 
-In addition to requesting the next animation cycle, it also checks the WebGL error state and halts animation if an error occurs.  This is good practice to maintain clean, error-free code.  
+In addition to requesting the next animation cycle, it also checks the WebGL error state and halts animation if an error occurs.  This is good practice to maintain clean, error-free code.
+
+See Listing~\ref{lst:drawFunc} for a usage example.  All recipes will have this basic structure.
+
+\begin{lstlisting}[
+    caption={High-level structure of a Giza application.},
+    label=lst:drawFunc,
+    language=JavaScript]
+var draw = function(time) {
+  // do work here...
+  GIZA.endFrame(draw);
+}
+
+GIZA.init();
+draw(GIZA.getTime());
+\end{lstlisting}
+
+Note that we explicitly called \code{draw} function after initialization to kick off the animation cycle.  Giza provides a \code{getTime} method to provide a timestamp that's consistent with the time argument provided to \code{requestAnimationFrame}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \rrecipe{Recipe 1: Strobe Light}
@@ -438,7 +455,7 @@ var main = function() {
     GIZA.endFrame(draw);
   };
 
-  draw(GIZA.now);
+  draw(GIZA.getTime());
 };
 \end{lstlisting} \index{\code{StrobeLight.js}}
 

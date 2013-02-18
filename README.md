@@ -1,7 +1,5 @@
 # master
 
-Use GIZA.getTime() & change verbiage
-
 Derby Projects Site
 
 Blog Entry -- after I get GFX card
