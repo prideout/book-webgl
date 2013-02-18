@@ -25,13 +25,13 @@ At the time of this writing, the latest versions of Firefox, Chrome, and Safari 
 
 Support for mobile platforms such as iOS and Android isn't quite here  yet, but that may change by the time you read this.
 
-With Safari, you may need to explicitly enable WebGL.  Go to \textbf{Safari > Preferences}.  In the Advanced tab, make sure the develop menu is enabled.  Now you should be able to select \textbf{Develop > Enable WebGL}.
+With Safari, you may need to explicitly enable WebGL.  Go to \textbf{Safari~>~Preferences}.  In the Advanced tab, make sure the develop menu is enabled.  Now you should be able to select \textbf{Develop~>~Enable~WebGL}.
 
 For those interested in supporting Internet Explorer, there's a plugin you can try:
 
 \url{http://iewebgl.com/}
 
-No matter which browser you use during development, your best friend will quickly become your browser's \term{Development Console}.  Find it and get acquainted if you're not already.  In our sample code, we tend to print errors using JavaScript's \code{console} object rather than calling the \code{alert} function, and these messages are only visible in the development console.
+No matter which browser you choose, your best friend will quickly become its \term{Development Console}.  Find it and get acquainted if you're not already.  It's the place for setting breakpoints, examining the call stack, and viewing diagnostic output.  In our sample code, we tend to print diagnostic messages using JavaScript's \code{console} object rather than calling the \code{alert} function; these messages are only visible in the development console.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -371,7 +371,7 @@ Note that we explicitly called \code{draw} function after initialization to kick
 \rrecipe{Recipe 1: Strobe Light}
 \summary{The simplest possible WebGL application; animates a solid color with \code{clear}.}
 
-Every chapter in this book ends with \term{recipe} that walks through all the code for a certain giza demo.  Each recipe has a very simple page layout, as seen in Figure~\ref{fig:Recipe1}.
+Every chapter in this book ends with a \term{recipe} that walks through all the code for a certain giza demo.  Each recipe has a very simple page layout, as seen in Figure~\ref{fig:Recipe1}.
 
 \begin{figure}[htb]\centering
   \includegraphics[width=120mm]{Recipe1.png}
@@ -409,12 +409,12 @@ This chapter's recipe is called \code{StrobeLight}, which isn't very exciting bu
 While giza has no dependencies on any JavaScript libraries, the \code{COMMON} layer depends on the following third-party libraries to make life a little easier:
 
 \begin{description}
-\item[head.js] Resource loading library from Tero Piirainen.
-\item[stats.js] Performance monitoring widget used in some recipes, written by Ricardo Cabello of ThreeJS fame.
+\item[head.js] Resource loading library from Tero Piirainen.  We use a minified subset called \texttt{head.load.min.js}.
+%\item[stats.js] Performance monitoring widget used in some recipes, written by Ricardo Cabello of ThreeJS fame.
 \item[jQuery] John Resig's insanely popular ``write less do more'' library.
 \end{description}
 
-HeadJS enables us to simplify our HTML by sharing a list of JavaScript libraries in \code{common.js} instead of duplicating a large set of \code{<script>} tags in every HTML file.  It also has the benefit of loading scripts asynchronously for better performance.  See Listing~\ref{lst:COMMON:file} for \code{common.js}.
+HeadJS enables us to simplify the HTML by sharing a list of JavaScript libraries in \code{common.js} instead of duplicating a large set of \code{<script>} tags in every HTML file.  It also has the benefit of loading scripts asynchronously for better performance.  See Listing~\ref{lst:COMMON:file} for \code{common.js}.
 
 \begin{lstlisting}[
     caption={\code{common.js}},
@@ -426,19 +426,18 @@ var COMMON = {}
 // Path to a content delivery network for jQuery etc.
 COMMON.cdn = "http://ajax.googleapis.com/ajax/libs/";
 
-// Strip off the .html extension from the current URL.
+// Get the recipe name by stripping the .html extension from the URL.
 COMMON.basepath = window.location.toString().slice(0, -5)
 
 // Use HeadJS to efficiently load and run a list of scripts.
 head.js(
   "lib/giza.min.js",
-  "lib/stats.min.js",
   COMMON.cdn + "jquery/1.8.0/jquery.min.js",
   COMMON.cdn + "jqueryui/1.9.2/jquery-ui.min.js",
   COMMON.basepath + ".js");
 
-// The last script in the above list defines a function called
-// "main" which we wish to run after the document is ready.
+// The last script in the above list is the recipe script, which
+// defines a global function called "main".
 head.ready(main);
 \end{lstlisting} \index{\code{common.js}}
 
@@ -484,7 +483,7 @@ By now you should understand everything in Listing~\ref{lst:StrobeLight2}.  Just
 \item Call \code{GIZA.init()} and create an alias to the WebGL context object that was extracted from the \code{<canvas>} element.
 \item Define a draw function that applies a sine function to the current time (in milliseconds), using it to modulate the background color between amber and yellow.
 \item Call \code{GIZA.endFrame} at the end of the draw cycle so that another animation frame is always requested, unless a WebGL error occurs.
-\item After defining the draw function, call it once (passing 0 for \code{currentTime}) to kick off the infinite animation.
+\item After defining the draw function, call it once to kick off the infinite animation.
 \end{enumerate}
 
 This was a rather boring example, but it was just a Hello World.  We'll start drawing actual 3D geometry in the next chapter.
