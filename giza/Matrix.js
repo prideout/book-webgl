@@ -201,6 +201,36 @@ GIZA.Matrix4 = {
     }
   },
 
+  rotationX: function(radians) {
+	var c = Math.cos(radians);
+	var s = Math.sin(radians);
+    return this.make(
+      1, 0, 0, 0,
+      0, c, -s, 0,
+      0, s, c, 0,
+      0, 0, 0, 1);
+  },
+
+  rotationY: function(radians) {
+	var c = Math.cos(radians);
+	var s = Math.sin(radians);
+    return this.make(
+      c, 0, s, 0,
+      0, 1, 0, 0,
+      -s, 0, c, 0,
+      0, 0, 0, 1);
+  },
+
+  rotationZ: function(radians) {
+	var c = Math.cos(radians);
+	var s = Math.sin(radians);
+    return this.make(
+      c, -s, 0, 0,
+      s, c, 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 1);
+  },
+
   rotateX: function(m, radians) {
 	var m12 = m[4];
 	var m22 = m[5];

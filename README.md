@@ -4,7 +4,6 @@ Create ColorWheel
    
    C4: set, hsvToRgb
    Get ColorWheel working
-   Gizmo -> FacetNormals
    Remove ResizeTest
    Create GIZA.BufferView
    

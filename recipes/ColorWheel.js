@@ -3,6 +3,8 @@ var main = function() {
   GIZA.init();
   var gl = GIZA.context;
   var M4 = GIZA.Matrix4;
+  var C4 = GIZA.Color4;
+  var V2 = GIZA.Vector2;
 
   var attribs = {
     POSITION: 0,
@@ -25,14 +27,14 @@ var main = function() {
 
   var init = function() {
 
-    var coordSize = 3 * Float32Array.BYTES_PER_ELEMENT;
+    var coordSize = 2 * Float32Array.BYTES_PER_ELEMENT;
     var colorSize = 4 * Uint8Array.BYTES_PER_ELEMENT;
     var vertexSize = coordSize + colorSize;
     var vertexArray = new ArrayBuffer(numPoints * vertexSize);
     var coordArray = new Float32Array(vertexArray, 0);
     var colorArray = new Uint8Array(vertexArray, coordSize);
-    var coordStride = elementSize / Float32Array.BYTES_PER_ELEMENT;
-    var colorStide = elementSize / Uint8Array.BYTES_PER_ELEMENT;
+    var coordStride = vertexSize / Float32Array.BYTES_PER_ELEMENT;
+    var colorStride = vertexSize / Uint8Array.BYTES_PER_ELEMENT;
 
     var getVertex = function(vertexIndex) {
       var coordIndex = vertexIndex * coordStride;
@@ -45,11 +47,11 @@ var main = function() {
     // First set up the center point.
     var i = 0;
     var vertex = getVertex(i);
-    V3.set(vertex.position, [0, 0, 0]);
-    C4.set(vertex.color, [1, 1, 1, 1]);
+    V2.set(vertex.position, [0, 0]);
+    C4.set(vertex.color, [1, 1, 1, 1], 255);
 
     // Now create the vertices along the circumference.
-    var dtheta = Math.PI * 2 / (numPoints - 1);
+    var dtheta = Math.PI * 2 / (numPoints - 2);
     var theta = 0;
     var radius = .75;
     for (i = 1; i < numPoints; i++) {
@@ -57,8 +59,11 @@ var main = function() {
       var y = radius * Math.sin(theta);
 
       vertex = getVertex(i);
-      V3.set(vertex.position, [x, y, 0]);
-      C4.set(vertex.color, C4.hsvToRgb(hue, 1, 1));
+      V2.set(vertex.position, [x, y]);
+
+      var hue = (i - 1) / (numPoints - 1);
+      C4.set(vertex.color, C4.hsvToRgb(hue, 1, 1), 255);
+
 
       theta += dtheta;
     }
@@ -67,9 +72,6 @@ var main = function() {
     gl.bufferData(gl.ARRAY_BUFFER, vertexArray, gl.STATIC_DRAW);
 
     gl.clearColor(0.61, 0.527, .397, 1.0);
-    gl.lineWidth(1.5 * GIZA.pixelScale);
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
   };
 
   var draw = function(currentTime) {
@@ -83,33 +85,25 @@ var main = function() {
     var proj = M4.orthographic(
         -s * GIZA.aspect, s * GIZA.aspect, // left right
         -s, +s, // bottom top
-        0, 1);  // near far
+        -10, 10);  // near far
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, lineBuffer);
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+
     gl.enableVertexAttribArray(attribs.POSITION);
-    gl.vertexAttribPointer(attribs.POSITION, 2, gl.FLOAT, false, 8, 0);
+    gl.vertexAttribPointer(attribs.POSITION, 2, gl.FLOAT, false, 12, 0);
+
+    gl.enableVertexAttribArray(attribs.COLOR);
+    gl.vertexAttribPointer(attribs.COLOR, 4, gl.UNSIGNED_BYTE, true, 12, 8);
 
     var program = programs.simple;
     gl.useProgram(program);
     gl.uniformMatrix4fv(program.projection, false, proj);
-    gl.bindBuffer(gl.ARRAY_BUFFER, lineBuffer);
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 
-    var mv = M4.identity();
-    M4.translate(mv, [-1.0, 0, 0]);
+    var mv = M4.rotationY(currentTime * 0.01);
     gl.uniformMatrix4fv(program.modelview, false, mv);
 
-    gl.uniform4f(program.color, 0.5, 0.75, 1.0, 1);
     gl.drawArrays(gl.TRIANGLE_FAN, 0, numPoints);
-    gl.uniform4f(program.color, 0, 0.125, 0.5, 1);
-    gl.drawArrays(gl.LINE_LOOP, 0, numPoints);
-
-    M4.translate(mv, [+2.0, 0, 0]);
-    gl.uniformMatrix4fv(program.modelview, false, mv);
-
-    gl.uniform4f(program.color, 0.5, 0.75, 1.0, 1);
-    gl.drawArrays(gl.TRIANGLE_FAN, 0, numPoints);
-    gl.uniform4f(program.color, 0, 0.125, 0.5, 1);
-    gl.drawArrays(gl.LINE_LOOP, 0, numPoints);
 
     GIZA.endFrame(draw);
   };

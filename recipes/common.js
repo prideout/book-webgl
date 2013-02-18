@@ -21,6 +21,7 @@ head.js(
   "../giza/Giza.js",
   "../giza/Vector.js",
   "../giza/Matrix.js",
+  "../giza/Color.js",
   "../giza/Topo.js",
   "../giza/Polygon.js",
   "../giza/Surface.js",
@@ -183,7 +184,8 @@ COMMON.compileShader = function(names, type) {
   gl.compileShader(handle);
   status = gl.getShaderParameter(handle, gl.COMPILE_STATUS);
   if (!status) {
-    console.error(gl.getShaderInfoLog(handle));
+    console.error('GLSL error in ' + names + ':\n' +
+                  gl.getShaderInfoLog(handle));
   }
   return handle;
 };
