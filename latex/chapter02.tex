@@ -32,7 +32,7 @@ gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 gl.enableVertexAttribArray(attribs.POSITION);
 gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 0, 0);
 
-// Finally, draw two triangles (six vertices).
+// Finally, draw two triangles (six vertices), starting at vertex 0.
 gl.drawArrays(gl.TRIANGLES, 0, 6);
 \end{lstlisting}
 
@@ -45,7 +45,11 @@ gl.drawArrays(gl.TRIANGLES, 0, 6);
 \section{Shading Language Basics}
 \summary{Explains uniforms, attributes, and varyings.  Walks through trivial \texttt{main} functions for vertex and fragment shaders.}
 
-\subsection{GIZA.FX}
+\section{Program Objects}
+
+\subsection{Uniforms}
+
+\subsection{GIZA.Fx}
 \summary{Describes a useful abstraction of the WebGL program object.}
 
 \section{Lines and Triangles}
@@ -53,6 +57,8 @@ gl.drawArrays(gl.TRIANGLES, 0, 6);
 
 \section{Typed Arrays, Vertex Attributes and VBOs}
 \summary{Shows how heterogeneous data (e.g., colors and positions) can be interleaved and submitted to WebGL.}
+
+\subsection{GIZA.BufferView}
 
 \rrecipe{Recipe 2: Color Wheel}
 \summary{Spinning wheel with various colors at each vertex.}

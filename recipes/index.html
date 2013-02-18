@@ -37,21 +37,20 @@
       window.onload = function() {
         var data = {
             StrobeLight: "Strobe Light",
-            ResizeTest: "(Resize Test)",
-            TunnelFlight: "(Tunnel Flight)",
-            Compositor: "(Compositor)",
-            Rule1: null,
-            PolygonTess: "Polygon Tessellation",
-            ColorGraph: "Color Graph",
+            ColorWheel: "ColorWheel",
             ParametricSurf: "Parametric Surface",
-            Rule2: null,
             BasicLighting: "Basic Lighting",
             Rule3: null,
-            //Tumble: "(Tumble)",
-            //FetchWireframe: "(FetchWireframe)",
-            //FetchModel: "(FetchModel)",
-            Gizmo: "(Gizmo)",
-            SmoothNormals: "(SmoothNormals)",
+            PolygonTess: "Polygon Tessellation",
+            ColorGraph: "Color Graph",
+            Tumble: "Tumble",
+            FetchWireframe: "-- FetchWireframe",
+            FetchModel: "-- FetchModel",
+            ResizeTest: "Resize Test",
+            TunnelFlight: "Tunnel Flight",
+            Compositor: "Compositor",
+            Gizmo: "Gizmo",
+            SmoothNormals: "SmoothNormals",
         };
         var ejs = new EJS({element: "recipe-template"});
         ejs.update("recipe-list", {recipes: data});
