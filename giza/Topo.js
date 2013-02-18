@@ -51,6 +51,13 @@ GIZA.Topo = {
       trianglesArray[t++] = i2;
     }
 
+    var getPoint = function(i) {
+      var x = config.pointsArray[i*3+0];
+      var y = config.pointsArray[i*3+1];
+      var z = config.pointsArray[i*3+2];
+      return V3.make(x, y, z);
+    };
+
     if (config.dereference) {
       if (!config.pointsArray) {
         console.error('GIZA.Topo: Dereferencing was requested, but pointsArray was not specified.');
@@ -64,13 +71,6 @@ GIZA.Topo = {
         pointsArray[p++] = config.pointsArray[i*3+1];
         pointsArray[p++] = config.pointsArray[i*3+2];
       }
-
-      var getPoint = function(i) {
-        var x = config.pointsArray[i*3+0];
-        var y = config.pointsArray[i*3+1];
-        var z = config.pointsArray[i*3+2];
-        return V3.make(x, y, z);
-      };
 
       var normalsArray = null;
       if (config.normals == GIZA.Topo.FACET) {
@@ -91,6 +91,49 @@ GIZA.Topo = {
             normalsArray[t++] = n[2];
           }
         }
+      }
+    }
+
+    if (config.normals == GIZA.Topo.SMOOTH) {
+
+      // Initialize a vertex-to-face table
+      var vertToQuad = [];
+      for (var v = 0; v < config.pointsArray.length / 3; v++) {
+        vertToQuad.push([]);
+      }
+
+      // Compute facet normals and populate the v2f table.
+      var quadNormals = [];
+      for (var q = 0; q < quadsArray.length;) {
+        var i0 = quadsArray[q++]; var i1 = quadsArray[q++];
+        var i2 = quadsArray[q++]; var i3 = quadsArray[q++];
+
+        vertToQuad[i0].push(q/4-1);
+        vertToQuad[i1].push(q/4-1);
+        vertToQuad[i2].push(q/4-1);
+        vertToQuad[i3].push(q/4-1);
+
+        var a = getPoint(i0);
+        var b = getPoint(i1);
+        var c = getPoint(i2);
+        var u = V3.direction(a, b);
+        var v = V3.direction(a, c);
+        var n = V3.cross(u, v);
+        quadNormals.push(n);
+      }
+
+      // Compute smooth normals by averaging neighboring face normals
+      normalsArray = new Float32Array(config.pointsArray.length);
+      var t = 0;
+      for (var v = 0; v < config.pointsArray.length / 3; v++) {
+        var n = V3.make(0, 0, 0);
+        for (var i = 0; i < vertToQuad[v].length; i++) {
+          n = V3.add(n, quadNormals[vertToQuad[v][i]]);
+        }
+        V3.normalize(n);
+        normalsArray[t++] = n[0];
+        normalsArray[t++] = n[1];
+        normalsArray[t++] = n[2];
       }
     }
 
