@@ -1,5 +1,7 @@
 # master
 
+Smooth Normals, Non Deref'd
+
 Derby Projects Site
 
 Blog Entry -- after I get GFX card
