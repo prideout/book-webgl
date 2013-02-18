@@ -2,7 +2,7 @@
 
 Ch 2 Verbiage
 
-WebGL at 10,000 ft
+Vector algebra
 
 Create GIZA.FX
    move functionality out of common

@@ -1,15 +1,40 @@
 \chapter{Vertices and Transforms}
 
-\section{WebGL at 10,000 feet}
-\summary{High-level overview of the WebGL rendering pipeline.}
-
-See Figure~\ref{fig:AssemblyLine}.
-
 \begin{figure}[htb]\centering
   \includegraphics[width=70mm]{pipeline.jpg}
   \caption{High level view of the WebGL / OpenGL ES pipeline}
   \label{fig:AssemblyLine}
 \end{figure}
+
+\section{WebGL at 10,000 feet}
+\summary{High-level overview of the WebGL rendering pipeline.}
+
+Earlier we indicated that the only two WebGL functions that can actually render 3D geometry are \code{drawArrays} and \code{drawElements}.  Both of these simply push a set of \index{vertices} \term{vertices} into the WebGL pipeline.  The vertices become rasterized into \index{fragments} \term{fragments}, or pixel values in the canvas.  Every vertex is defined by a set of \term{vertex attributes}, one of which is usually an XYZ coordinate.  Vertices come together to form \term{primitives}, which include point sprites, lines, and triangles.
+
+Vertices initially belong to a swath of memory called a \term{vertex buffer}, and WebGL provides a rich API that allows you to specify how heterogenous attributes can be packed into a vertex buffer.  Figure~\ref{fig:AssemblyLine} depicts how data flows through the pipeline, starting off as vertex buffers, eventually transforming into pixels in the canvas.
+
+Two phases of this data flow are programmable: the vertex shader and the fragment shader.  Shaders are bundled together into \index{program object} \term{program objects}.   More precisely, a program object is the linked combination of a compiled vertex shader, a compiled fragment shader, and a set of constant inputs known as \term{uniforms}.
+
+We'll dive deeper into shaders and vertex buffers later in this chapter; for now, see Listing~\ref{lst:Taste} for a taste of the various set-up that must be performed before actually pushing the vertices into the pipeline.
+
+\begin{lstlisting}[
+    caption={The typical state-setting that occurs before \code{drawArrays}.},
+    escapechar=\%,
+    label=lst:Taste,
+    language=JavaScript]
+// Bind a program object and set up a couple uniforms.
+gl.useProgram(program);
+gl.uniform1f(program, shininess, 0.5);
+gl.uniform4fv(program, color, [1,1,0,1]);
+
+// Bind a vertex buffer and set up the position attribute.
+gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+gl.enableVertexAttribArray(attribs.POSITION);
+gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 0, 0);
+
+// Finally, draw two triangles (six vertices).
+gl.drawArrays(gl.TRIANGLES, 0, 6);
+\end{lstlisting}
 
 \section{Vector Algebra with JavaScript}
 \summary{This sections walks through giza's implementation of vector and matrix classes.  Rotation, translation, and scale are given a very brief treatment.}
