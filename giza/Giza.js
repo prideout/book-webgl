@@ -83,6 +83,7 @@ GIZA.format = function (s, o) {
   );
 };
 
+// Copy all attributes from b into a
 GIZA.merge = function (a, b) {
   for (var attrname in b) {
     a[attrname] = b[attrname];
@@ -156,6 +157,24 @@ GIZA.endFrame = function(drawFunc) {
     };
     window.requestAnimationFrame(wrappedDrawFunc, GIZA.canvas);
   }
+};
+
+// Return a high-precision time that's consistent with the
+// requestAnimationFrame argument.
+GIZA.getTime = function() {
+
+  // Firefox
+  if ('mozAnimationStartTime' in window) {
+    return window.mozAnimationStartTime;
+  }
+      
+  // Chrome
+  if (window.performance && 'now' in window.performance) {
+    return window.performance.now();
+  }
+  
+  // Safari
+  return Date.now();
 };
 
 GIZA.drawHooks = []

@@ -1,5 +1,7 @@
 # master
 
+Use GIZA.getTime() & change verbiage
+
 Derby Projects Site
 
 Blog Entry -- after I get GFX card
@@ -9,8 +11,6 @@ Blog Entry -- after I get GFX card
 Ch 1 Changes
 
   New template
-  never -> rarely
-  COMMON.endFrame -> GIZA.endFrame
   Requirements section
 
 Ch 2 Verbiage

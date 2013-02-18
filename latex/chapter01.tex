@@ -28,7 +28,7 @@ Not long after Silicon Graphics released the first version of OpenGL to the worl
 
 This is not just a book, it's a library.  Many of the code listings on these pages are lifted directly from the giza library, named after the ancient Egyptian city.  The Giza pyramids form a skyline of triangles, which are the primary drawing primitive in WebGL.  The pyramid shape also describes a \term{viewing frustum}, a spatial region that encompasses everything within a certain vantage point in a 3D graphics program.
 
-As a design philosphy, giza never calls methods on the WebGL context object -- that's your job!  This differentiates it from higher-level libraries such as ThreeJS.  Instead of providing an abstraction of WebGL, giza offers a set of utility layers that help with vector algebra, building mesh data, and implementing 3D manipulator widgets.
+As a design philosphy, giza rarely calls methods on the WebGL context object -- that's your job!  This differentiates it from higher-level libraries such as ThreeJS.  Instead of providing an abstraction of WebGL, giza offers a set of utility layers that help with vector algebra, building mesh data, and implementing 3D manipulator widgets.
 
 \subsection{Code Conventions}
 
@@ -311,13 +311,13 @@ GIZA.init = function(canvasElement) {
     window.msRequestAnimationFrame;
 \end{lstlisting} \index{\code{GIZA.init}}
 
-The \code{requestAnimationFrame} method is actually more like \code{setTimeout} than \code{setInterval} because it doesn't automatically repeat itself.  Typically this means you'll want to call it during your draw cycle.  Our \code{COMMON} layer wraps this functionality by providing the \code{endFrame} function, meant to be called at the end of your draw function. See Listing~\ref{lst:COMMON:endFrame}.
+The \code{requestAnimationFrame} method is actually more like \code{setTimeout} than \code{setInterval} because it doesn't automatically repeat itself.  Typically this means you'll want to call it during your draw cycle.  Giza wraps this functionality by providing the \code{endFrame} function, meant to be called at the end of your draw function. See Listing~\ref{lst:GIZA:endFrame}.
 
 \begin{lstlisting}[
     caption={Common end-of-frame tasks.},
-    label=lst:COMMON:endFrame,
+    label=lst:GIZA:endFrame,
     language=JavaScript]
-COMMON.endFrame = function(drawFunc) {
+GIZA.endFrame = function(drawFunc) {
   var err = gl.getError();
   if (err != gl.NO_ERROR) {
     console.error("WebGL error during draw cycle: ", err);
@@ -327,7 +327,7 @@ COMMON.endFrame = function(drawFunc) {
     window.requestAnimationFrame(drawFunc, GIZA.canvas);
   }
 };
-\end{lstlisting} \index{\code{COMMON.endframe}}
+\end{lstlisting} \index{\code{GIZA.endframe}}
 
 In addition to requesting the next animation cycle, it also checks the WebGL error state and halts animation if an error occurs.  This is good practice to maintain clean, error-free code.  
 
@@ -404,9 +404,6 @@ head.js(
 // The last script in the above list defines a function called
 // "main" which we wish to run after the document is ready.
 head.ready(main);
-
-// Define various utility methods:
-COMMON.endFrame = ...; // see %\color{purple}Listing~\ref{lst:COMMON:endFrame}.%
 \end{lstlisting} \index{\code{common.js}}
 
 Each recipe in the book consists of two files: \code{RecipeName.html} and \code{RecipeName.js}.  The latter defines a function \code{main}, which we pass to \code{head.ready} to ensure that it executes after all libraries are loaded.
@@ -438,11 +435,10 @@ var main = function() {
     x = 0.25 + x * 0.5;
     gl.clearColor(x, x, 0, 1);
     gl.clear(gl.COLOR_BUFFER_BIT);
-    COMMON.endFrame(draw);
+    GIZA.endFrame(draw);
   };
 
-  draw(0);
-
+  draw(GIZA.now);
 };
 \end{lstlisting} \index{\code{StrobeLight.js}}
 
@@ -451,7 +447,7 @@ By now you should understand everything in Listing~\ref{lst:StrobeLight2}.  Just
 \begin{enumerate}
 \item Call \code{GIZA.init()} and create an alias to the WebGL context object that was extracted from the \code{<canvas>} element.
 \item Define a draw function that applies a sine function to the current time (in milliseconds), using it to modulate the background color between amber and yellow.
-\item Call \code{COMMON.endFrame} at the end of the draw cycle so that another animation frame is always requested, unless a WebGL error occurs.
+\item Call \code{GIZA.endFrame} at the end of the draw cycle so that another animation frame is always requested, unless a WebGL error occurs.
 \item After defining the draw function, call it once (passing 0 for \code{currentTime}) to kick off the infinite animation.
 \end{enumerate}
 

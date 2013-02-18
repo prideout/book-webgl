@@ -126,15 +126,7 @@ var main = function() {
     onArrival('meta');
   };
 
-  var init = function() {
-    GIZA.get('media/Gizmo.coords.bin', onCoords, 'binary');
-    GIZA.get('media/Gizmo.quads.bin', onQuads, 'binary');
-    GIZA.get('media/Gizmo.meta.json', onMeta, 'json');
-    gl.clearColor(0.9, 0.9, 0.9, 1);
-  }
-
   var draw = function(currentTime) {
-    
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     
     if (numPendingLoadTasks != 0) {
@@ -199,9 +191,11 @@ var main = function() {
     GIZA.endFrame(draw);
   }
 
-  init();
-  draw(0);
+  GIZA.get('media/Gizmo.coords.bin', onCoords, 'binary');
+  GIZA.get('media/Gizmo.quads.bin', onQuads, 'binary');
+  GIZA.get('media/Gizmo.meta.json', onMeta, 'json');
+  gl.clearColor(0.9, 0.9, 0.9, 1);
+  draw(GIZA.getTime());
 
   COMMON.enableScreenshot(draw);
-
 };
