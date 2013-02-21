@@ -1,9 +1,16 @@
+
 # master
 
 Ch 2 Verbiage
 
   Program Objects / GIZA.FX
   BufferView
+
+Ch 1 Additions
+
+Giza should allow mouse-over thumbs and go-to-fullscreen
+
+http://codeflow.org/entries/2013/feb/15/soft-shadow-mapping/#antialiased-and-filtered-vsm
 
 # later
 
