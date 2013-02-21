@@ -7,13 +7,11 @@ Ch 2 Verbiage
 
 # later
 
-- If no response from Ricardo, find a public domain image of the pyramids.
-
 - De-jQeuerify the COMMON.getMouse and move to GIZA
 
 - Turntable
   - HomePosition
-  - Pan / Zoom / DisableAxisLock (make it similar to tdsview controls)
+  - Pan / Zoom (similar to tdsview controls)
 
 - Move COMMON.Turntable into GIZA
   - use raw DOM for mouse events instead of jQuery

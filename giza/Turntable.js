@@ -20,7 +20,8 @@ GIZA.Turntable = function(config) {
     epsilon: 3, // distance (in pixels) to wait before deciding if a drag is a Tilt or a Spin
     radiansPerPixel: V2.make(0.01, -0.01),
     canvas: GIZA.canvas,
-    trackpad : true,
+    trackpad: true,  // if true, compensate for the delay on trackpads that occur between touchup and mouseup
+    lockAxes: false, // if true, don't allow simultaneous spin + tilt
     homeTilt: 0.25,
     //bounceTilt: false, // if true, returns the tilt to the "home" angle after a mouse release
     //boundSpin: false, // if true, returns to the startSpin state after a mouse release
@@ -68,6 +69,9 @@ GIZA.Turntable = function(config) {
     var deltaTime = time - previousTime;
     previousTime = time;
 
+    var isSpinning = currentState == state.DraggingSpin ||
+      (currentState == state.DraggingInit && !config.lockAxes);
+
     if (currentState == state.SpinningStart) {
       currentSpin += config.startSpin * deltaTime;
     } else if (currentState == state.SpinningInertia) {
@@ -81,7 +85,7 @@ GIZA.Turntable = function(config) {
     // and the time we receive the mouseup event.  To accomodate this,
     // we execute inertia even while we think the mouse is still down.
     // This behavior can be disabled with the "trackpad" config option.
-    } else if (config.trackpad && currentState == state.DraggingSpin &&
+    } else if (config.trackpad && isSpinning &&
                V2.equivalent(currentPosition, previous2Position, 0)) {
       currentSpin += inertiaSpeed * deltaTime;
       inertiaSpeed *= (1 - config.spinFriction);
@@ -94,6 +98,7 @@ GIZA.Turntable = function(config) {
 
   this.startDrag = function(position) {
     startPosition = position.slice(0);
+    currentPosition = position.slice(0);
     currentState = state.DraggingInit;
   };
 
@@ -101,7 +106,7 @@ GIZA.Turntable = function(config) {
     var delta = V2.subtract(position, startPosition);
 
     // If we haven't decided yet, decide if we're spinning or tilting.
-    if (currentState == state.DraggingInit) {
+    if (currentState == state.DraggingInit && config.lockAxes) {
       if (Math.abs(delta[0]) > config.epsilon && config.allowSpin) {
         currentState = state.DraggingSpin;
       } else if (Math.abs(delta[1]) > config.epsilon && config.allowTilt) {
@@ -126,10 +131,12 @@ GIZA.Turntable = function(config) {
     if (currentState == state.DraggingSpin) {
       var radians = config.radiansPerPixel[0] * delta[0];
       spin += radians;
-    }
-    if (currentState == state.DraggingTilt) {
+    } else if (currentState == state.DraggingTilt) {
       var radians = config.radiansPerPixel[1] * delta[1];
       tilt += radians;
+    } else if (!config.lockAxes && currentState == state.DraggingInit) {
+      spin += config.radiansPerPixel[0] * delta[0];
+      tilt += config.radiansPerPixel[1] * delta[1];
     }
     return [spin, tilt];
   };

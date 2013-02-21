@@ -89,7 +89,7 @@ var main = function() {
     gl.uniformMatrix4fv(program.projection, false, proj);
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 
-    var mv = M4.rotationY(currentTime * 0.01);
+    var mv = M4.rotationZ(currentTime * 0.01);
     gl.uniformMatrix4fv(program.modelview, false, mv);
 
     gl.drawArrays(gl.TRIANGLE_FAN, 0, numPoints);
