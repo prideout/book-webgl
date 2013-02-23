@@ -366,17 +366,22 @@ COMMON.Turntable = function(config) {
 
 COMMON.initMultiple = function(canvasList) {
 
-  head.js(
-    'MultiCanvas1.js',
-    'MultiCanvas2.js',
-    function() {
+  var global = Function('return this')();
 
-      GIZA.init(document.getElementById('canvas1'));
-      main1();
+  // Use head.js to load scripts in parallel.
+  for (var i = 0; i < canvasList.length; i++) {
+    head.js(canvasList[i].scriptUrl);
+  }
 
-      GIZA.init(document.getElementById('canvas2'));
-      main2();
-
-    });
+  // Execute the GIZA.init() method for each canvas
+  // then execute its designated entry point function.
+  head.ready(function() {
+    for (var i = 0; i < canvasList.length; i++) {
+      var canvasId = canvasList[i].canvasId;
+      var entryFunction = canvasList[i].entryFunction;
+      GIZA.init(document.getElementById(canvasId));
+      global[entryFunction]();
+    }
+  });
 
 };

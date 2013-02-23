@@ -1,8 +1,6 @@
 
 # master
 
-Implement COMMON.initMultiple
-
 Ch 2 Verbiage
   Program Objects / GIZA.FX
   BufferView
