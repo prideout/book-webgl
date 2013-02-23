@@ -1,5 +1,6 @@
-// As a design philosophy, giza never makes WebGL calls, and it
-// doesn't have dependencies on any other JavaScript libraries.  It's
+// Giza: a low-level utility layer for WebGL
+//
+// Giza doesn't have dependencies on any other JavaScript libraries.  It's
 // a low-level utility layer rather than a scene graph or effects
 // library.
 
@@ -7,12 +8,16 @@ var GIZA = GIZA || { REVISION : '0' };
 
 GIZA.init = function(canvas, options) {
 
+  if (GIZA.currentGizaContext) {
+    GIZA.merge(GIZA.currentGizaContext, GIZA);
+  }
+
   window.requestAnimationFrame = window.requestAnimationFrame ||
     window.mozRequestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
     window.msRequestAnimationFrame;
 
-  // Find a canvas element if it wasn't specified.
+  // Find a canvas element if one wasn't specified.
   canvas = canvas || document.getElementsByTagName('canvas')[0];
 
   // Gather information about the canvas.
@@ -47,13 +52,39 @@ GIZA.init = function(canvas, options) {
   GIZA.canvas = canvas;
   GIZA.aspect = aspect;
 
+  // Use a subset of fields to form the gizaContext,
+  // just in case multiple canvases are needed.
+  var gizaContextFields = [
+    'context',
+    'pixelScale',
+    'canvas',
+    'aspect',
+    'drawHooks',
+  ];
+  GIZA.makeGizaContext = function() {
+    return GIZA.extract(GIZA, gizaContextFields);
+  };
+  GIZA.setGizaContext = function(gizaContext) {
+    GIZA.merge(GIZA.currentGizaContext, GIZA);
+    GIZA.merge(GIZA, gizaContext);
+  };
+  GIZA.currentGizaContext = GIZA.makeGizaContext();
+  GIZA.gizaContexts = GIZA.gizaContexts || [];
+  GIZA.gizaContexts.push(GIZA.currentGizaContext);
+
   // Handle resize events appropriately.
+  var resize = function(gizaContext) {
+    var width = gizaContext.canvas.clientWidth;
+    var height = gizaContext.canvas.clientHeight;
+    gizaContext.aspect = width / height;
+    gizaContext.canvas.width = width * gizaContext.pixelScale;
+    gizaContext.canvas.height = height * gizaContext.pixelScale;
+  };
   window.onresize = function() {
-    width = canvas.clientWidth;
-    height = canvas.clientHeight;
-    GIZA.aspect = width / height;
-    canvas.width = width * pixelScale;
-    canvas.height = height * pixelScale;
+    resize(GIZA);
+    for (var i = 0; i < GIZA.gizaContexts.length; i++) {
+      resize(GIZA.gizaContexts[i]);
+    }
   };
 }
 
@@ -89,6 +120,17 @@ GIZA.merge = function (a, b) {
     a[attrname] = b[attrname];
   }
   return a;
+};
+
+// Extract a list of attributes from the given object,
+// and use them to form a new object.
+GIZA.extract = function(object, fields) {
+  var retval = {};
+  for (var i = 0; i < fields.length; i++) {
+    var field = fields[i];
+    retval[field] = object[field];
+  }
+  return retval;
 };
 
 // Aggregate a list of typed arrays by pre-allocating a giant array
@@ -135,13 +177,16 @@ GIZA.get = function(url, successFunc, dataType) {
 // by halting animation after a GL error.
 GIZA.endFrame = function(drawFunc) {
   var gl = GIZA.context;
+  var gizaContext = GIZA.currentGizaContext;
   err = gl.getError();
   if (err != gl.NO_ERROR) {
     console.error("WebGL error during draw cycle: ", err);
   } else {
     var wrappedDrawFunc = function(time) {
 
-      GIZA.now = time;
+      // In case there are multiple canvases, select the "current"
+      // GIZA context before calling the draw function.
+      GIZA.setGizaContext(gizaContext);
 
       // Clear out the GL error state at the beginning of the next frame.
       // This is a workaround for a Safari bug.
@@ -153,6 +198,7 @@ GIZA.endFrame = function(drawFunc) {
       }
 
       // Finally, draw the main frame.
+      gl.viewport(0, 0, GIZA.canvas.width, GIZA.canvas.height);
       drawFunc(time);
     };
     window.requestAnimationFrame(wrappedDrawFunc, GIZA.canvas);

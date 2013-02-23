@@ -1,18 +1,26 @@
 
 # master
 
-Ch 2 Verbiage
+Implement COMMON.initMultiple
 
+Ch 2 Verbiage
   Program Objects / GIZA.FX
   BufferView
 
+jslint
+  2 space indention
+  ' over "
+  expressions over declarations
+
 Ch 1 Additions
-
-Giza should allow mouse-over thumbs and go-to-fullscreen
-
-http://codeflow.org/entries/2013/feb/15/soft-shadow-mapping/#antialiased-and-filtered-vsm
+  Verbiage for MultiContext
+  Enhance MultiContext
+  Giza should allow mouse-over thumbs and go-to-fullscreen
+  http://codeflow.org/entries/2013/feb/15/soft-shadow-mapping/#antialiased-and-filtered-vsm
 
 # later
+
+- Specular looks wrong in MultiCanvas
 
 - De-jQeuerify the COMMON.getMouse and move to GIZA
 
@@ -53,6 +61,8 @@ http://codeflow.org/entries/2013/feb/15/soft-shadow-mapping/#antialiased-and-fil
   There's a twitter link to a NVIDIA post about this.
 
 - pycollada -> King Tut
+
+- Shadow Mapping -- http://t.co/rOHU6Tcp
 
 # server 
 

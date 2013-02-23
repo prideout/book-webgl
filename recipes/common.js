@@ -363,3 +363,20 @@ COMMON.Turntable = function(config) {
   });
 
 };
+
+COMMON.initMultiple = function(canvasList) {
+
+  head.js(
+    'MultiCanvas1.js',
+    'MultiCanvas2.js',
+    function() {
+
+      GIZA.init(document.getElementById('canvas1'));
+      main1();
+
+      GIZA.init(document.getElementById('canvas2'));
+      main2();
+
+    });
+
+};

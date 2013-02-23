@@ -50,6 +50,8 @@ As a design philosphy, giza rarely calls methods on the WebGL context object -- 
 
 \subsection{Code Conventions}
 
+\subsubsection{Namespaces}
+
 All giza methods belong to a global object called \code{GIZA}, following the namespace convention common in JavaScript.  For example, here's how we define a small utility function that merges all attributes from object \code{b} into object \code{a}:
 
 \begin{lstlisting}[language=JavaScript]
@@ -66,6 +68,28 @@ GIZA.merge = function (a, b) {
 The first line is repeated at the top of all giza files.  This allows clients to include a subset of giza because it creates a new \code{GIZA} namespace only if it doesn't already exist.
 
 Other than \code{GIZA}, the only global variable that we create is \code{COMMON}.  This is where we place a small handful of WebGL helpers.  Unlike methods in \code{GIZA} -- which have no dependencies on third-party libraries) -- methods in \code{COMMON} are allowed to call jQuery functions and WebGL methods.
+
+\subsubsection{Function Declaration Syntax}
+
+In this book, we define all functions using function expressions rather than function statements.  In other words, we prefer this syntax:
+
+\begin{lstlisting}[language=JavaScript]
+var main = function() {
+  console.info("This is a function expression!");
+};
+\end{listlising}
+
+Over this syntax:
+
+\begin{lstlisting}[language=JavaScript]
+function main() {
+  console.info("This is a function declaration!");
+};
+\end{listlising}
+
+They mean almost the same thing, but there are subtle differences.  Douglas Crockford (known for JSON and \emph{JavaScript: The Good Parts}) recommends expressions over statements because they emphasize the first-class nature of functions in JavaScript, and they avoid the scope-hoisting behavior that characterizes function declarations.
+
+\subsubsection{Aliases}
 
 To reduce code verbosity, we'll often create short-named aliases at the top of a scope.  For example:
 
