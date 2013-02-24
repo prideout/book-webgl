@@ -147,10 +147,9 @@ var main = function() {
     gl.disableVertexAttribArray(attribs.COLOR);
 
     stats.end();
-    GIZA.endFrame(draw);
   }
 
   init();
-  draw(GIZA.getTime());
+  GIZA.animate(draw);
 
 };

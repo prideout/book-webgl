@@ -51,6 +51,7 @@ GIZA.init = function(canvas, options) {
   GIZA.pixelScale = pixelScale;
   GIZA.canvas = canvas;
   GIZA.aspect = aspect;
+  GIZA.timeOffset = 0;
 
   // Use a subset of fields to form the gizaContext,
   // just in case multiple canvases are needed.
@@ -62,6 +63,8 @@ GIZA.init = function(canvas, options) {
     'drawHooks',
     'animation',
     'paused',
+    'timeOffset',
+    'pauseTime',
   ];
   GIZA.currentGizaContext = GIZA.extract(GIZA, gizaContextFields);
 

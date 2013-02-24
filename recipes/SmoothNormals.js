@@ -132,7 +132,6 @@ var main = function() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     
     if (numPendingLoadTasks != 0) {
-      GIZA.endFrame(draw);
       return;
     }
 
@@ -194,14 +193,13 @@ var main = function() {
 
     gl.disableVertexAttribArray(attribs.POSITION);
     gl.disableVertexAttribArray(attribs.NORMAL);
-    GIZA.endFrame(draw);
   }
 
   GIZA.get('media/Gizmo.coords.bin', onCoords, 'binary');
   GIZA.get('media/Gizmo.quads.bin', onQuads, 'binary');
   GIZA.get('media/Gizmo.meta.json', onMeta, 'json');
   gl.clearColor(0.9, 0.9, 0.9, 1);
-  draw(GIZA.getTime());
 
+  GIZA.animate(draw);
   COMMON.enableScreenshot(draw);
 };

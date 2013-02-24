@@ -39,11 +39,6 @@ var main = function() {
   };
   var pointCount, outerPointCount, triangleCount;
 
-  COMMON.loadTexture('media/PointSprite.png', function(i) {
-    spriteTexture = i;
-    draw(GIZA.getTime());
-  });
-
   var init = function() {
     
     gl.clearColor(0.9, 0.9, 0.9, 1.0);
@@ -194,10 +189,13 @@ var main = function() {
     gl.drawArrays(gl.POINTS, 0, pointCount);
 
     gl.disableVertexAttribArray(attribs.POSITION);
-
-    GIZA.endFrame(draw);
   }
 
   init();
+
+  COMMON.loadTexture('media/PointSprite.png', function(i) {
+    spriteTexture = i;
+    GIZA.animate(draw);
+  });
 
 };

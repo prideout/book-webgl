@@ -155,7 +155,9 @@ COMMON.bindOptions = function(options, divid) {
     });
   };
   updateOptions();
-  $(divid).buttonset().change(updateOptions);
+  $(divid).buttonset().change(function() {
+    updateOptions();
+  });
 };
 
 // Returns a relative mouse position inside the given element,

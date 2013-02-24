@@ -13,6 +13,8 @@ GIZA.endFrame = function(drawFunc) {
   } else {
     var wrappedDrawFunc = function(time) {
 
+      time += GIZA.timeOffset;
+
       // In case there are multiple canvases, select the "current"
       // GIZA context before calling the draw function.
       GIZA.setGizaContext(gizaContext);
@@ -50,11 +52,40 @@ GIZA.animate = function(drawFunction) {
 
 GIZA.pause = function() {
   GIZA.paused = true;
+  GIZA.pauseTime = GIZA.getTime();
 };
 
 GIZA.resume = function() {
   if (GIZA.paused) {
+    var resumeTime = GIZA.getTime();
+    var deltaTime = resumeTime - GIZA.pauseTime;
+    GIZA.timeOffset -= deltaTime;
     GIZA.paused = false;
     GIZA.animate(GIZA.animation);
   }
+};
+
+// Return a high-precision time that's consistent with what the
+// browser passes to the requestAnimationFrame function, and that
+// honors an offset created by the pause and resume.
+GIZA.getTime = function() {
+
+  var now;
+
+  // Firefox
+  if ('mozAnimationStartTime' in window) {
+    now = window.mozAnimationStartTime;
+  }
+      
+  // Chrome
+  else if (window.performance && 'now' in window.performance) {
+    now = window.performance.now();
+  }
+  
+  // Safari
+  else {
+    now = Date.now();
+  }
+
+  return now + GIZA.timeOffset;
 };

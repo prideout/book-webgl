@@ -131,7 +131,6 @@ var main = function() {
       3, 2000);  // near and far
 
     if (numPendingLoadTasks != 0) {
-      GIZA.endFrame(draw);
       return;
     }
 
@@ -174,12 +173,10 @@ var main = function() {
         2 * prim.lineOffset * 2);
     }
     gl.disableVertexAttribArray(attribs.POSITION);
-
-    GIZA.endFrame(draw);
   }
 
   init();
-  draw(GIZA.getTime());
+  GIZA.animate(draw);
 
   COMMON.enableScreenshot(draw);
 

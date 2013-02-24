@@ -1,9 +1,8 @@
 
 # giza
 
- - pause and resume should make time corrections
- 
- - everybody should use animate(...)
+ - COMMON.bindOptions should call GIZA.refresh (when paused, equiv to resume + pause)
+   with all GIZA contexts.  Perhaps this uses "GIZA.forEachGizaContext"
 
  - giza/Animation: fix the problem where the FIRST draw call doesn't have any preamble
    perhaps remove endFrame for this.
@@ -32,15 +31,16 @@ be an exact duplicate of master.  Or, move pbrowser into sandbox to free up a re
 
 # book
 
+Canvas is NOT block-level like div...  it's "phrasing content" like span
+Verbiage for animate()
+
 Ch 2 Verbiage
 
-Ch 1 Additions
+Ch 3 : Interaction (?)
   Verbiage for MultiContext
   Enhance MultiContext:
      Giza should allow mouse-over thumbs and go-to-fullsxbcreen
      http://codeflow.org/entries/2013/feb/15/soft-shadow-mapping/#antialiased-and-filtered-vsm
-
-Ch 3 : Interaction (?)
 
 # later
 

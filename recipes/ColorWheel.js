@@ -92,11 +92,9 @@ var main = function() {
     gl.uniformMatrix4fv(program.modelview, false, mv);
 
     gl.drawArrays(gl.TRIANGLE_FAN, 0, numPoints);
-
-    GIZA.endFrame(draw);
   };
 
   init();
-  draw(GIZA.getTime());
+  GIZA.animate(draw);
 
 };

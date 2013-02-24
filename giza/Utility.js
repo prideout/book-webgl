@@ -90,21 +90,3 @@ GIZA.get = function(url, successFunc, dataType) {
   xhr.onload = onloadFunc;
   xhr.send(null);
 };
-
-// Return a high-precision time that's consistent with the
-// requestAnimationFrame argument.
-GIZA.getTime = function() {
-
-  // Firefox
-  if ('mozAnimationStartTime' in window) {
-    return window.mozAnimationStartTime;
-  }
-      
-  // Chrome
-  if (window.performance && 'now' in window.performance) {
-    return window.performance.now();
-  }
-  
-  // Safari
-  return Date.now();
-};

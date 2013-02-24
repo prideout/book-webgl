@@ -202,12 +202,10 @@ var main = function() {
     gl.enable(gl.DEPTH_TEST);
     gl.disable(gl.BLEND);
     gl.disableVertexAttribArray(attribs.POSITION);
-
-    GIZA.endFrame(draw);
   }
 
   init();
-  draw(GIZA.getTime());
+  GIZA.animate(draw);
 
   COMMON.enableScreenshot(draw);
 

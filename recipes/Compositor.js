@@ -28,11 +28,10 @@ var main = function() {
 
   var draw = function(currentTime) {
     gl.clear(gl.COLOR_BUFFER_BIT);
-    GIZA.endFrame(draw);
   }
 
   init();
-  draw(GIZA.getTime());
+  GIZA.animate(draw);
 
   COMMON.enableScreenshot(draw);
 
