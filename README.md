@@ -1,7 +1,22 @@
 
 # giza
 
+ - MouseTest:
+     draw a point sprite where the mouse is
+     color it when "down"
+
  - De-jQeuerify the COMMON.getMouse and move to GIZA
+
+GIZA.position = function(elem) {
+  var box = elem.getBoundingClientRect()
+  var body = document.body
+  var docElem = document.documentElement
+  var scrollTop = window.pageYOffset
+  var scrollLeft = window.pageXOffset
+  var top  = box.top +  scrollTop
+  var left = box.left + scrollLeft
+  return { top: Math.round(top), left: Math.round(left) }
+}
 
  - Ditto for COMMON.Turntable
  

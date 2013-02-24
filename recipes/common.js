@@ -14,6 +14,12 @@ COMMON.basepath = window.location.toString().slice(0, -5)
 // Extract the name of the recipe from the basepath.
 COMMON.recipe = COMMON.basepath.split('/').pop();
 
+// Convenient mouse location
+COMMON.mouse = {
+  position = null,
+  buttons = null
+};
+
 // Use HeadJS to load scripts asynchronously, but execute them
 // synchronously.  After we have a build process in place, we'll
 // replace the following source list with a single minified file.
@@ -152,14 +158,16 @@ COMMON.bindOptions = function(options, divid) {
 
 // Returns a relative mouse position inside the given element,
 // which is usually a canvas.  It's tempting to use offsetX
-// instead, but that's not safe across browsers.
+// instead, but that's not safe across browsers.  Also invert
+// Y such that the origin is at the lower-left corner.
 COMMON.getMouse = function(event, element) {
   var p = $(element).position();
   var x = event.pageX - p.left;
   var y = event.pageY - p.top;
   var s = GIZA.pixelScale;
   y = $(element).height() - y;
-  return GIZA.Vector2.make(x * s, y * s);
+  COMMON.mouse.position = GIZA.Vector2.make(x * s, y * s);
+  return COMMON.mouse.position;
 };
 
 // Create an event handler that listens for a chosen screenshot key,
