@@ -92,6 +92,8 @@ GIZA.surfaceFlags = {
 GIZA.surface = function(equation, rows, cols, flags) {
   
   var V3 = GIZA.Vector3;
+  var V2 = GIZA.Vector2;
+
   if (flags == null) {
     var F = GIZA.surfaceFlags;
     flags = F.POSITIONS | F.WRAP_COLS | F.WRAP_ROWS;
@@ -168,23 +170,27 @@ GIZA.surface = function(equation, rows, cols, flags) {
     },
 
     lines: function (arrayType) {
-      var lineArray = new Uint16Array(lineCount * 2);
-      var lineIndex = 0;
+      arrayType = arrayType || Uint16Array;
+      var bufferView = new GIZA.BufferView({
+        line: [arrayType, 2],
+      });
+      var lines = bufferView.makeBuffer(lineCount);
+      var line = bufferView.iterator('line');
       var pointsPerRow = cols+1;
       var pointsPerCol = rows+1;
       for (var row = 0; row < rowLines; row++) {
-        for (var col = 0; col < cols; col++, lineIndex += 2) {
-          lineArray[lineIndex] = row * pointsPerRow + col;
-          lineArray[lineIndex+1] = lineArray[lineIndex] + 1;
+        for (var col = 0; col < cols; col++) {
+          var i = row * pointsPerRow + col;
+          V2.set(line.next(), [i, i + 1]);
         }
       }
       for (var row = 0; row < rows; row++) {
-        for (var col = 0; col < colLines; col++, lineIndex += 2) {
-          lineArray[lineIndex] = row * pointsPerRow + col;
-          lineArray[lineIndex+1] = lineArray[lineIndex] + pointsPerRow;
+        for (var col = 0; col < colLines; col++) {
+          var i = row * pointsPerRow + col;
+          V2.set(line.next(), [i, i + pointsPerRow]);
         }
       }
-      return lineArray;
+      return lines;
     },
 
     triangles: function (arrayType) {

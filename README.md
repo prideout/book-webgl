@@ -1,7 +1,7 @@
 
 # giza
 
- - Use BufferView in more places.
+ - Use BufferView in more places (Surface.js).
  
  - De-jQeuerify the COMMON.getMouse and move to GIZA
 
