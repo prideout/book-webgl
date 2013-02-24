@@ -37,7 +37,8 @@ var main = function() {
     var vertexArray = bufferView.makeBuffer(numPoints);
 
     // Initialize the center point of the wheel.
-    var vertex = bufferView.getVertex(0);
+    var iterator = bufferView.iterator();
+    var vertex = iterator.next();
     V2.set(vertex.position, [0, 0]);
     C4.set(vertex.color, [1, 1, 1, 1], 255);
 
@@ -45,19 +46,17 @@ var main = function() {
     var dtheta = Math.PI * 2 / (numPoints - 2);
     var theta = 0;
     var radius = .75;
-    for (var i = 1; i < numPoints; i++) {
-      vertex = bufferView.getVertex(i);
-
+    while (vertex = iterator.next()) {
       var x = radius * Math.cos(theta);
       var y = radius * Math.sin(theta);
       V2.set(vertex.position, [x, y]);
 
-      var hue = (i - 1) / (numPoints - 1);
+      var hue = (iterator.index - 1) / (numPoints - 1);
       C4.set(vertex.color, C4.hsvToRgb(hue, 1, 1), 255);
-
       theta += dtheta;
     }
 
+    // Populate the vertex buffer obejct.
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
     gl.bufferData(gl.ARRAY_BUFFER, vertexArray, gl.STATIC_DRAW);
     gl.clearColor(0.61, 0.527, .397, 1.0);

@@ -1,3 +1,5 @@
+var GIZA = GIZA || {};
+
 GIZA.equations = {};
 
 GIZA.equations.sphere = function(radius) {
@@ -14,11 +16,8 @@ GIZA.equations.sphere = function(radius) {
 
 GIZA.equations.plane = function(width) {
   return function(u, v) {
-    return GIZA.Vector3.make(
-        -width/2 + width * u,
-        -width/2 + width * v,
-      0
-    );
+    var x = -width/2 + width;
+    return GIZA.Vector3.make(x * u, x * v, 0);
   };
 };
 
@@ -127,11 +126,11 @@ GIZA.surface = function(equation, rows, cols, flags) {
   var bytesPerPoint = 4 * numFloats;
 
   return {
-    "pointCount": function () { return pointCount; },
-    "lineCount": function () { return lineCount; },
-    "triangleCount": function () { return triangleCount; },
+    pointCount: function () { return pointCount; },
+    lineCount: function () { return lineCount; },
+    triangleCount: function () { return triangleCount; },
 
-    "points": function () {
+    points: function () {
       if (pointCount > 65535) {
         console.error("Too many points for 16-bit indices");
       }
@@ -168,7 +167,7 @@ GIZA.surface = function(equation, rows, cols, flags) {
       return coordArray;
     },
 
-    "lines": function () {
+    lines: function (arrayType) {
       var lineArray = new Uint16Array(lineCount * 2);
       var lineIndex = 0;
       var pointsPerRow = cols+1;
@@ -188,20 +187,23 @@ GIZA.surface = function(equation, rows, cols, flags) {
       return lineArray;
     },
 
-    "triangles": function () {
-      var triangles = new Uint16Array(triangleCount * 3);
-      var triIndex = 0;
+    triangles: function (arrayType) {
+      arrayType = arrayType || Uint16Array;
+      var bufferView = new GIZA.BufferView({
+        triangle: [arrayType, 3],
+      });
+      var triangles = bufferView.makeBuffer(triangleCount);
+      var triangle = bufferView.iterator('triangle');
       var pointsPerRow = cols+1;
       for (var row = 0; row < rows; row++) {
         for (var col = 0; col < cols; col++) {
           var i = row * pointsPerRow + col;
-          triangles[triIndex++] = i+pointsPerRow;
-          triangles[triIndex++] = i+1;
-          triangles[triIndex++] = i;
-
-          triangles[triIndex++] = i+pointsPerRow+1;
-          triangles[triIndex++] = i+1;
-          triangles[triIndex++] = i+pointsPerRow;
+          var a = i+pointsPerRow;
+          var b = i+1;
+          var c = i;
+          var d = i+pointsPerRow+1;
+          V3.set(triangle.next(), [a, b, c])
+          V3.set(triangle.next(), [d, b, a])
         }
       }
       return triangles;

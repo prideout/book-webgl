@@ -19,13 +19,13 @@ GIZA.BufferView = function(desc) {
     this.dims[key] = arrayDim;
     offset += size;
   }
-  this.vertexSize = offset;
+  this.elementSize = offset;
 
   // Now compute a stride for each attribute.
   this.strides = {};
   for (var key in desc) {
     var arrayType = desc[key][0];
-    var stride = this.vertexSize / arrayType.BYTES_PER_ELEMENT;
+    var stride = this.elementSize / arrayType.BYTES_PER_ELEMENT;
     if (stride != Math.floor(stride)) {
       console.error("GIZA.BufferView is not aligned properly.");
     }
@@ -34,6 +34,7 @@ GIZA.BufferView = function(desc) {
 
   // Populate the typed views.
   this.setArray = function(arrayBuffer) {
+    this.numElements = arrayBuffer.byteLength / this.elementSize;
     this.typedArrays = {};
     for (var key in desc) {
       var arrayType = desc[key][0];
@@ -41,20 +42,36 @@ GIZA.BufferView = function(desc) {
     }
   };
 
-  // Create an array large enough to accomodate the specified vertex count.
-  this.makeBuffer = function(vertexCount) {
-    var vertexArray = new ArrayBuffer(vertexCount * this.vertexSize);
-    this.setArray(vertexArray);
-    return vertexArray;
+  // Create an array that can accommodate the specified element count.
+  this.makeBuffer = function(elementCount) {
+    var elementArray = new ArrayBuffer(elementCount * this.elementSize);
+    this.setArray(elementArray);
+    return elementArray;
   };
 
+  // Create an iterator that can be used in a while loop via its
+  // "next" method.  If the iterator is constructed without a
+  // specified field, the next method returns the entire element.
+  // Otherwise the specified field is extracted.
+  this.iterator = function(field) {
+    var bufferView = this;
+    return {
+      index: 0,
+      next: function() {
+        if (this.index >= bufferView.numElements) {
+          return null;
+        }
+        var element = bufferView.getElement(this.index++);
+        return field ? element[field] : element;
+      }
+    };
+  };
 
   // Provide an object constructor.
-  this.getVertex = function(vertexIndex) {
+  this.getElement = function(elementIndex) {
     retval = {};
     for (var key in desc) {
-      var index = vertexIndex * this.strides[key];
-      //console.info('prideout', key, index, index + this.dims[key]);
+      var index = elementIndex * this.strides[key];
       retval[key] = this.typedArrays[key].subarray(
         index, index + this.dims[key]);
     }
