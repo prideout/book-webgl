@@ -1,8 +1,6 @@
 
 # giza
 
- - Use BufferView in more places (Surface.js).
- 
  - De-jQeuerify the COMMON.getMouse and move to GIZA
 
  - Ditto for COMMON.Turntable
@@ -17,7 +15,7 @@ Ch 2 Verbiage
 Ch 1 Additions
   Verbiage for MultiContext
   Enhance MultiContext:
-     Giza should allow mouse-over thumbs and go-to-fullscreen
+     Giza should allow mouse-over thumbs and go-to-fullsxbcreen
      http://codeflow.org/entries/2013/feb/15/soft-shadow-mapping/#antialiased-and-filtered-vsm
 
 # later

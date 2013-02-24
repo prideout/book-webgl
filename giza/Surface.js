@@ -16,8 +16,9 @@ GIZA.equations.sphere = function(radius) {
 
 GIZA.equations.plane = function(width) {
   return function(u, v) {
-    var x = -width/2 + width;
-    return GIZA.Vector3.make(x * u, x * v, 0);
+    var x = -width/2 + width * u;
+    var y = -width/2 + width * v;
+    return GIZA.Vector3.make(x, y, 0);
   };
 };
 
@@ -128,16 +129,32 @@ GIZA.surface = function(equation, rows, cols, flags) {
   var bytesPerPoint = 4 * numFloats;
 
   return {
-    pointCount: function () { return pointCount; },
-    lineCount: function () { return lineCount; },
-    triangleCount: function () { return triangleCount; },
+    pointCount: function() { return pointCount; },
+    lineCount: function() { return lineCount; },
+    triangleCount: function() { return triangleCount; },
 
-    points: function () {
+    points: function() {
       if (pointCount > 65535) {
         console.error("Too many points for 16-bit indices");
       }
-      var coordArray = new Float32Array(pointCount * bytesPerPoint / 4);
-      var coordIndex = 0;
+
+      // Create a description of the vertex format.
+      var desc = {};
+      desc.position = [Float32Array, 3];
+      if (normals) {
+        desc.normal = [Float32Array, 3];
+      }
+      if (colors) {
+        desc.color = [Uint8Array, 4];
+      }
+
+      // Allocate the interleaved buffer and create iterators.
+      var bufferView = new GIZA.BufferView(desc);
+      var points = bufferView.makeBuffer(pointCount);
+      var position = bufferView.iterator('position');
+      var normal = bufferView.iterator('normal');
+
+      // Evaluate the parametric function and generate points.
       var du = 1.0 / cols;
       var dv = 1.0 / rows;
       var v = 0;
@@ -145,31 +162,23 @@ GIZA.surface = function(equation, rows, cols, flags) {
         var u = 0;
         for (var col = 0; col < cols + 1; col++) {
           var p = equation(u, v);
-
-          coordArray[coordIndex++] = p[0];
-          coordArray[coordIndex++] = p[1];
-          coordArray[coordIndex++] = p[2];
+          V3.set(position.next(), p);
 
           if (normals) {
             var p2 = V3.subtract(equation(u+du, v), p);
             var p1 = V3.subtract(equation(u, v+dv), p);
             var n = V3.normalize(V3.cross(p1, p2));
-            coordArray[coordIndex++] = n[0];
-            coordArray[coordIndex++] = n[1];
-            coordArray[coordIndex++] = n[2];
+            V3.set(normal.next(), n);
           }
 
-          if (colors) {
-            coordIndex++;
-          }
           u = (col == cols) ? 1.0 : (u + du);
         }
         v = (row == rows) ? 1.0 : (v + dv);
       }
-      return coordArray;
+      return points;
     },
 
-    lines: function (arrayType) {
+    lines: function(arrayType) {
       arrayType = arrayType || Uint16Array;
       var bufferView = new GIZA.BufferView({
         line: [arrayType, 2],
@@ -193,7 +202,7 @@ GIZA.surface = function(equation, rows, cols, flags) {
       return lines;
     },
 
-    triangles: function (arrayType) {
+    triangles: function(arrayType) {
       arrayType = arrayType || Uint16Array;
       var bufferView = new GIZA.BufferView({
         triangle: [arrayType, 3],
