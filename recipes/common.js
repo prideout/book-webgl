@@ -251,10 +251,12 @@ COMMON.initMultiple = function(canvasList) {
       if (session.lazy) {
         var gizaContext = GIZA.currentGizaContext;
         var canvas = $(GIZA.startCanvas);
-        canvas.mouseenter(function() {
+        var resume = function() {
           GIZA.setGizaContext(gizaContext);
           GIZA.resume();
-        });
+        };
+        canvas.mouseenter(resume);
+        canvas.mousemove(resume);
         canvas.mouseleave(function() {
           GIZA.setGizaContext(gizaContext);
           GIZA.pause();

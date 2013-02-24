@@ -2,51 +2,49 @@ var GIZA = GIZA || {};
 
 GIZA.drawHooks = []
 
-// Requests the next animation frame and prevents cascading errors
-// by halting animation after a WebGL error.
-GIZA.endFrame = function(drawFunc) {
-  var gl = GIZA.context;
-  var gizaContext = GIZA.currentGizaContext;
-  err = gl.getError();
-  if (err != gl.NO_ERROR) {
-    console.error("WebGL error during draw cycle: ", err);
-  } else {
-    var wrappedDrawFunc = function(time) {
-
-      time += GIZA.timeOffset;
-
-      // In case there are multiple canvases, select the "current"
-      // GIZA context before calling the draw function.
-      GIZA.setGizaContext(gizaContext);
-
-      // Clear out the GL error state at the beginning of the next frame.
-      // This is a workaround for a Safari bug.
-      gl.getError();
-
-      // Before drawing the main frame, execute all draw hooks.
-      for (var i = 0; i < GIZA.drawHooks.length; i++) {
-        GIZA.drawHooks[i](time);
-      }
-
-      // Finally, draw the main frame.
-      gl.viewport(0, 0, GIZA.canvas.width, GIZA.canvas.height);
-      drawFunc(time);
-    };
-    window.requestAnimationFrame(wrappedDrawFunc, GIZA.canvas);
-  }
-};
-
-// Kicks off an infinite series of animation frames,
-// honoring 'pause' and 'resume'.
+// Kicks off an infinite series of animation frames, honoring 'pause'
+// and 'resume'.  Prevents cascading errors by halting animation after
+// a WebGL error.
 GIZA.animate = function(drawFunction) {
+
   GIZA.paused = false;
   GIZA.animation = drawFunction;
+  var gizaContext = GIZA.currentGizaContext;
+
   var renderFrame = function(time) {
-    if (!GIZA.paused) {
-      GIZA.animation(time);
-      GIZA.endFrame(renderFrame);
+
+    // There may be multiple canvases, so select the "current"
+    // GIZA context before calling the draw function.
+    GIZA.setGizaContext(gizaContext);
+    if (GIZA.paused) {
+      return;
+    }
+
+    // Clear out the GL error state at the beginning of the frame.
+    // This is a workaround for a Safari bug.
+    var gl = GIZA.context;
+    gl.getError();
+
+    // Before drawing the main frame, execute all draw hooks.
+    time += GIZA.timeOffset;
+    for (var i = 0; i < GIZA.drawHooks.length; i++) {
+      GIZA.drawHooks[i](time);
+    }
+
+    // Set the viewport and execute the draw function.
+    gl.viewport(0, 0, GIZA.canvas.width, GIZA.canvas.height);
+    GIZA.animation(time);
+
+    // Check WebGL error state before requesting the next animation
+    // frame.
+    err = gl.getError();
+    if (err == gl.NO_ERROR) {
+      window.requestAnimationFrame(renderFrame, GIZA.canvas);
+    } else {
+      console.error("WebGL error during draw cycle: ", err);
     }
   };
+
   renderFrame(GIZA.getTime());
 };
 

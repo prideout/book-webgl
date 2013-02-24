@@ -1,12 +1,6 @@
 
 # giza
 
- - COMMON.bindOptions should call GIZA.refresh (when paused, equiv to resume + pause)
-   with all GIZA contexts.  Perhaps this uses "GIZA.forEachGizaContext"
-
- - giza/Animation: fix the problem where the FIRST draw call doesn't have any preamble
-   perhaps remove endFrame for this.
- 
  - MouseTest:
      fork from ColorWheel
      color it when "down"
@@ -44,11 +38,12 @@ Ch 3 : Interaction (?)
 
 # later
 
+ - Fix refresh issue in ThumbTest when checks are visible: COMMON.bindOptions should call GIZA.refresh (when paused, equiv to resume + pause)
+   with all GIZA contexts.  Perhaps this uses "GIZA.forEachGizaContext"
+
 - Use SVG Path.getPointAtLength
 
   http://stackoverflow.com/questions/12253855/svg-path-getpointatlength-returning-wrong-values
-
-- Specular looks wrong in MultiCanvas
 
 - Turntable
   - HomePosition
