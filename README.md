@@ -1,9 +1,8 @@
 
 # giza
 
- - MouseTest:
-     fork from ColorWheel
-     color it when "down"
+ - add mouse-testing to PolygonTess
+   why is it dividing by pixelScale?  that's inconsistent with the viewport!
      
  - De-jQeuerify the COMMON.getMouse and move to GIZA
 
@@ -41,7 +40,7 @@ Ch 3 : Interaction (?)
  - Fix refresh issue in ThumbTest when checks are visible: COMMON.bindOptions should call GIZA.refresh (when paused, equiv to resume + pause)
    with all GIZA contexts.  Perhaps this uses "GIZA.forEachGizaContext"
 
-- Use SVG Path.getPointAtLength
+ - Combine Turtle and Path; use SVG Path.getPointAtLength
 
   http://stackoverflow.com/questions/12253855/svg-path-getpointatlength-returning-wrong-values
 

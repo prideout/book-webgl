@@ -65,7 +65,6 @@ var main = function() {
   var draw = function(currentTime) {
 
     gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.viewport(0, 0, GIZA.canvas.width, GIZA.canvas.height);
     
     var MinWidth = 700;
     var s = (MinWidth / GIZA.canvas.width) * GIZA.pixelScale;

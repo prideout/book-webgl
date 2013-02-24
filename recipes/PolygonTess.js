@@ -47,8 +47,7 @@ var main = function() {
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
     var vec2ify = function(o) {
-      var v = V2.make(600 - o[1], 35 + o[0]);
-      return v;
+      return V2.make(600 - o[1], 35 + o[0]);
     };
 
     var turtle = GIZA.Turtle2D(145.81951,11.151985);
