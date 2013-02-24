@@ -9,7 +9,7 @@ var main = function() {
     NORMAL: 1,
   };
 
-  var programs = COMMON.compilePrograms({
+  var programs = GIZA.compile({
     lit: {
       vs: ['genericvs'],
       fs: ['litfs'],

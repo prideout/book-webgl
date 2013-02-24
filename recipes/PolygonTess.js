@@ -12,7 +12,7 @@ var main = function() {
     TEXCOORD: 2
   };
 
-  var programs = COMMON.compilePrograms({
+  var programs = GIZA.compile({
     dot: {
       vs: ['dotvs'],
       fs: ['dotfs'],

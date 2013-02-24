@@ -12,7 +12,7 @@ var main = function() {
     NORMAL: 1,
   };
 
-  var programs = COMMON.compilePrograms({
+  var programs = GIZA.compile({
     solid: {
       vs: ['solidvs'],
       fs: ['solidfs'],

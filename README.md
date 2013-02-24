@@ -1,35 +1,32 @@
 
-# master
+# giza
+
+ - Use BufferView in more places.
+ 
+ - De-jQeuerify the COMMON.getMouse and move to GIZA
+
+ - Ditto for COMMON.Turntable
+ 
+ - Publicize GIZA by moving it into giza/giza and recipes into giza/demos. Remove the two Clock demos.  Then, make a subproject in book-webgl.  Also update the URL in chapter 1.  Root giza should contain an index.html so that gh-pages can
+be an exact duplicate of master.
+
+# book
 
 Ch 2 Verbiage
-  Program Objects / GIZA.FX
-  BufferView
-
-jslint
-  2 space indention
-  ' over "
-  expressions over declarations
 
 Ch 1 Additions
   Verbiage for MultiContext
-  Enhance MultiContext
-  Giza should allow mouse-over thumbs and go-to-fullscreen
-  http://codeflow.org/entries/2013/feb/15/soft-shadow-mapping/#antialiased-and-filtered-vsm
+  Enhance MultiContext:
+     Giza should allow mouse-over thumbs and go-to-fullscreen
+     http://codeflow.org/entries/2013/feb/15/soft-shadow-mapping/#antialiased-and-filtered-vsm
 
 # later
 
 - Specular looks wrong in MultiCanvas
 
-- De-jQeuerify the COMMON.getMouse and move to GIZA
-
 - Turntable
   - HomePosition
   - Pan / Zoom (similar to tdsview controls)
-
-- Move COMMON.Turntable into GIZA
-  - use raw DOM for mouse events instead of jQuery
-
-- Nuke Trackball
 
 - Jump into Chapter 3 demos (TexCoords, Ribbons and Tubes)
   Use a superellipsoid Mobius shape for demo purposes
@@ -49,8 +46,6 @@ Ch 1 Additions
 
 - GIZA.Turtle3D and GIZA.Tube for implementing Knots
 
-- Screenshots
-
 - PolygonTess
   - degenerate triangle
   - Move eval into a worker?
@@ -58,19 +53,18 @@ Ch 1 Additions
 - My explanation of premultiplied alpha sucks.
   There's a twitter link to a NVIDIA post about this.
 
-- pycollada -> King Tut
-
-- Shadow Mapping -- http://t.co/rOHU6Tcp
-
-# server 
-
 - a build system that uses jslint and minification
   > maybe this would just slow me down...
+    2 space indention
+    ' over "
+    functio expressions over declarations
   > perhaps I should wait to do this, and do it at the same time
     that I write some rst docs
     http://vimalkumar.in/sphinx-themes/solar/html/index.html
 
 # Notes
+
+- Shadow Mapping -- http://t.co/rOHU6Tcp
 
 to escape inside a listing:
 escapechar=\%,

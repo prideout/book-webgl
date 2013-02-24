@@ -24,7 +24,7 @@ var main = function() {
     COLOR: 1
   };
 
-  var programs = COMMON.compilePrograms({
+  var programs = GIZA.compile({
     simple: {
       vs: ['simple-vs'],
       fs: ['solid-color'],

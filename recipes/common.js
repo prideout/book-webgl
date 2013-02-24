@@ -19,6 +19,8 @@ COMMON.recipe = COMMON.basepath.split('/').pop();
 // replace the following source list with a single minified file.
 head.js(
   "../giza/Giza.js",
+  "../giza/Shaders.js",
+  "../giza/BufferView.js",
   "../giza/Vector.js",
   "../giza/Matrix.js",
   "../giza/Color.js",
@@ -27,9 +29,7 @@ head.js(
   "../giza/Surface.js",
   "../giza/Turtle.js",
   "../giza/Path.js",
-  "../giza/Trackball.js",
   "../giza/Turntable.js",
-  "../giza/BufferView.js",
   "lib/stats.min.js",
   COMMON.cdn + "jquery/1.8.0/jquery.min.js",
   COMMON.cdn + "jqueryui/1.9.2/jquery-ui.min.js",
@@ -119,78 +119,6 @@ COMMON.loadTexture = function (filename, onLoaded) {
   return tex.image.src = filename;
 };
 
-// Use the supplied JSON metadata to fetch GLSL, compile it, bind
-// attributes, and finally link it into a program object.
-COMMON.compilePrograms = function(shaders) {
-  var name, programs, shd;
-  programs = {};
-  for (name in shaders) {
-    shd = shaders[name];
-    programs[name] = COMMON.compileProgram(shd.vs, shd.fs, shd.attribs);
-  }
-  return programs;
-};
-
-COMMON.compileProgram = function(vNames, fNames, attribs) {
-  var fShader, key, numUniforms, program, status, u, uniforms, vShader, value, _i, _len;
-  var gl = GIZA.context;
-  vShader = COMMON.compileShader(vNames, gl.VERTEX_SHADER);
-  fShader = COMMON.compileShader(fNames, gl.FRAGMENT_SHADER);
-  program = gl.createProgram();
-  gl.attachShader(program, vShader);
-  gl.attachShader(program, fShader);
-  for (key in attribs) {
-    value = attribs[key];
-    gl.bindAttribLocation(program, value, key);
-  }
-  gl.linkProgram(program);
-  status = gl.getProgramParameter(program, gl.LINK_STATUS);
-  if (!status) {
-    console.error("Could not link " + vNames + " with " + fNames);
-  }
-  numUniforms = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
-  uniforms = (function() {
-    var _i, _results;
-    _results = [];
-    for (u = _i = 0; 0 <= numUniforms ? _i < numUniforms : _i > numUniforms; u = 0 <= numUniforms ? ++_i : --_i) {
-      _results.push(gl.getActiveUniform(program, u).name);
-    }
-    return _results;
-  })();
-  for (_i = 0, _len = uniforms.length; _i < _len; _i++) {
-    u = uniforms[_i];
-    program[u] = gl.getUniformLocation(program, u);
-  }
-  return program;
-};
-
-COMMON.compileShader = function(names, type) {
-  var gl = GIZA.context;
-  var handle, id, source, status;
-  source = ((function() {
-    var _i, _len, _results;
-    _results = [];
-    for (_i = 0, _len = names.length; _i < _len; _i++) {
-      id = names[_i];
-      var e = $('#' + id);
-      if (!e.length) {
-        e = $('iframe').contents().find('#' + id);
-      }
-      _results.push(e.text());
-    }
-    return _results;
-  })()).join();
-  handle = gl.createShader(type);
-  gl.shaderSource(handle, source);
-  gl.compileShader(handle);
-  status = gl.getShaderParameter(handle, gl.COMPILE_STATUS);
-  if (!status) {
-    console.error('GLSL error in ' + names + ':\n' +
-                  gl.getShaderInfoLog(handle));
-  }
-  return handle;
-};
-
 // If you wish the store your shaders in a separate HTML file,
 // include this at the bottom of your main page body:
 //
@@ -199,7 +127,7 @@ COMMON.compileShader = function(names, type) {
 // This function will extract the spec and attribs for you.
 COMMON.initFrame = function() {
   eval($('iframe').contents().find('#shaders').text());
-  COMMON.programs = COMMON.compilePrograms(spec);
+  COMMON.programs = GIZA.compile(spec);
   COMMON.attribs = attribs;
 };
 
@@ -247,74 +175,6 @@ COMMON.enableScreenshot = function(drawFunc, triggerKey) {
       window.focus();
     }
   });
-
-};
-
-// 'canvas' is the canvas element you wish to tumble on;
-// 'extent' is a percentage in [0,1] that defines the radius.
-COMMON.Trackball = function(canvas, extent) {
-  var V2 = GIZA.Vector2;
-  var V3 = GIZA.Vector3;
-  var gl = GIZA.context;
-  if (!(this instanceof COMMON.Trackball)) {
-    return new COMMON.Trackball(canvas);
-  }
-  canvas = canvas || $('canvas');
-  extent = extent || 0.9;
-
-  var w = GIZA.canvas.width, h = GIZA.canvas.height;
-  var center = V2.make(w / 2, h / 2);
-  var radius = (radius || 0.8) * Math.min(w, h / 2);
-  var trackball = new GIZA.Trackball(center, radius);
-
-  this.getSpin = function() {
-    return trackball.getSpin();
-  };
-
-  var isDown = false;
-
-  canvas.mousedown(function(e) {
-    var pos = COMMON.getMouse(e, this);
-    trackball.startDrag(pos);
-    isDown = true;
-  });
-
-  canvas.mouseup(function(e) {
-    var pos = COMMON.getMouse(e, this);
-    trackball.endDrag(pos);
-    isDown = false;
-  });
-
-  canvas.mousemove(function(e) {
-    var pos = COMMON.getMouse(e, this);
-
-    // Handle the case where the mouse was released off-canvas
-    if (isDown && !e.which) {
-      trackball.endDrag(pos);
-      isDown = false;
-      return;
-    }
-
-    trackball.updateDrag(pos);
-  });
-
-  var center = V3.make(center[0], center[1], 0);
-  var normal = V3.make(0, 0, 1);
-  var path = new GIZA.Path.Circle(center, radius, normal);
-  var numPoints = 128;
-
-  var typedArray = path.tessellate(numPoints);
-  var circleBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, circleBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, typedArray, gl.STATIC_DRAW);
-
-  this.drawCircle = function(attrib) {
-    if (isDown) {
-      gl.bindBuffer(gl.ARRAY_BUFFER, circleBuffer);
-      gl.vertexAttribPointer(attrib || 0, 3, gl.FLOAT, false, 12, 0);
-      gl.drawArrays(gl.LINE_LOOP, 0, numPoints);
-    }
-  };
 
 };
 

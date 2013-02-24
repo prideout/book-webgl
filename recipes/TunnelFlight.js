@@ -17,7 +17,7 @@ var main = function() {
     NORMAL: 1,
   };
 
-  var programs = COMMON.compilePrograms({
+  var programs = GIZA.compile({
     lit: {
       vs: ['solidvs'],
       fs: ['lit'],
