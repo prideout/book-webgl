@@ -147,6 +147,6 @@ var main = function() {
   }
 
   init();
-  draw(GIZA.getTime());
+  GIZA.animate(draw);
 
 };

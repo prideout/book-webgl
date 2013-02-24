@@ -26,6 +26,8 @@ COMMON.mouse = {
 // replace the following source list with a single minified file.
 head.js(
   "../giza/Giza.js",
+  "../giza/Utility.js",
+  "../giza/Animation.js",
   "../giza/Shaders.js",
   "../giza/BufferView.js",
   "../giza/Vector.js",

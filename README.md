@@ -3,8 +3,13 @@
 
  - ThumbTest
      hover-over
-     
+ 
  - Remove MultiCanvas
+ 
+ - everybody should use animate(...)
+
+ - giza/Animation: fix the problem where the FIRST draw call doesn't have any preamble
+   perhaps remove endFrame for this.
  
  - MouseTest:
      fork from ColorWheel
@@ -12,21 +17,21 @@
      
  - De-jQeuerify the COMMON.getMouse and move to GIZA
 
-GIZA.position = function(elem) {
-  var box = elem.getBoundingClientRect()
-  var body = document.body
-  var docElem = document.documentElement
-  var scrollTop = window.pageYOffset
-  var scrollLeft = window.pageXOffset
-  var top  = box.top +  scrollTop
-  var left = box.left + scrollLeft
-  return { top: Math.round(top), left: Math.round(left) }
-}
+    GIZA.position = function(elem) {
+      var box = elem.getBoundingClientRect()
+      var body = document.body
+      var docElem = document.documentElement
+      var scrollTop = window.pageYOffset
+      var scrollLeft = window.pageXOffset
+      var top  = box.top +  scrollTop
+      var left = box.left + scrollLeft
+      return { top: Math.round(top), left: Math.round(left) }
+    }
 
  - Ditto for COMMON.Turntable
  
- - Publicize GIZA by moving it into giza/giza and recipes into giza/demos. Remove the two Clock demos.  Then, make a subproject in book-webgl.  Also update the URL in chapter 1.  Root giza should contain an index.html so that gh-pages can
-be an exact duplicate of master.
+ - Make GIZA into its own repo by moving it into giza/giza and recipes into giza/demos. Remove the two Clock demos.  Then, make a subproject in book-webgl.  Also update the URL in chapter 1.  Root giza should contain an index.html so that gh-pages can
+be an exact duplicate of master.  Or, move pbrowser into sandbox to free up a repo.
 
 # book
 
