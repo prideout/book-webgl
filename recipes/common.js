@@ -16,8 +16,9 @@ COMMON.recipe = COMMON.basepath.split('/').pop();
 
 // Convenient mouse location
 COMMON.mouse = {
-  position = null,
-  buttons = null
+  position: null,
+  buttons: null,
+  isInside: false,
 };
 
 // Use HeadJS to load scripts asynchronously, but execute them
@@ -204,6 +205,14 @@ COMMON.Turntable = function(config) {
   var isDown = false;
   var canvas = $(turntable.config.canvas);
 
+  canvas.mouseenter(function() {
+    COMMON.mouse.isInside = true;
+  });
+
+  canvas.mouseleave(function() {
+    COMMON.mouse.isInside = false;
+  });
+
   canvas.mousedown(function(e) {
     var pos = COMMON.getMouse(e, this);
     turntable.startDrag(pos);
@@ -233,23 +242,11 @@ COMMON.Turntable = function(config) {
 };
 
 COMMON.initMultiple = function(canvasList) {
-
   var global = Function('return this')();
-
-  // Use head.js to load scripts in parallel.
-  for (var i = 0; i < canvasList.length; i++) {
-    head.js(canvasList[i].scriptUrl);
-  }
-
-  // Execute the GIZA.init() method for each canvas
-  // then execute its designated entry point function.
-  head.ready(function() {
-    for (var i = 0; i < canvasList.length; i++) {
-      var canvasId = canvasList[i].canvasId;
-      var entryFunction = canvasList[i].entryFunction;
-      GIZA.init(document.getElementById(canvasId));
-      global[entryFunction]();
-    }
+  canvasList.forEach(function(session) {
+    $.getScript(session.scriptUrl, function() {
+      GIZA.startCanvas = document.getElementById(session.canvasId);
+      global[session.entryFunction || 'main']();
+    });
   });
-
 };

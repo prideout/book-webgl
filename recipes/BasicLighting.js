@@ -13,9 +13,9 @@ var main = function() {
   };
 
   var programs = GIZA.compile({
-    solid: {
-      vs: ['solidvs'],
-      fs: ['solidfs'],
+    lighting: {
+      vs: ['litvs'],
+      fs: ['litfs'],
       attribs: {
         Position: attribs.POSITION,
         Normal: attribs.NORMAL
@@ -85,7 +85,7 @@ var main = function() {
     gl.enableVertexAttribArray(attribs.POSITION);
     gl.enableVertexAttribArray(attribs.NORMAL);
 
-    var program = programs.solid;
+    var program = programs.lighting;
     gl.useProgram(program);
     gl.uniformMatrix4fv(program.projection, false, proj);
     gl.uniform4f(program.lightPosition, 0.75, .25, 1, 1);

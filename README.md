@@ -1,10 +1,15 @@
 
 # giza
 
+ - ThumbTest
+     hover-over
+     
+ - Remove MultiCanvas
+ 
  - MouseTest:
-     draw a point sprite where the mouse is
+     fork from ColorWheel
      color it when "down"
-
+     
  - De-jQeuerify the COMMON.getMouse and move to GIZA
 
 GIZA.position = function(elem) {
@@ -33,7 +38,13 @@ Ch 1 Additions
      Giza should allow mouse-over thumbs and go-to-fullsxbcreen
      http://codeflow.org/entries/2013/feb/15/soft-shadow-mapping/#antialiased-and-filtered-vsm
 
+Ch 3 : Interaction (?)
+
 # later
+
+- Use SVG Path.getPointAtLength
+
+  http://stackoverflow.com/questions/12253855/svg-path-getpointatlength-returning-wrong-values
 
 - Specular looks wrong in MultiCanvas
 

@@ -8,8 +8,8 @@ var GIZA = GIZA || { REVISION : '0' };
 
 GIZA.init = function(canvas, options) {
 
-  if (GIZA.currentGizaContext) {
-    GIZA.merge(GIZA.currentGizaContext, GIZA);
+  if (GIZA.saveGizaContext) {
+    GIZA.saveGizaContext();
   }
 
   window.requestAnimationFrame = window.requestAnimationFrame ||
@@ -18,7 +18,7 @@ GIZA.init = function(canvas, options) {
     window.msRequestAnimationFrame;
 
   // Find a canvas element if one wasn't specified.
-  canvas = canvas || document.getElementsByTagName('canvas')[0];
+  canvas = canvas || GIZA.startCanvas || document.getElementsByTagName('canvas')[0];
 
   // Gather information about the canvas.
   var pixelScale = window.devicePixelRatio || 1;
@@ -61,14 +61,19 @@ GIZA.init = function(canvas, options) {
     'aspect',
     'drawHooks',
   ];
-  GIZA.makeGizaContext = function() {
-    return GIZA.extract(GIZA, gizaContextFields);
+  GIZA.currentGizaContext = GIZA.extract(GIZA, gizaContextFields);
+
+  // Methods to handle multiple canvases.  Client should rarely (if ever)
+  // need to call these methods, even if when using multiple canvases.
+  GIZA.saveGizaContext = function() {
+    if (GIZA.currentGizaContext) {
+      GIZA.merge(GIZA.currentGizaContext, GIZA, gizaContextFields);
+    }
   };
   GIZA.setGizaContext = function(gizaContext) {
-    GIZA.merge(GIZA.currentGizaContext, GIZA);
+    GIZA.saveGizaContext();
     GIZA.merge(GIZA, gizaContext);
   };
-  GIZA.currentGizaContext = GIZA.makeGizaContext();
   GIZA.gizaContexts = GIZA.gizaContexts || [];
   GIZA.gizaContexts.push(GIZA.currentGizaContext);
 
@@ -114,8 +119,15 @@ GIZA.format = function (s, o) {
   );
 };
 
-// Copy all attributes from b into a
-GIZA.merge = function (a, b) {
+// Copy all (or some) attributes from b into a
+GIZA.merge = function (a, b, fields) {
+  if (fields) {
+    for (var i = 0; i < fields.length; i++) {
+      var field = fields[i];
+      a[field] = b[field];
+    }
+    return a;
+  }
   for (var attrname in b) {
     a[attrname] = b[attrname];
   }

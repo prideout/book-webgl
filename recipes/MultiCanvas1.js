@@ -1,5 +1,6 @@
 var main1 = function() {
 
+  GIZA.init();
   var gl = GIZA.context;
   var M4 = GIZA.Matrix4;
 
