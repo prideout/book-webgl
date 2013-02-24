@@ -18,7 +18,6 @@ COMMON.recipe = COMMON.basepath.split('/').pop();
 COMMON.mouse = {
   position: null,
   buttons: null,
-  isInside: false,
 };
 
 // Use HeadJS to load scripts asynchronously, but execute them
@@ -207,14 +206,6 @@ COMMON.Turntable = function(config) {
   var isDown = false;
   var canvas = $(turntable.config.canvas);
 
-  canvas.mouseenter(function() {
-    COMMON.mouse.isInside = true;
-  });
-
-  canvas.mouseleave(function() {
-    COMMON.mouse.isInside = false;
-  });
-
   canvas.mousedown(function(e) {
     var pos = COMMON.getMouse(e, this);
     turntable.startDrag(pos);
@@ -247,8 +238,28 @@ COMMON.initMultiple = function(canvasList) {
   var global = Function('return this')();
   canvasList.forEach(function(session) {
     $.getScript(session.scriptUrl, function() {
+
+      // Select the chosen canvas element for GIZA.init, and execute
+      // the entry point function for the canvas.
       GIZA.startCanvas = document.getElementById(session.canvasId);
       global[session.entryFunction || 'main']();
+      
+      // If the canvas opts for "lazy" animation, then it pauses when
+      // the mouse leaves, and resumes when the mouse enters.
+      if (session.lazy) {
+        var gizaContext = GIZA.currentGizaContext;
+        var canvas = $(GIZA.startCanvas);
+        canvas.mouseenter(function() {
+          GIZA.setGizaContext(gizaContext);
+          GIZA.resume();
+        });
+        canvas.mouseleave(function() {
+          GIZA.setGizaContext(gizaContext);
+          GIZA.pause();
+        });
+        GIZA.pause();
+      }
+
     });
   });
 };

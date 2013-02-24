@@ -74,6 +74,7 @@ GIZA.init = function(canvas, options) {
   };
   GIZA.setGizaContext = function(gizaContext) {
     GIZA.saveGizaContext();
+    GIZA.currentGizaContext = gizaContext;
     GIZA.merge(GIZA, gizaContext);
   };
   GIZA.gizaContexts = GIZA.gizaContexts || [];

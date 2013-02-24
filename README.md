@@ -1,10 +1,7 @@
 
 # giza
 
- - ThumbTest
-     hover-over
- 
- - Remove MultiCanvas
+ - pause and resume should make time corrections
  
  - everybody should use animate(...)
 
