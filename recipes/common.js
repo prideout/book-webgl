@@ -17,7 +17,7 @@ COMMON.recipe = COMMON.basepath.split('/').pop();
 // Convenient mouse location
 COMMON.mouse = {
   position: null,
-  buttons: null,
+  altKey: false,
 };
 
 // Use HeadJS to load scripts asynchronously, but execute them
@@ -49,6 +49,19 @@ head.ready(function() {
 
   // Execute the recipe's main() function
   main();
+
+  // Install a mouse handler that corresponds to CSS pixels (not
+  // device pixels) but with (0,0) at the lower-left to be more
+  // WebGL-friendly.
+  var canvas = GIZA.canvas;
+  canvas.addEventListener("mousedown", function(event) {
+    var V2 = GIZA.Vector2;
+    var box = canvas.getBoundingClientRect();
+    var x = event.clientX - box.left;
+    var y = event.clientY - box.top;
+    COMMON.mouse.altKey = event.altKey;
+    COMMON.mouse.position = V2.make(x, box.height - y);
+  });
 
   // Download highlightjs and provide buttons for it
   var hljsurl = "http://yandex.st/highlightjs/7.3/highlight.min.js";

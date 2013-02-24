@@ -139,10 +139,11 @@ var main = function() {
 
     gl.clear(gl.COLOR_BUFFER_BIT);
     
+    // This is 1-to-1 with "CSS pixels" and "mouse pixels"
     var mv = M4.identity();
     var proj = M4.orthographic(
-      0, GIZA.canvas.width / GIZA.pixelScale,
-      0, GIZA.canvas.height / GIZA.pixelScale,
+      0, GIZA.canvas.clientWidth,
+      0, GIZA.canvas.clientHeight,
       0, 1);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.coords);

@@ -1,46 +1,41 @@
 
 # giza
 
- - add mouse-testing to PolygonTess
-   why is it dividing by pixelScale?  that's inconsistent with the viewport!
-     
- - De-jQeuerify the COMMON.getMouse and move to GIZA
+- common.js now has a raw addEventListener; run with it and 
+  update PolygonTess appropriately.  Don't worry about pointer lock etc.
 
-    GIZA.position = function(elem) {
-      var box = elem.getBoundingClientRect()
-      var body = document.body
-      var docElem = document.documentElement
-      var scrollTop = window.pageYOffset
-      var scrollLeft = window.pageXOffset
-      var top  = box.top +  scrollTop
-      var left = box.left + scrollLeft
-      return { top: Math.round(top), left: Math.round(left) }
-    }
+- De-jQeuerify the COMMON.getMouse and move to GIZA
 
- - Ditto for COMMON.Turntable
- 
- - Make GIZA into its own repo by moving it into giza/giza and recipes into giza/demos. Remove the two Clock demos.  Then, make a subproject in book-webgl.  Also update the URL in chapter 1.  Root giza should contain an index.html so that gh-pages can
+- Ditto for COMMON.Turntable
+
+- Spin inertia with physical mouse doesn't work
+
+- Make GIZA into its own repo by moving it into giza/giza and recipes into giza/demos. Remove the two Clock demos.  Then, make a subproject in book-webgl.  Also update the URL in chapter 1.  Root giza should contain an index.html so that gh-pages can
 be an exact duplicate of master.  Or, move pbrowser into sandbox to free up a repo.
 
 # book
 
-Canvas is NOT block-level like div...  it's "phrasing content" like span
-Verbiage for animate()
+Ch 1
+
+- Canvas is NOT block-level like div...  it's "phrasing content" like span
+
+- Verbiage for animate()
 
 Ch 2 Verbiage
 
 Ch 3 : Interaction (?)
+  Pointer Lock and Fullscreen APIs
   Verbiage for MultiContext
-  Enhance MultiContext:
-     Giza should allow mouse-over thumbs and go-to-fullsxbcreen
-     http://codeflow.org/entries/2013/feb/15/soft-shadow-mapping/#antialiased-and-filtered-vsm
+  Enhance MultiContext demo with go-to-fullscreen
 
 # later
 
- - Fix refresh issue in ThumbTest when checks are visible: COMMON.bindOptions should call GIZA.refresh (when paused, equiv to resume + pause)
+- Fix refresh issue in ThumbTest when checks are visible: COMMON.bindOptions should call GIZA.refresh (when paused, equiv to resume + pause)
    with all GIZA contexts.  Perhaps this uses "GIZA.forEachGizaContext"
 
- - Combine Turtle and Path; use SVG Path.getPointAtLength
+- TunnelFlight is lit incorrectly
+
+- Combine Turtle and Path; use SVG Path.getPointAtLength
 
   http://stackoverflow.com/questions/12253855/svg-path-getpointatlength-returning-wrong-values
 

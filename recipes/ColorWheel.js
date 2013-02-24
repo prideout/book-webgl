@@ -66,12 +66,9 @@ var main = function() {
 
     gl.clear(gl.COLOR_BUFFER_BIT);
     
-    var MinWidth = 700;
-    var s = (MinWidth / GIZA.canvas.width) * GIZA.pixelScale;
-    s = (s < 1.0) ? 1.0 : s;
     var proj = M4.orthographic(
-        -s * GIZA.aspect, s * GIZA.aspect, // left right
-        -s, +s, // bottom top
+        -GIZA.aspect, GIZA.aspect, // left right
+        -1, +1, // bottom top
         -10, 10);  // near far
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);

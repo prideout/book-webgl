@@ -57,7 +57,6 @@ GIZA.init = function(canvas, options) {
   // just in case multiple canvases are needed.
   var gizaContextFields = [
     'context',
-    'pixelScale',
     'canvas',
     'aspect',
     'drawHooks',
