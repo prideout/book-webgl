@@ -14,12 +14,6 @@ COMMON.basepath = window.location.toString().slice(0, -5)
 // Extract the name of the recipe from the basepath.
 COMMON.recipe = COMMON.basepath.split('/').pop();
 
-// Convenient mouse location
-COMMON.mouse = {
-  position: null,
-  altKey: false,
-};
-
 // Use HeadJS to load scripts asynchronously, but execute them
 // synchronously.  After we have a build process in place, we'll
 // replace the following source list with a single minified file.
@@ -51,17 +45,8 @@ head.ready(function() {
   main();
 
   // Install a mouse handler that corresponds to CSS pixels (not
-  // device pixels) but with (0,0) at the lower-left to be more
-  // WebGL-friendly.
+  // device pixels) with (0,0) at the upper-left corner.
   var canvas = GIZA.canvas;
-  canvas.addEventListener("mousedown", function(event) {
-    var V2 = GIZA.Vector2;
-    var box = canvas.getBoundingClientRect();
-    var x = event.clientX - box.left;
-    var y = event.clientY - box.top;
-    COMMON.mouse.altKey = event.altKey;
-    COMMON.mouse.position = V2.make(x, box.height - y);
-  });
 
   // Download highlightjs and provide buttons for it
   var hljsurl = "http://yandex.st/highlightjs/7.3/highlight.min.js";

@@ -35,7 +35,8 @@ var main = function() {
   var buffers = {
     coords: gl.createBuffer(),
     lines: gl.createBuffer(),
-    triangles: gl.createBuffer()
+    triangles: gl.createBuffer(),
+    mousePoints: gl.createBuffer()
   };
   var pointCount, outerPointCount, triangleCount;
 
@@ -187,6 +188,17 @@ var main = function() {
     gl.bindTexture(gl.TEXTURE_2D, spriteTexture);
     gl.uniform4f(program.color, 0, 0.25, 0.5, 1);
     gl.drawArrays(gl.POINTS, 0, pointCount);
+
+    // Draw the mouse cursor
+    if (GIZA.mouse.position) {
+      var typedArray = new Float32Array(GIZA.mouse.position);
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffers.mousePoints);
+      gl.bufferData(gl.ARRAY_BUFFER, typedArray, gl.STATIC_DRAW);
+      gl.vertexAttribPointer(attribs.POSITION, 2, gl.FLOAT, false, 0, 0);
+      gl.uniform1f(program.pointSize, 12 * GIZA.pixelScale);
+      gl.uniform4f(program.color, 0.5, 0.0, 0.0, 1);
+      gl.drawArrays(gl.POINTS, 0, 1);
+    }
 
     gl.disableVertexAttribArray(attribs.POSITION);
   }
