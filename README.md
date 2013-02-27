@@ -7,10 +7,6 @@
 
 - Spin inertia with physical mouse doesn't work
 
-- Remove Turtle2D, push functionality into Path (quick n dirty for now)
-
-- Remove MochaTest
-
 - Make GIZA into its own repo by moving it into giza/giza and recipes into giza/demos. Remove the two Clock demos.  Then, make a subproject in book-webgl.  Also update the URL in chapter 1.  Root giza should contain an index.html so that gh-pages can
 be an exact duplicate of master.  Or, move pbrowser into sandbox to free up a repo.
 

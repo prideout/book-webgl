@@ -29,7 +29,6 @@ head.js(
   "../giza/Topo.js",
   "../giza/Polygon.js",
   "../giza/Surface.js",
-  "../giza/Turtle.js",
   "../giza/Path.js",
   "../giza/Turntable.js",
   "lib/stats.min.js",

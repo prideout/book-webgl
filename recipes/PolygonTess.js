@@ -51,7 +51,7 @@ var main = function() {
       return V2.make(600 - o[1], 35 + o[0]);
     };
 
-    var turtle = GIZA.Turtle2D(145.81951,11.151985);
+    var turtle = GIZA.Path.Turtle(145.81951,11.151985);
     turtle.bezierCurveTo(95.611047,11.151985,64.330726,57.81599,65.04964,114.16208);
     turtle.bezierCurveTo(65.570813,155.00985,86.749849,194.54165,119.00057,243.25502);
     turtle.lineTo(11.1508857,230.99317);
@@ -68,7 +68,7 @@ var main = function() {
     turtle.closePath();
     contourPts = turtle.coords().map(vec2ify);
 
-    var turtle = GIZA.Turtle2D(145.81951,50.025214);
+    var turtle = GIZA.Path.Turtle(145.81951,50.025214);
     turtle.bezierCurveTo(160.87845,50.025214,171.12769,56.48072,179.76059,69.052219);
     turtle.bezierCurveTo(188.3935,81.623719,193.95465,101.05069,193.87445,123.43774);
     turtle.bezierCurveTo(193.69265,174.18665,166.85172,209.27827,145.81951,241.22019);
