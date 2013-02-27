@@ -1,7 +1,9 @@
 
 # giza
 
-- Spin inertia with physical mouse doesn't work
+- Turntable: Spin inertia with physical mouse doesn't work.
+  I think we can implement something robust by computing an average velocity:
+  Keep around a small history of (time,spin,tilt) samples, taken during the drawHook.
 
 - Make GIZA into its own repo by moving it into giza/giza and recipes into giza/demos. Remove the two Clock demos.  Then, make a subproject in book-webgl.  Also update the URL in chapter 1.  Root giza should contain an index.html so that gh-pages can
 be an exact duplicate of master.  Or, move pbrowser into sandbox to free up a repo.
