@@ -18,7 +18,7 @@ GIZA.Turntable = function(config) {
     allowSpin: true,
     spinFriction: 0.125, // 0 means no friction (infinite spin) while 1 means no inertia
     epsilon: 3, // distance (in pixels) to wait before deciding if a drag is a Tilt or a Spin
-    radiansPerPixel: V2.make(0.01, -0.01),
+    radiansPerPixel: V2.make(0.01, 0.01),
     canvas: GIZA.canvas,
     trackpad: true,  // if true, compensate for the delay on trackpads that occur between touchup and mouseup
     lockAxes: false, // if true, don't allow simultaneous spin + tilt
@@ -40,14 +40,7 @@ GIZA.Turntable = function(config) {
     ReturningHome: 6,
   };
 
-  this.startDrag = function(position) {};
-  this.endDrag = function(position) {};
-  this.updateDrag = function(position) {};
-  this.getRotation = function() {};
-  this.returnHome = function() {};
-
   var startPosition = V2.make(0, 0);
-
   var currentPosition = V2.make(0, 0);
 
   // TODO make these into a "positionHistory"
@@ -61,6 +54,21 @@ GIZA.Turntable = function(config) {
   var previousTime = null;
   var inertiaSpeed = 0;
   var initialInertia = 0.125;
+  var turntable = this;
+
+  GIZA.mousedown(function(position, modifiers) {
+    turntable.startDrag(position);
+  });
+
+  GIZA.mouseup(function(position, modifiers) {
+    turntable.endDrag(position);
+  });
+
+  GIZA.mousemove(function(position, modifiers) {
+    if (modifiers.button) {
+      turntable.updateDrag(position);
+    }
+  });
 
   GIZA.drawHooks.push(function(time) {
     if (previousTime == null) {
@@ -93,7 +101,6 @@ GIZA.Turntable = function(config) {
 
     previous2Position = previousPosition.slice(0);
     previousPosition = currentPosition.slice(0);
-
   });
 
   this.startDrag = function(position) {

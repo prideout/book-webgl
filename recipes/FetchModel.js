@@ -36,7 +36,7 @@ var main = function() {
   var quadPoints = null;
   var prims = [];
   var numPendingLoadTasks = 3;
-  var turntable = new COMMON.Turntable();
+  var turntable = new GIZA.Turntable();
 
   var onArrival = function(userdata) {
 
@@ -86,8 +86,8 @@ var main = function() {
     }
 
     // Aggregate the buffers into a monolithic VBO.
-    coords = GIZA.join(coords);
-    normals = GIZA.join(normals);
+    coords = GIZA.joinBuffers(coords);
+    normals = GIZA.joinBuffers(normals);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.modelCoords);
     gl.bufferData(gl.ARRAY_BUFFER, coords, gl.STATIC_DRAW);
@@ -127,9 +127,9 @@ var main = function() {
   };
 
   var init = function() {
-    GIZA.get('media/Clock.coords.bin', onCoords, 'binary');
-    GIZA.get('media/Clock.quads.bin', onQuads, 'binary');
-    GIZA.get('media/Clock.meta.json', onMeta, 'json');
+    GIZA.download('media/Clock.coords.bin', onCoords, 'binary');
+    GIZA.download('media/Clock.quads.bin', onQuads, 'binary');
+    GIZA.download('media/Clock.meta.json', onMeta, 'json');
     gl.clearColor(0.9, 0.9, 0.9, 1);
   }
 

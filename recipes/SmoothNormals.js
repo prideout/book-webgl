@@ -37,7 +37,7 @@ var main = function() {
   var quadPoints = null;
   var prims = [];
   var numPendingLoadTasks = 3;
-  var turntable = new COMMON.Turntable();
+  var turntable = new GIZA.Turntable();
 
   var onArrival = function(userdata) {
 
@@ -85,8 +85,8 @@ var main = function() {
     }
 
     // Aggregate the buffers into a monolithic VBO.
-    normals = GIZA.join(normals);
-    tris = GIZA.join(tris);
+    normals = GIZA.joinBuffers(normals);
+    tris = GIZA.joinBuffers(tris);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.modelCoords);
     gl.bufferData(gl.ARRAY_BUFFER, quadPoints, gl.STATIC_DRAW);
@@ -195,9 +195,9 @@ var main = function() {
     gl.disableVertexAttribArray(attribs.NORMAL);
   }
 
-  GIZA.get('media/Gizmo.coords.bin', onCoords, 'binary');
-  GIZA.get('media/Gizmo.quads.bin', onQuads, 'binary');
-  GIZA.get('media/Gizmo.meta.json', onMeta, 'json');
+  GIZA.download('media/Gizmo.coords.bin', onCoords, 'binary');
+  GIZA.download('media/Gizmo.quads.bin', onQuads, 'binary');
+  GIZA.download('media/Gizmo.meta.json', onMeta, 'json');
   gl.clearColor(0.9, 0.9, 0.9, 1);
 
   GIZA.animate(draw);

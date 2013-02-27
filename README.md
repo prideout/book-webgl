@@ -1,10 +1,6 @@
 
 # giza
 
-- Remove COMMON.Turntable, push it into GIZA.Turntable
-
-- Remove COMMON.getMouse
-
 - Spin inertia with physical mouse doesn't work
 
 - Make GIZA into its own repo by moving it into giza/giza and recipes into giza/demos. Remove the two Clock demos.  Then, make a subproject in book-webgl.  Also update the URL in chapter 1.  Root giza should contain an index.html so that gh-pages can

@@ -1,5 +1,6 @@
 var GIZA = GIZA || {};
 
+// Flattens a list-of-lists into a single list.  Doesn't go any deeper.
 GIZA.flatten = function(array) {
     var element, flattened, _i, _len;
     flattened = [];
@@ -14,7 +15,7 @@ GIZA.flatten = function(array) {
     return flattened;
 };
 
-// String interpolation -- this is Douglas Crockford's "supplant" function
+// String interpolation -- this is Douglas Crockford's "supplant" function.
 GIZA.format = function (s, o) {
   return s.replace(
       /{([^{}]*)}/g,
@@ -26,7 +27,7 @@ GIZA.format = function (s, o) {
   );
 };
 
-// Copy all (or some) attributes from b into a
+// Copy all (or some) attributes from b into a.
 GIZA.merge = function (a, b, fields) {
   if (fields) {
     for (var i = 0; i < fields.length; i++) {
@@ -54,7 +55,7 @@ GIZA.extract = function(object, fields) {
 
 // Aggregate a list of typed arrays by pre-allocating a giant array
 // and blitting into it.
-GIZA.join = function(arrays, destType) {
+GIZA.joinBuffers = function(arrays, destType) {
   destType = destType || arrays[0].constructor;
   var totalSize = arrays.reduce(function(prev, curr) {
     return prev + curr.length;
@@ -70,7 +71,7 @@ GIZA.join = function(arrays, destType) {
 
 // Kinda like jQuery's get function, except that dataType can be
 // either "binary" or "json".
-GIZA.get = function(url, successFunc, dataType) {
+GIZA.download = function(url, successFunc, dataType) {
   var xhr = new XMLHttpRequest();
   xhr.open('GET', url, true);
   if (dataType == 'json') {
@@ -89,4 +90,12 @@ GIZA.get = function(url, successFunc, dataType) {
   }
   xhr.onload = onloadFunc;
   xhr.send(null);
+};
+
+// Take a screenshot of the canvas and open it in a new tab.
+GIZA.grabCanvas = function () {
+  var url = GIZA.canvas.toDataURL("image/png");
+  window.open(url, '_blank');
+  window.focus();
+  return url;
 };

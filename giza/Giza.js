@@ -98,29 +98,5 @@ GIZA.init = function(canvas, options) {
     }
   };
 
-  // Listen for mouse events.
-  var giza = GIZA;
-  giza.mouse = {
-    position: null,
-    modifiers: false,
-  };
-  var updateMouse = function(event) {
-    var box = canvas.getBoundingClientRect();
-    var x = event.clientX - box.left;
-    var y = event.clientY - box.top;
-    giza.mouse.modifiers = {
-      alt: event.altKey,
-      shift: event.shiftKey,
-      ctrl: event.ctrlKey
-    };
-    giza.mouse.position = [x, y];
-  };
-  canvas.addEventListener("mousedown", updateMouse);
-  canvas.addEventListener("mouseup", updateMouse);
-  canvas.addEventListener("mousemove", updateMouse);
-  canvas.addEventListener("mouseenter", updateMouse);
-  canvas.addEventListener("mouseout", function() {
-    giza.mouse.position = null;
-  });
-
+  GIZA.mouseinit();
 }

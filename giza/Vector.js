@@ -1,9 +1,6 @@
 // This file defines groups of free functions (eg, GIZA.Vector2).  It
 // does NOT define new JavaScript objects.  The underlying data can be
 // native JavaScript Arrays or TypedArrays.
-//
-// See MochaTest.js for usage examples.
-//
 
 var GIZA = GIZA || {};
 

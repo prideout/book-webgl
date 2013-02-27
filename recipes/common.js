@@ -30,6 +30,7 @@ head.js(
   "../giza/Polygon.js",
   "../giza/Surface.js",
   "../giza/Path.js",
+  "../giza/Mouse.js",
   "../giza/Turntable.js",
   "lib/stats.min.js",
   COMMON.cdn + "jquery/1.8.0/jquery.min.js",
@@ -157,20 +158,6 @@ COMMON.bindOptions = function(options, divid) {
   });
 };
 
-// Returns a relative mouse position inside the given element,
-// which is usually a canvas.  It's tempting to use offsetX
-// instead, but that's not safe across browsers.  Also invert
-// Y such that the origin is at the lower-left corner.
-COMMON.getMouse = function(event, element) {
-  var p = $(element).position();
-  var x = event.pageX - p.left;
-  var y = event.pageY - p.top;
-  var s = GIZA.pixelScale;
-  y = $(element).height() - y;
-  COMMON.mouse.position = GIZA.Vector2.make(x * s, y * s);
-  return COMMON.mouse.position;
-};
-
 // Create an event handler that listens for a chosen screenshot key,
 // which is 's' if unspecified.  When pressed, a new tab opens with
 // the PNG image.
@@ -178,56 +165,7 @@ COMMON.enableScreenshot = function(drawFunc, triggerKey) {
   triggerKey = triggerKey || 83;
   $(document).keydown(function(e) {
     if (e.keyCode == triggerKey) {
-      drawFunc(COMMON.now);
-      var imgUrl = GIZA.canvas.toDataURL("image/png");
-      window.open(imgUrl, '_blank');
-      window.focus();
-    }
-  });
-
-};
-
-COMMON.Turntable = function(config) {
-
-  var V2 = GIZA.Vector2;
-  var V3 = GIZA.Vector3;
-  var gl = GIZA.context;
-  if (!(this instanceof COMMON.Turntable)) {
-    return new COMMON.Turntable(config);
-  }
-
-  var turntable = new GIZA.Turntable(config);
-
-  this.getRotation = function() {
-    return turntable.getRotation();
-  };
-
-  var isDown = false;
-  var canvas = $(turntable.config.canvas);
-
-  canvas.mousedown(function(e) {
-    var pos = COMMON.getMouse(e, this);
-    turntable.startDrag(pos);
-    isDown = true;
-  });
-
-  canvas.mouseup(function(e) {
-    var pos = COMMON.getMouse(e, this);
-    turntable.endDrag(pos);
-    isDown = false;
-  });
-
-  canvas.mousemove(function(e) {
-    var pos = COMMON.getMouse(e, this);
-
-    // Handle the case where the mouse was released off-canvas
-    if (isDown && !e.which) {
-      turntable.endDrag(pos);
-      isDown = false;
-      return;
-    }
-    if (isDown) {
-      turntable.updateDrag(pos);
+      GIZA.grabCanvas();
     }
   });
 

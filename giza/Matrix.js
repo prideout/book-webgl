@@ -1,9 +1,6 @@
 // This file defines groups of free functions (eg, GIZA.Matrix3).  It
 // does NOT define new JavaScript objects.  The underlying data must be
 // a one-dimensional native JavaScript Array, or TypedArray.
-//
-// See MochaTest.js for usage examples.
-//
 
 var GIZA = GIZA || {};
 
