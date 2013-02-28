@@ -127,9 +127,9 @@ var main = function() {
   };
 
   var init = function() {
-    GIZA.download('media/Clock.coords.bin', onCoords, 'binary');
-    GIZA.download('media/Clock.quads.bin', onQuads, 'binary');
-    GIZA.download('media/Clock.meta.json', onMeta, 'json');
+    GIZA.download('assets/Clock.coords.bin', onCoords, 'binary');
+    GIZA.download('assets/Clock.quads.bin', onQuads, 'binary');
+    GIZA.download('assets/Clock.meta.json', onMeta, 'json');
     gl.clearColor(0.9, 0.9, 0.9, 1);
   }
 

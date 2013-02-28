@@ -3,7 +3,7 @@
 
 - repair references to ../giza
 
-- common, css, etc should stay in giza/demos.  make symlinks if necessary.
+- remove StrobeLight etc from giza/demos
 
 - Update the URL in chapter 1.
 
