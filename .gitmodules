@@ -1,0 +1,3 @@
+[submodule "giza"]
+	path = giza
+	url = https://github.com/prideout/giza.git

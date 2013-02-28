@@ -37,19 +37,11 @@
       window.onload = function() {
         var data = {
             StrobeLight: "Strobe Light",
-            ColorWheel: "Color Wheel",
-            ParametricSurf: "Parametric Surface",
-            BasicLighting: "Basic Lighting",
-            SmoothNormals: "Smooth Normals",
-            Rule3: null,
-            PolygonTess: "Polygon Tessellation",
-            FacetNormals: "Facet Normals",
             ColorGraph: "Color Graph",
-            FetchWireframe: "-- FetchWireframe",
-            FetchModel: "-- FetchModel",
+            FetchWireframe: "Fetch Wireframe",
+            FetchModel: "Fetch Model",
             TunnelFlight: "Tunnel Flight",
             Compositor: "Compositor",
-            ThumbTest: "ThumbTest",
         };
         var ejs = new EJS({element: "recipe-template"});
         ejs.update("recipe-list", {recipes: data});

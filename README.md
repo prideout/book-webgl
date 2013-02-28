@@ -1,12 +1,13 @@
 
 # giza
 
-- Turntable: Spin inertia with physical mouse doesn't work.
-  I think we can implement something robust by computing an average velocity:
-  Keep around a small history of (time,spin,tilt) samples, taken during the drawHook.
+- repair references to ../giza
 
-- Make GIZA into its own repo by moving it into giza/giza and recipes into giza/demos. Remove the two Clock demos.  Then, make a subproject in book-webgl.  Also update the URL in chapter 1.  Root giza should contain an index.html so that gh-pages can
-be an exact duplicate of master.  Or, move pbrowser into sandbox to free up a repo.
+- common, css, etc should stay in giza/demos.  make symlinks if necessary.
+
+- Update the URL in chapter 1.
+
+- Root giza should contain an index.html
 
 # book
 
@@ -24,6 +25,14 @@ Ch 3 : Interaction (?)
   Enhance MultiContext demo with go-to-fullscreen
 
 # later
+
+- Remove 'js' from ColorGraph since it's broken
+
+- Make points draggable in PolygonTess since the instructions claim it's possible
+
+- Turntable: Spin inertia with physical mouse doesn't work.
+  I think we can implement something robust by computing an average velocity:
+  Keep around a small history of (time,spin,tilt) samples, taken during the drawHook.
 
 - Fix refresh issue in ThumbTest when checks are visible: COMMON.bindOptions should call GIZA.refresh (when paused, equiv to resume + pause)
    with all GIZA contexts.  Perhaps this uses "GIZA.forEachGizaContext"
