@@ -1,11 +1,9 @@
 
 # giza
 
-- remove StrobeLight etc from giza/demos
+- through smart javascripting, you can present a unified list in book/recipes/index
 
 - Update the URL in chapter 1.  Also we aren't using stats.
-
-- Root giza should contain an index.html
 
 # book
 
