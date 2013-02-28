@@ -1,11 +1,9 @@
 
 # giza
 
-- repair references to ../giza
-
 - remove StrobeLight etc from giza/demos
 
-- Update the URL in chapter 1.
+- Update the URL in chapter 1.  Also we aren't using stats.
 
 - Root giza should contain an index.html
 
@@ -26,7 +24,7 @@ Ch 3 : Interaction (?)
 
 # later
 
-- Remove 'js' from ColorGraph since it's broken
+- Remove 'js' from ColorGraph since it's broken, and remove the stats stuff
 
 - Make points draggable in PolygonTess since the instructions claim it's possible
 
