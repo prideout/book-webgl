@@ -1,7 +1,7 @@
 
 # giza
 
-- through smart javascripting, you can present a unified list in book/recipes/index
+- Remove 'js' from ColorGraph since it's broken, and remove the stats stuff
 
 - Update the URL in chapter 1.  Also we aren't using stats.
 
@@ -21,8 +21,6 @@ Ch 3 : Interaction (?)
   Enhance MultiContext demo with go-to-fullscreen
 
 # later
-
-- Remove 'js' from ColorGraph since it's broken, and remove the stats stuff
 
 - Make points draggable in PolygonTess since the instructions claim it's possible
 
