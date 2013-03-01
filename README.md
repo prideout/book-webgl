@@ -1,4 +1,7 @@
 
+- Make points draggable in PolygonTess since the instructions claim it's possible
+  Add getNearest() to Path.Turtle
+
 # book
 
 Ch 1
@@ -17,8 +20,6 @@ Ch 3 : Interaction (?)
   Enhance MultiContext demo with go-to-fullscreen
 
 # later
-
-- Make points draggable in PolygonTess since the instructions claim it's possible
 
 - Turntable: Spin inertia with physical mouse doesn't work.
   I think we can implement something robust by computing an average velocity:
