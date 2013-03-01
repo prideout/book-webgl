@@ -1,20 +1,5 @@
 var main = function() {
 
-  // Provide a performance indicator in the upper-right corner.
-  var stats = new Stats();
-  stats.setMode(1); // 0: fps, 1: ms
-  stats.domElement.style.position = 'absolute';
-  stats.domElement.style.right = '0px';
-  stats.domElement.style.top = '0px';
-  document.body.appendChild( stats.domElement );  
-
-  // The mode variable is either "glsl" or "js".  It specifies if
-  // evaluation of the sinc function occurs on the CPU or on the GPU.
-  var mode = $("input:checked")[0].id;
-  $("#radio").buttonset().change(function (e) {
-    mode = $("input:checked")[0].id;
-  });
-
   GIZA.init();
   var gl = GIZA.context;
   var M4 = GIZA.Matrix4;
@@ -72,7 +57,6 @@ var main = function() {
 
   var draw = function(currentTime) {
     
-    stats.begin();
     gl.clear(gl.COLOR_BUFFER_BIT);
     
     var mv = M4.lookAt(
@@ -98,37 +82,11 @@ var main = function() {
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.sincCoords);
 
-    var program;
-    if (mode == "glsl") {
-      program = programs.sinc;
-      gl.useProgram(program);
-      gl.uniform1f(program.interval, interval);
-      gl.uniform1f(program.width, width);
-      gl.uniform1f(program.height, sincHeight);
-    } else {
-      program = programs.simple;
-      gl.useProgram(program);
-
-      var rawBuffer = sinc.points().buffer;
-      var coordView = new Float32Array(rawBuffer)
-      var colorView = new Uint8Array(rawBuffer, 12);
-
-      var coordIndex = 0;
-      var colorIndex = 0;
-      for (var i = 0; i < sinc.pointCount(); i++) {
-        var z = coordView[coordIndex+2];
-        var v = 255 * Math.abs(z * 4);
-        v = Math.min(v, 255);
-        colorView[colorIndex+0] = v;     // red
-        colorView[colorIndex+1] = 128;   // grn
-        colorView[colorIndex+2] = 255-v; // blu
-        colorView[colorIndex+3] = 64;    // alp
-        colorIndex += 16;
-        coordIndex += 4;
-      }
-
-      gl.bufferData(gl.ARRAY_BUFFER, rawBuffer, gl.STATIC_DRAW);
-    }
+    var program = programs.sinc;
+    gl.useProgram(program);
+    gl.uniform1f(program.interval, interval);
+    gl.uniform1f(program.width, width);
+    gl.uniform1f(program.height, sincHeight);
 
     var stride = (surfFlags & GIZA.surfaceFlags.COLORS) ? 16 : 12;
     gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, stride, 0);
@@ -145,8 +103,6 @@ var main = function() {
 
     gl.disableVertexAttribArray(attribs.POSITION);
     gl.disableVertexAttribArray(attribs.COLOR);
-
-    stats.end();
   }
 
   init();

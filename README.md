@@ -1,13 +1,9 @@
 
-# giza
-
-- Remove 'js' from ColorGraph since it's broken, and remove the stats stuff
-
-- Update the URL in chapter 1.  Also we aren't using stats.
-
 # book
 
 Ch 1
+
+- Update the giza URL.  Also we aren't using stats.
 
 - Canvas is NOT block-level like div...  it's "phrasing content" like span
 
@@ -31,7 +27,7 @@ Ch 3 : Interaction (?)
 - Fix refresh issue in ThumbTest when checks are visible: COMMON.bindOptions should call GIZA.refresh (when paused, equiv to resume + pause)
    with all GIZA contexts.  Perhaps this uses "GIZA.forEachGizaContext"
 
-- TunnelFlight is lit incorrectly
+- TunnelFlight is lit incorrectly on HP laptop
 
 - Combine Turtle and Path; use SVG Path.getPointAtLength
 
