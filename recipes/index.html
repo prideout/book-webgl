@@ -7,6 +7,8 @@
     <meta name="author" content="Philip Rideout">
     <link href="../recipes/css/style.css" rel="stylesheet">
     <style>
+        h1 { font-size: 14px; }
+
         a, a:visited, a:hover {
             text-decoration: none;
             color: #11a;
@@ -71,7 +73,7 @@
       [% for(var key in items) { %]
        <li>
          [% if (items[key]) { %]
-           <a class='big' href='[%= base %]/[%= key %].html'>
+           <a href='[%= base %]/[%= key %].html'>
              [%= items[key] %]
            </a>
          [% } else { %]

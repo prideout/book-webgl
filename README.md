@@ -1,6 +1,5 @@
 
-- Make points draggable in PolygonTess since the instructions claim it's possible
-  Add getNearest() to Path.Turtle
+- Honor dragging in 
 
 # book
 
