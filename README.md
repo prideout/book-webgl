@@ -1,13 +1,17 @@
 
 # book
 
-- data-main and canvas are highlighted incorrectly in Listing 1.7
+- Ch 2 Verbiage from "Program Objects" downwards
 
-- Research CMYK images.
+- ColorWheel Recipe
 
-- Ch 2
-  - Verbiage
-  - ColorWheel
+- During the week:
+
+  - Digitize figure 2.1
+
+  - data-main and canvas are highlighted incorrectly in Listing 1.7
+
+  - Research CMYK images.
 
 - Ch 3 : Interaction (?)
   - Pointer Lock and Fullscreen APIs
