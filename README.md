@@ -1,15 +1,12 @@
 
 # book
 
-Ch 1
+- Ch 1
+  - Latex
 
-- Explain requirejs instead of headjs
-
-- Canvas is NOT block-level like div...  it's "phrasing content" like span
-
-- Verbiage for animate()
-
-Ch 2 Verbiage
+- Ch 2
+  - Verbiage
+  - ColorWheel
 
 Ch 3 : Interaction (?)
   Pointer Lock and Fullscreen APIs

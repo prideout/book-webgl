@@ -44,7 +44,7 @@ No matter which browser you choose, your best friend will quickly become its \te
   \label{fig:Giza}
 \end{figure}
 
-This is not just a book, it's a library.  Many of the code listings on these pages are lifted directly from the giza library, named after the ancient Egyptian city.  The Giza pyramids form a skyline of triangles, which are the primary drawing primitive in WebGL.  The pyramid shape also describes a \term{viewing frustum}, a spatial region that encompasses everything within a certain vantage point in a 3D graphics program.
+This is not just a book, it's a library.  Many of the code listings on these pages are lifted directly from the giza library, named after the ancient Egyptian city.  The Giza pyramids form a skyline of triangles, which are the primary drawing primitive in WebGL.  The pyramid shape also describes a \term{viewing frustum}, the spatial region that encompasses everything within a certain vantage point in a 3D graphics program.
 
 As a design philosphy, giza rarely calls methods on the WebGL context object -- that's your job!  This differentiates it from higher-level libraries such as ThreeJS.  Instead of providing an abstraction of WebGL, giza offers a set of utility layers that help with vector algebra, building mesh data, and implementing 3D manipulator widgets.
 
@@ -52,7 +52,7 @@ As a design philosphy, giza rarely calls methods on the WebGL context object -- 
 
 \subsubsection{Namespaces}
 
-All giza methods belong to a global object called \code{GIZA}, following the namespace convention common in JavaScript.  For example, here's how we define a small utility function that merges all attributes from object \code{b} into object \code{a}:
+All giza methods belong to a global object called \code{GIZA}, using a simple JavaScript module pattern.  For example, here's how we define a small utility function that merges all attributes from object \code{b} into object \code{a}:
 
 \begin{lstlisting}[language=JavaScript]
 var GIZA = GIZA || {};
@@ -65,9 +65,9 @@ GIZA.merge = function (a, b) {
 };
 \end{lstlisting}
 
-The first line is repeated at the top of all giza files.  This allows clients to include a subset of giza because it creates a new \code{GIZA} namespace only if it doesn't already exist.
+The first line is repeated at the top of all giza files.  This allows clients to include a subset of giza because it creates a new \code{GIZA} namespace only if one doesn't already exist.  Moreover it allows clients to load giza files asynchronously and out of order for speed.
 
-Other than \code{GIZA}, the only global variable that we create is \code{COMMON}.  This is where we place a small handful of WebGL helpers.  Unlike methods in \code{GIZA} -- which have no dependencies on third-party libraries) -- methods in \code{COMMON} are allowed to call jQuery functions and WebGL methods.
+Other than \code{GIZA}, the only global variable that we create is \code{COMMON}.  This is where we place a small handful of WebGL helpers.  Unlike methods in \code{GIZA} -- which have no dependencies on third-party libraries -- methods in \code{COMMON} are allowed to call jQuery functions.
 
 \subsubsection{Function Declaration Syntax}
 
@@ -122,7 +122,7 @@ The canvas element \index{\code{<canvas>} element} is one of the cornerstones of
 
 \subsection{Dealing with Size}
 
-By default, \code{<canvas>} is a block level element, similar to \code{<div>}.  This means that it can only be a child of \code{<body>}, and that it's typically rendered with surrounding line breaks.
+According to the HTML specification, \code{<canvas>} is \term{phrasing content}, roughly meaning that it has layout characteristics similar to \code{<span>}.  This means that it is typically a child of a paragraph-style element (such as \code{<div>}) and doesn't have any flow-content children.  In fact, \code{<canvas>} often has no children whatsoever; usually all of its visual content is determined programmatically.
 
 An important distinction between canvas and other elements is that it has two \index{size} sizes.  One size is the \term{display area}, specified with familiar \index{CSS} CSS mechanisms.  The other size is the \term{content size}, specified with explicit \code{width} \index{\code{width} attribute} and \code{height} \index{\code{height} attribute} attributes.  The content size specifies an off-screen drawing surface that gets scaled into the display area on the web page.
 
@@ -143,10 +143,10 @@ Watch out!  If you assume that device pixels are 1:1 with CSS pixels, some users
 To get around these issues, \code{GIZA.init} (Listing~\ref{lst:GIZA:init1}) examines the \linebreak \code{devicePixelRatio} window property to check how much upscaling is active.  It also examines the \code{clientWidth} \index{\code{clientWidth}, \code{clientHeight}} and \code{clientHeight} properties of the canvas element to obtain the finalized display area.
 
 \begin{lstlisting}[
-    caption={Adjusting the canvas size.},
+    caption={Adjust the canvas size and create a WebGL context.},
     label=lst:GIZA:init1,
     language=JavaScript]
-GIZA.init = function(canvasElement) {
+GIZA.init = function(canvasElement, options) {
 
   // Find a canvas element if one wasn't specified.
   var canvas = canvasElement;
@@ -167,6 +167,8 @@ GIZA.init = function(canvasElement) {
 
   adjustSize();
   window.onresize = adjustSize;
+  return canvas.getContext('experimental-webgl', options);
+};
 \end{lstlisting} \index{\code{GIZA.init}}
 
 In Listing~\ref{lst:GIZA:init1}, we adjust the canvas width and height not only during initialization, but also in response to the window's \index{\code{onresize} event} \code{onresize} event.  (It's also common to adjust the WebGL \term{viewport} and \term{projection matrix} during a resize event, but we'll learn more about that in future chapters.)
@@ -245,7 +247,7 @@ We'll learn more about \code{drawArrays} and \code{drawElements} in the next cha
     caption={Clearing the canvas.},
     label=lst:ClearCanvas,
     language=JavaScript]
-gl = canvas.getContext('experimental-webgl', {antialias: true});
+var gl = canvas.getContext('experimental-webgl', {antialias: true});
 gl.clearColor(1, 1, 0, 1);
 gl.clear(gl.COLOR_BUFFER_BIT);
 \end{lstlisting}
@@ -354,25 +356,34 @@ GIZA.init = function(canvasElement) {
     window.msRequestAnimationFrame;
 \end{lstlisting} \index{\code{GIZA.init}}
 
-The \code{requestAnimationFrame} method is actually more like \code{setTimeout} than \code{setInterval} because it doesn't automatically repeat itself.  Typically this means you'll want to call it during your draw cycle.  Giza wraps this functionality by providing the \code{endFrame} function, meant to be called at the end of your draw function. See Listing~\ref{lst:GIZA:endFrame}.
+The \code{requestAnimationFrame} method is actually more like \code{setTimeout} than \code{setInterval} because it doesn't automatically repeat itself.  Typically this means you'll want to call it during your draw cycle.  Giza can generate a function wrapper that wil call \code{requestAnimationFrame} on your behalf.  See Listing~\ref{lst:GIZA:animate}.
 
 \begin{lstlisting}[
-    caption={Common end-of-frame tasks.},
-    label=lst:GIZA:endFrame,
+    caption={Wrap a draw function to request the next animation frame.},
+    label=lst:GIZA:animate,
     language=JavaScript]
-GIZA.endFrame = function(drawFunc) {
-  var err = gl.getError();
-  if (err != gl.NO_ERROR) {
-    console.error("WebGL error during draw cycle: ", err);
-    // Don't request another draw cycle here;
-    // this prevents an infinite cascade of errors.
-  } else {
-    window.requestAnimationFrame(drawFunc, GIZA.canvas);
-  }
-};
-\end{lstlisting} \index{\code{GIZA.endframe}}
+GIZA.animate = function(drawFunc) {
 
-In addition to requesting the next animation cycle, it also checks the WebGL error state and halts animation if an error occurs.  This is good practice to maintain clean, error-free code.
+  var renderFrame = function(time) {
+
+    // Execute the custom draw function.
+    drawFunc(time);
+
+    // Check WebGL error state before requesting the next animation
+    // frame.
+    err = gl.getError();
+    if (err == gl.NO_ERROR) {
+      window.requestAnimationFrame(renderFrame, GIZA.canvas);
+    } else {
+      console.error("WebGL error during draw cycle: ", err);
+    }
+  };
+
+  renderFrame(GIZA.getTime());
+};
+\end{lstlisting} \index{\code{GIZA.animate}}
+
+In addition to requesting the next animation cycle, giza's draw wrapper also checks the WebGL error state and halts animation if an error occurs.  This is good practice to prevent cascading errors and maintain clean code.
 
 See Listing~\ref{lst:drawFunc} for a usage example.  All recipes will have this basic structure.
 
@@ -380,16 +391,16 @@ See Listing~\ref{lst:drawFunc} for a usage example.  All recipes will have this 
     caption={High-level structure of a Giza application.},
     label=lst:drawFunc,
     language=JavaScript]
+var gl = GIZA.init();
+
+// various initialization and loading code goes here...
+
 var draw = function(time) {
-  // do work here...
-  GIZA.endFrame(draw);
-}
+  // efficient rendering work goes here...
+};
 
-GIZA.init();
-draw(GIZA.getTime());
+GIZA.animate(draw));
 \end{lstlisting}
-
-Note that we explicitly called \code{draw} function after initialization to kick off the animation cycle.  Giza provides a \code{getTime} method to provide a timestamp that's consistent with the time argument provided to \code{requestAnimationFrame}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \rrecipe{Recipe 1: Strobe Light}
@@ -414,8 +425,7 @@ This chapter's recipe is called \code{StrobeLight}, which isn't very exciting bu
   <head>
     <title>StrobeLight</title>
     <link href="css/style.css" rel="stylesheet">
-    <script src="lib/head.load.min.js"></script>
-    <script src="common.js"></script>
+    <script data-main="common.js" src="lib/require.js"></script>
   </head>
   <body>
     <h1>Strobe Light</h1>
@@ -433,36 +443,41 @@ This chapter's recipe is called \code{StrobeLight}, which isn't very exciting bu
 While giza has no dependencies on any JavaScript libraries, the \code{COMMON} layer depends on the following third-party libraries to make life a little easier:
 
 \begin{description}
-\item[head.js] Resource loading library from Tero Piirainen.  We use a minified subset called \texttt{head.load.min.js}.
+\item[RequireJS] JavaScript file and module loader.
 \item[jQuery] John Resig's insanely popular ``write less do more'' library.
 \end{description}
 
-HeadJS enables us to simplify the HTML by sharing a list of JavaScript libraries in \code{common.js} instead of duplicating a large set of \code{<script>} tags in every HTML file.  It also has the benefit of loading scripts asynchronously for better performance.  See Listing~\ref{lst:COMMON:file} for \code{common.js}.
+RequireJS enables us to simplify the HTML by sharing a list of JavaScript libraries in \code{common.js} instead of duplicating a large set of \code{<script>} tags in every HTML file.  It also has the benefit of loading scripts asynchronously for better performance.  See Listing~\ref{lst:COMMON:file} for \code{common.js}.
 
 \begin{lstlisting}[
     caption={\code{common.js}},
     escapechar=\%,
     label=lst:COMMON:file,
     language=JavaScript]
-var COMMON = {}
+var COMMON = (function () {
 
-// Path to a content delivery network for jQuery etc.
-COMMON.cdn = "http://ajax.googleapis.com/ajax/libs/";
+  // Path to a content delivery network for jQuery.
+  var cdn = "http://ajax.googleapis.com/ajax/libs/";
 
-// Get the recipe name by stripping the .html extension from the URL.
-COMMON.basepath = window.location.toString().slice(0, -5)
+  // Get the recipe name by stripping the .html extension from the URL.
+  var basepath = window.location.toString().slice(0, -5)
 
-// Use HeadJS to efficiently load and run a list of scripts.
-head.js(
-  "lib/giza.min.js",
-  COMMON.cdn + "jquery/1.8.0/jquery.min.js",
-  COMMON.cdn + "jqueryui/1.9.2/jquery-ui.min.js",
-  COMMON.basepath + ".js");
+  var scripts = [
+    "lib/giza.min.js",
+    cdn + "jquery/1.8.0/jquery.min.js",
+    cdn + "jqueryui/1.9.2/jquery-ui.min.js",
+    basepath + ".js"
+  ];
 
-// The last script in the above list is the recipe script, which
-// defines a global function called "main".
-head.ready(main);
+  // Load the scripts asynchronously and execute the recipe-specific main() function.
+  require(scripts, function() { main() });
+
+})();
 \end{lstlisting} \index{\code{common.js}}
+
+\begin{sidenote}
+For simplicity we use RequireJS only to load scripts asychronously; we don't use it to create formal AMD modules and dependencies.
+\end{sidenote}
 
 Each recipe in the book consists of two files: \code{RecipeName.html} and \code{RecipeName.js}.  The latter defines a function \code{main}, which we pass to \code{head.ready} to ensure that it executes after all libraries are loaded.
 
@@ -471,9 +486,8 @@ Each recipe in the book consists of two files: \code{RecipeName.html} and \code{
 {RecipeName}.html
 common.js
 css/style.css
-lib/head.load.min.js
+lib/require.js
 lib/giza.min.js
-lib/stats.min.js
 \end{comment}
 
 Next let's take a look at the \code{main} function for the Strobe Light recipe.  See Listing~\ref{lst:StrobeLight2}.
@@ -493,10 +507,9 @@ var main = function() {
     x = 0.25 + x * 0.5;
     gl.clearColor(x, x, 0, 1);
     gl.clear(gl.COLOR_BUFFER_BIT);
-    GIZA.endFrame(draw);
   };
 
-  draw(GIZA.getTime());
+  GIZA.animate(draw);
 };
 \end{lstlisting} \index{\code{StrobeLight.js}}
 
@@ -505,8 +518,7 @@ By now you should understand everything in Listing~\ref{lst:StrobeLight2}.  Just
 \begin{enumerate}
 \item Call \code{GIZA.init()} and create an alias to the WebGL context object that was extracted from the \code{<canvas>} element.
 \item Define a draw function that applies a sine function to the current time (in milliseconds), using it to modulate the background color between amber and yellow.
-\item Call \code{GIZA.endFrame} at the end of the draw cycle so that another animation frame is always requested, unless a WebGL error occurs.
-\item After defining the draw function, call it once to kick off the infinite animation.
+\item After defining the draw function, kick off the infinite animation using \code{GIZA.animate}.
 \end{enumerate}
 
 This was a rather boring example, but it was just a Hello World.  We'll start drawing actual 3D geometry in the next chapter.

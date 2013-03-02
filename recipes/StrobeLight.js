@@ -1,7 +1,6 @@
 var main = function() {
 
-  GIZA.init();
-  var gl = GIZA.context;
+  var gl = GIZA.init();
 
   var draw = function(currentTime) {
     var x = 0.5 + 0.5 * Math.sin(currentTime / 100);
