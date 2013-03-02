@@ -1,17 +1,18 @@
 
 # book
 
-- Ch 1
-  - Latex
+- data-main and canvas are highlighted incorrectly in Listing 1.7
+
+- Research CMYK images.
 
 - Ch 2
   - Verbiage
   - ColorWheel
 
-Ch 3 : Interaction (?)
-  Pointer Lock and Fullscreen APIs
-  Verbiage for MultiContext
-  Enhance MultiContext demo with go-to-fullscreen
+- Ch 3 : Interaction (?)
+  - Pointer Lock and Fullscreen APIs
+  - Verbiage for MultiContext
+  - Enhance MultiContext demo with go-to-fullscreen
 
 # later
 
