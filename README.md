@@ -1,11 +1,9 @@
 
-- Honor dragging in 
-
 # book
 
 Ch 1
 
-- Update the giza URL.  Also we aren't using stats.
+- Explain requirejs instead of headjs
 
 - Canvas is NOT block-level like div...  it's "phrasing content" like span
 
