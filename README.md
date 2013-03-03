@@ -1,9 +1,10 @@
 
 # book
 
-- Ch 2 Verbiage from "Program Objects" downwards
+- Ch 2 Verbiage from "Program Objects" downwards, skipping Lines and Triangles.
 
 - ColorWheel Recipe
+  - Get a screenshot in soon.
 
 - During the week:
 

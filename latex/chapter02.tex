@@ -9,11 +9,11 @@
 \section{WebGL at 10,000 feet}
 \summary{High-level overview of the WebGL rendering pipeline.}
 
-Earlier we indicated that only two WebGL functions that can actually render 3D geometry: \code{drawArrays} and \code{drawElements}.  Both of these simply push a set of \index{vertices} \term{vertices} into the WebGL pipeline.  The vertices become rasterized into \index{fragments} \term{fragments}, or pixel values in the canvas.  Every vertex is defined by a set of \term{vertex attributes}, one of which is usually an XYZ coordinate.  Vertices come together to form \term{primitives}, which include point sprites, lines, and triangles.
+Earlier we mentioned that only two WebGL functions that can actually render 3D geometry: \code{drawArrays} and \code{drawElements}.  Both of these simply push a set of \index{vertices} vertices into the WebGL pipeline.  The vertices become rasterized into \index{fragments} \term{fragments}, or pixel values in the canvas.  Every vertex is defined by a set of \term{vertex attributes}, one of which is usually an XYZ coordinate.  Vertices come together to form \term{primitives}, which include point sprites, lines, and triangles.
 
 Vertices initially belong to a swath of memory called a \term{vertex buffer}, and WebGL provides a rich API that allows you to specify how heterogenous attributes can be packed into a vertex buffer.  Figure~\ref{fig:AssemblyLine} depicts how vertex data flows through the pipeline, starting off in vertex buffers, eventually transforming into pixels in the canvas.
 
-Two phases of this data flow are programmable: the vertex shader and the fragment shader.  Shaders are bundled together into \index{program object} \term{program objects}.   More precisely, a program object is the linked combination of a compiled vertex shader, a compiled fragment shader, and a set of constant inputs known as \term{uniforms}.
+Two phases of this data flow are programmable: the vertex shader and the fragment shader.  Shaders are bundled together into \index{program object} \term{program objects}.   More precisely, a program object is the linked combination of a compiled vertex shader, a compiled fragment shader, a set of bindings for constant inputs (\term{uniforms}), and a set of bindings for vertex-varying inputs (\term{attributes}).
 
 We'll dive deeper into shaders and vertex buffers later in this chapter; for now, see Listing~\ref{lst:Taste} for a taste of the various set-up that must be performed before actually pushing the vertices into the pipeline.
 
@@ -49,11 +49,11 @@ gl.drawArrays(gl.TRIANGLES, 0, 6);
 
 \subsection{Fetching and Compiling Shader Strings}
 
-Shaders are specified with multi-line strings that get passed to WebGL for compilation.  There are several ways to embed a multi-line string in your JavaScript code: you can end each line with a backslash, or concatenate each line with the \code{+} operator, or you can create an array of strings that can you glue together with \code{join}.
+Shaders are specified with multi-line strings that get passed to WebGL for compilation.  There are several ways to embed a multi-line string in JavaScript code: you can end each line with a backslash, or concatenate a series of single-line strings with the \code{+} operator, or create an array of strings that become glued together with \code{join}.
 
-None of embedded options are ideal, so another idea is to download the entire shader from an external file, which jQuery's \code{get} method makes easy.
+None of embedded options are ideal, so another idea is to download the entire shader from an external file.  With jQuery, this is easily accomplished with \code{\$.get}.
 
-In this book's sample code, we've decided to use each recipe's HTML file as a container for all shader strings.  There's plenty of precendent for using \code{<script>} tags to hold things that aren't scripts.  For example, this is common when using template systems such as handlebars (\url{http://handlebarsjs.com}). 
+In this book's sample code however, we've decided to use the HTML file as a container for all shader strings, by authoring the shaders inside \code{<script>} elements.  Embedding arbitrary strings in \code{<script>} is also a common practice with templating systems such as \mbox{\code{handlebars.js}}.
 
 Listing~\ref{lst:embed} shows how we embed a fragment shader in the HTML.
 
@@ -70,25 +70,25 @@ Listing~\ref{lst:embed} shows how we embed a fragment shader in the HTML.
 </script>
 \end{lstlisting}
 
-Each shader (or ``snippet'' of a shader, as we'll see later) is given a unique identifier in its enclosing script tag.  From JavaScript, this string can easily be retrieved using jQuery:
+With this system, every shader string is assigned a unique identifier in its enclosing script tag.  The string can then easily be retrieved using jQuery:
 
 \begin{lstlisting}[language=JavaScript]
 var fsText = $('#simplefs').text();
 \end{lstlisting} % $
 
-Since Giza avoids having a dependency on jQuery, it does something similar using the raw DOM element:
+Alternatively, you can fetch the string through the raw DOM element:
 
 \begin{lstlisting}[language=JavaScript]
 var fsText = document.getElementById('simplefs').innerHTML;
 \end{lstlisting}
 
-Now that we have a shader string, the next step is to pass it into a WebGL shader object and compile it:
+After obtaining a shader string, the next step is to pass it into a WebGL shader object and compile it:
 
 \begin{lstlisting}[language=JavaScript]
 var fsObject = gl.createShader(gl.FRAGMENT_SHADER);
 gl.shaderSource(shaderObject, fsText);
 gl.compileShader(fsObject);
-status = gl.getShaderParameter(fsObject, gl.COMPILE_STATUS);
+var status = gl.getShaderParameter(fsObject, gl.COMPILE_STATUS);
 if (!status) {
  console.error(gl.getShaderInfoLog(fsObject));
 }
@@ -98,7 +98,7 @@ Since GLSL does not have a \code{\#include} statement, it's often useful to stit
 
 \begin{lstlisting}[
     language=JavaScript,
-    caption={The implementation of \code{GIZA.compileShader}, minus some error checking.},
+    caption={The \code{compileShader} function (error checking omitted).},
     label=lst:GIZA:compileShader]
 GIZA.compileShader = function(ids, type) {
   var gl = GIZA.context;
@@ -116,11 +116,36 @@ GIZA.compileShader = function(ids, type) {
 
 \subsection{Creating Program Objects}
 
-Recall that a \term{program object} program object is the linked combination of a compiled vertex shader, a compiled fragment shader, and a set of uniforms.
+Recall that a \index{program object} program object is the linked combination of a compiled vertex shader, a compiled fragment shader, and a set of bindings for uniforms and attributes.
 
-\subsection{Setting Uniforms}
+Giza provides a utility function that takes two id lists (one for the vertex shader, one for the fragment shader), aggregates them, compiles them, and links them into a program object.  See Listing~\ref{lst:GIZA:compileProgram}.
 
-\subsection{Giza's \code{compile} function}
+\begin{lstlisting}[
+    language=JavaScript,
+    caption={The \code{compileProgram} function (abridged).},
+    label=lst:GIZA:compileProgram]
+GIZA.compileProgram = function(vsIds, fsIds) {
+  var gl = GIZA.context;
+  var vShader = GIZA.compileShader(vsIds, gl.VERTEX_SHADER);
+  var fShader = GIZA.compileShader(fsIds, gl.FRAGMENT_SHADER);
+  var program = gl.createProgram();
+  gl.attachShader(program, vShader);
+  gl.attachShader(program, fShader);
+  // bind attributes here...
+  gl.linkProgram(program);
+  var status = gl.getProgramParameter(program, gl.LINK_STATUS);
+  if (!status) {
+    console.error("Could not link " + vsIds + " with " + fsIds);
+  }
+  // query uniforms here...
+}
+\end{lstlisting}
+
+\subsection{Binding Attributes}
+
+\subsection{Querying and Setting Uniforms}
+
+\subsection{Giza's top-level \code{compile} utility}
 \notetoself{Describes a useful abstraction of the WebGL program object.}
 
 \section{Lines and Triangles}
