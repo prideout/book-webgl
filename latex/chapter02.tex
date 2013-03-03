@@ -53,9 +53,9 @@ Shaders are specified with multi-line strings that get passed to WebGL for compi
 
 None of embedded options are ideal, so another idea is to download the entire shader from an external file.  With jQuery, this is easily accomplished with \code{\$.get}.
 
-In this book's sample code however, we've decided to use the HTML file as a container for all shader strings, by authoring the shaders inside \code{<script>} elements.  Embedding arbitrary strings in \code{<script>} is also a common practice with templating systems such as \mbox{\code{handlebars.js}}.
+In this book's sample code however, we've decided to use the HTML file as a container for all shader strings by authoring the shaders inside \code{<script>} elements.  Embedding arbitrary strings in \code{<script>} is also a common practice with templating systems such as \mbox{\code{handlebars.js}}.
 
-Listing~\ref{lst:embed} shows how we embed a fragment shader in the HTML.
+Listing~\ref{lst:embed} shows how we embed a fragment shader in HTML.
 
 \begin{lstlisting}[
     language=HTML,
@@ -104,8 +104,7 @@ GIZA.compileShader = function(ids, type) {
   var gl = GIZA.context;
   var sourceText = "";
   for (var i = 0; i < ids.length; i++) {
-    var e = document.getElementById(id);
-    sourceText += e.innerHTML;
+    sourceText += document.getElementById(id).innerHTML;
   }
   var shaderObject = gl.createShader(type);
   gl.shaderSource(shaderObject, sourceText);
@@ -118,7 +117,7 @@ GIZA.compileShader = function(ids, type) {
 
 Recall that a \index{program object} program object is the linked combination of a compiled vertex shader, a compiled fragment shader, and a set of bindings for uniforms and attributes.
 
-Giza provides a utility function that takes two id lists (one for the vertex shader, one for the fragment shader), aggregates them, compiles them, and links them into a program object.  See Listing~\ref{lst:GIZA:compileProgram}.
+Giza provides a utility function that takes two id lists (one for the vertex shader, one for the fragment shader), aggregates them, compiles them, and links them into a program object.  See Listing~\ref{lst:GIZA:compileProgram} for the skeletal implementation -- we'll flesh it out a bit in upcoming sections.
 
 \begin{lstlisting}[
     language=JavaScript,
@@ -141,7 +140,50 @@ GIZA.compileProgram = function(vsIds, fsIds) {
 }
 \end{lstlisting}
 
-\subsection{Binding Attributes}
+\subsection{Binding Vertex Attributes}
+
+WebGL needs to know how to correllate data elements in the vertex buffer with attributes in the vertex shader.  Each attribute that the vertex shader reads has an associated string name and an associated integer handle.  The integer handle is used when specifying the vertex buffer layout, as you'll see in \ref{sec:VBOs}.
+
+WebGL and other OpenGL-based APIs provide two ways of associating attributes with integers: you can let WebGL make the association, or you can bind them explicitly.  To allow WebGL to make the association, just compile and link the program object as you normally would, then query for the integer handles afterwards like so:
+
+\begin{lstlisting}
+var handle = gl.getAttribLocation(programObject, "Position");
+\end{lstlisting}
+
+However, I generally try to avoid this strategy, preferring instead to bind attributes explicitly using WebGL's \code{bindAttribLocation} method:
+
+\begin{lstlisting}
+var handle = 3;
+gl.bindAttribLocation(programObject, handle, "Position");
+\end{lstlisting}
+
+My usual approach is to specify a single, authoratative enumeration of all possible vertex attributes used in my application; this allows me to decouple vertex buffer layouts from shaders.  In other words, I can more easily mix and match vertex buffers with shaders.  This practice is known as \index{semantic binding} \term{semantic binding} in the OpenGL community.
+
+For example, suppose your application uses two program objects: one that applies a texture, and another that performs lighting (both of which we'll learn about in future chapters).  The texturing program requires two attributes: positions and texture coordinates.  The lighting program requires positions and normal vectors.  With semantic binding, your application would define an object for the superset of these attributes:
+
+\begin{lstlisting}
+var attribs = {
+  POSITION: 0,
+  NORMAL: 1,
+  TEXCOORD: 2
+};
+\end{lstlisting}
+
+One gotcha with \code{bindAttribLocation} is that it needs to occur after shader compilation but before program linking.  See Listing~\ref{lst:GIZA:compileProgram2} for how we augmented Giza's \code{compileProgram} method to do this for you.  Notice that we added a third argument to the function declaration.
+
+\begin{lstlisting}[
+    language=JavaScript,
+    caption={Adding attribute binding to \code{compileProgram}.},
+    label=lst:GIZA:compileProgram2]
+GIZA.compileProgram = function(vsIds, fsIds, attribs) {
+  ...
+  for (key in attribs) {
+    gl.bindAttribLocation(program, attribs[key], key);
+  }
+  gl.linkProgram(program);
+  ...
+};
+\end{lstlisting}
 
 \subsection{Querying and Setting Uniforms}
 
@@ -151,7 +193,9 @@ GIZA.compileProgram = function(vsIds, fsIds) {
 \section{Lines and Triangles}
 \notetoself{Explains the various primitive types (e.g., \texttt{LINES}), \texttt{drawArrays}, and \texttt{drawElements}.}
 
-\section{Typed Arrays, Vertex Attributes and VBOs}
+\section{Typed Arrays and VBOs}
+\label{sec:VBOs}
+
 \notetoself{Shows how heterogeneous data (e.g., colors and positions) can be interleaved and submitted to WebGL.}
 
 \subsection{GIZA.BufferView}
