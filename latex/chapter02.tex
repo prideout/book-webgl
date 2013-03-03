@@ -82,7 +82,37 @@ Since Giza avoids having a dependency on jQuery, it does something similar using
 var fsText = document.getElementById('simplefs').innerHTML;
 \end{lstlisting}
 
-Now that we have a shader string, the next step...
+Now that we have a shader string, the next step is to pass it into a WebGL shader object and compile it:
+
+\begin{lstlisting}[language=JavaScript]
+var fsObject = gl.createShader(gl.FRAGMENT_SHADER);
+gl.shaderSource(shaderObject, fsText);
+gl.compileShader(fsObject);
+status = gl.getShaderParameter(fsObject, gl.COMPILE_STATUS);
+if (!status) {
+ console.error(gl.getShaderInfoLog(fsObject));
+}
+\end{lstlisting}
+
+Since GLSL does not have a \code{\#include} statement, it's often useful to stitch together several strings to form a single shader.  This allows you to share a single function (or block of uniforms) among several shader objects.  See Listing~\ref{lst:GIZA:compileShader} for Giza's implementation of a utility function that takes a list of ids and a shader type.  It fetches the strings from the DOM, glues them together, and compiles them.
+
+\begin{lstlisting}[
+    language=JavaScript,
+    caption={The implementation of \code{GIZA.compileShader}, minus some error checking.},
+    label=lst:GIZA:compileShader]
+GIZA.compileShader = function(ids, type) {
+  var gl = GIZA.context;
+  var sourceText = "";
+  for (var i = 0; i < ids.length; i++) {
+    var e = document.getElementById(id);
+    sourceText += e.innerHTML;
+  }
+  var shaderObject = gl.createShader(type);
+  gl.shaderSource(shaderObject, sourceText);
+  gl.compileShader(shaderObject);
+  return shaderObject;
+};
+\end{lstlisting}
 
 \subsection{Creating Program Objects}
 

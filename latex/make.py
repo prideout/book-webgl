@@ -51,7 +51,11 @@ def build(args):
     if args.index:
         cmds.append('makeindex %s' % roottex)
         cmds.append('pdflatex -shell-escape %s.tex' % roottex)
+    if args.crop:
+        cmd = 'pdfcrop %s.pdf -p 1.8 2.9 -u "in" > cropped.pdf' % roottex
+        cmds.append(cmd)
     for cmd in cmds:
+        print colored(cmd, 'yellow')
         if os.system(cmd):
             sys.exit(1)
     print
@@ -89,6 +93,10 @@ parser_build.add_argument(
 parser_build.add_argument(
     '-refresh',
     help = 'refresh OS X preview window',
+    action = 'store_true')
+parser_build.add_argument(
+    '-crop',
+    help = 'crop away margins for preview',
     action = 'store_true')
 parser_build.set_defaults(func = build)
 
