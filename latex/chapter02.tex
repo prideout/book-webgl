@@ -217,7 +217,7 @@ Wouldn't it be nice if you didn't have to query for location handles, and instea
 gl.uniform1f(program, program.shininess, 3.0);
 \end{lstlisting}
 
-In general I try to stay away from mutating API objects in this way, but this seems like it's worth an exception.  See Listing~\ref{lst:GIZA:compileProgram3} to see how \code{compileProgram} is enhanced to automatically graft all uniform locations onto the program object.
+We usually stay away from mutating API objects in this way, but in this case we made an exception.  See Listing~\ref{lst:GIZA:compileProgram3} to see how \code{compileProgram} is enhanced to automatically graft all uniform locations onto the program object.
 
 \begin{lstlisting}[
     language=JavaScript,
@@ -234,12 +234,60 @@ GIZA.compileProgram = function(vsIds, fsIds, attribs) {
 };
 \end{lstlisting}
 
-\subsection{Giza's top-level \code{compile} utility}
+\subsection{Giza's top-level \code{compile} function}
 
-\notetoself{Describes a useful abstraction of the WebGL program object.}
+So far we've discussed several techniques for making shaders easier to deal with: string extraction and aggregation, semantic attribute binding, and grafting uniform locations onto the program object.  Putting all this together, Giza provides a high-level \code{compile} function that does this work for you.  The caller passes in a \term{shader specification}, and it creates one or more program objects, placing them into a dictionary.  A usage example is shown in Listing~\ref{lst:GIZA:compileUsage}.
 
-\section{Lines and Triangles}
-\notetoself{Explains the various primitive types (e.g., \texttt{LINES}), \texttt{drawArrays}, and \texttt{drawElements}.}
+\begin{lstlisting}[
+    language=JavaScript,
+    caption={How to use \code{GIZA.compile}.},
+    label=lst:GIZA:compileUsage]
+// First, define semantic bindings:
+var attribs = {
+  POSITION: 0,
+  NORMAL: 1,
+};
+
+// Construct a shader specification that generates two program objects:
+var programs = GIZA.compile({
+  solid: {
+    vs: ['basic-vs'],
+    fs: ['solid-fs'],
+    attribs: {
+      Position: attribs.POSITION
+    }
+  },
+  lit: {
+    vs: ['basic-vs'],
+    fs: ['lit-fs'],
+    attribs: {
+      Position: attribs.POSITION,
+      Normal: attribs.NORMAL,
+    }
+  }
+});
+
+// Activate a shader program and initialize one of its uniforms.
+var program = programs.lit;
+gl.useProgram(program);
+gl.uniform1f(program, program.shininess, 3.0);
+\end{lstlisting}
+
+The implementation of \code{GIZA.compile} is very simple; it simply iterates through the shader specification and delegates to \code{GIZA.compileProgram}; see Listing~\ref{lst:GIZA:compile}.
+
+\begin{lstlisting}[
+    language=JavaScript,
+    caption={Implementation of \code{GIZA.compile}.},
+    label=lst:GIZA:compile]
+GIZA.compile = function(shaderSpec) {
+  var programs = {};
+  for (var name in shaderSpec) {
+    var shd = shaders[name];
+    programs[name] = GIZA.compileProgram(shd.vs, shd.fs, shd.attribs);
+  }
+  return programs;
+};
+\end{lstlisting}
 
 \section{Typed Arrays and VBOs}
 \label{sec:VBOs}
@@ -247,6 +295,9 @@ GIZA.compileProgram = function(vsIds, fsIds, attribs) {
 \notetoself{Shows how heterogeneous data (e.g., colors and positions) can be interleaved and submitted to WebGL.}
 
 \subsection{GIZA.BufferView}
+
+\section{Lines and Triangles}
+\notetoself{Explains the various primitive types (e.g., \texttt{LINES}), \texttt{drawArrays}, and \texttt{drawElements}.}
 
 \rrecipe{Recipe 2: Color Wheel}
 \notetoself{Spinning wheel with various colors at each vertex.}
