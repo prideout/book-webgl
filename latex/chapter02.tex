@@ -137,12 +137,12 @@ GIZA.compileProgram = function(vsIds, fsIds) {
     console.error("Could not link " + vsIds + " with " + fsIds);
   }
   // query uniforms here...
-}
+};
 \end{lstlisting}
 
 \subsection{Binding Vertex Attributes}
 
-WebGL needs to know how to correllate data elements in the vertex buffer with attributes in the vertex shader.  Each attribute that the vertex shader reads has an associated string name and an associated integer handle.  The integer handle is used when specifying the vertex buffer layout, as you'll see in \ref{sec:VBOs}.
+WebGL needs to know how to correllate data elements in the vertex buffer with attributes in the vertex shader.  Each attribute that the vertex shader reads has an associated string name and an associated integer handle.  The integer handle is used when specifying the vertex buffer layout, as you'll see in Section~\ref{sec:VBOs}.
 
 WebGL and other OpenGL-based APIs provide two ways of associating attributes with integers: you can let WebGL make the association, or you can bind them explicitly.  To allow WebGL to make the association, just compile and link the program object as you normally would, then query for the integer handles afterwards like so:
 
@@ -159,7 +159,7 @@ gl.bindAttribLocation(programObject, handle, "Position");
 
 My usual approach is to specify a single, authoratative enumeration of all possible vertex attributes used in my application; this allows me to decouple vertex buffer layouts from shaders.  In other words, I can more easily mix and match vertex buffers with shaders.  This practice is known as \index{semantic binding} \term{semantic binding} in the OpenGL community.
 
-For example, suppose your application uses two program objects: one that applies a texture, and another that performs lighting (both of which we'll learn about in future chapters).  The texturing program requires two attributes: positions and texture coordinates.  The lighting program requires positions and normal vectors.  With semantic binding, your application would define an object for the superset of these attributes:
+For example, suppose your application creates two program objects: one that applies a texture, and another that performs lighting (both of which we'll learn about in future chapters).  The texturing program requires two attributes: positions and texture coordinates.  The lighting program requires positions and normal vectors.  With semantic binding, your application would define an object for the superset of these attributes:
 
 \begin{lstlisting}
 var attribs = {
@@ -169,7 +169,7 @@ var attribs = {
 };
 \end{lstlisting}
 
-One gotcha with \code{bindAttribLocation} is that it needs to occur after shader compilation but before program linking.  See Listing~\ref{lst:GIZA:compileProgram2} for how we augmented Giza's \code{compileProgram} method to do this for you.  Notice that we added a third argument to the function declaration.
+See Listing~\ref{lst:GIZA:compileProgram2} for how we augmented Giza's \code{compileProgram} method to read through a list of semantic attributes and explictly bind them.  Notice that we added a third argument to the function declaration.
 
 \begin{lstlisting}[
     language=JavaScript,
@@ -177,17 +177,65 @@ One gotcha with \code{bindAttribLocation} is that it needs to occur after shader
     label=lst:GIZA:compileProgram2]
 GIZA.compileProgram = function(vsIds, fsIds, attribs) {
   ...
-  for (key in attribs) {
-    gl.bindAttribLocation(program, attribs[key], key);
+  for (name in attribs) {
+    var handle = attribs[name];
+    gl.bindAttribLocation(program, handle, name);
   }
   gl.linkProgram(program);
   ...
 };
 \end{lstlisting}
 
+\begin{sidenote}%
+Notice in Listing~\ref{lst:GIZA:compileProgram2} that the \code{bindAttribLocation} call occurs after shader compilation but before program linking.  WebGL requires attrributes to be bound before linking; this is a common gotcha!
+\end{sidenote}%
+
 \subsection{Querying and Setting Uniforms}
 
+The other type of input data consumed by shaders are uniform variables.  Uniforms are constant across all vertices submitted to the draw call.  Similar to vertex attributes, uniforms have associated string names and locations.  However, uniform locations are opaque objects rather than integers.  The location of a uniform can be queried from the program object like so:
+
+\begin{lstlisting}
+var clipMatLoc = gl.getUniformLocation(programObject, "ClipMatrix");
+\end{lstlisting}
+
+The values for all uniforms are zero-filled by default, and can be set using any of the thirty \code{uniform*} methods available on the WebGL context.  Some examples of setting uniforms:
+
+\begin{lstlisting}
+gl.uniform1i(programObject, enableLightingLoc, 1);
+gl.uniform2f(programObject, windowSizeLoc, 200.0, 100.0);
+gl.uniform2fv(programObject, windowSizeLoc, [200, 100]);
+gl.uniformMatrix3fv(programObject, clipMatLoc, false, clipMatValue);
+\end{lstlisting}
+
+There are a total of thirty functions for setting uniforms, but they all basically do the same thing.  The number (1-4) specifies the dimension of the vector; the \code{i} or \code{f} letter specifies the type (integer or float) and the the \code{v} suffix is used for passing a JavaScript sequence or typed array instead of separate arguments for each vector element.
+
+Matrices are somehow special in that they are named \code{uniformMatrix*} and the specified dimension can only be 2, 3, and 4.  These functions also take an additional argument, which is boolean that can be set if you wish to transpose the matrix on the way down.
+
+Wouldn't it be nice if you didn't have to query for location handles, and instead refer directly to the string name when setting a value?  We can make life easier by employing the age-old JavaScript trick of adding arbitrary properties to an API object.  For each uniform in the shader, we can graft a property onto the WebGL program object.  This will allow to set uniform values using a shorthand notation like this:
+
+\begin{lstlisting}
+gl.uniform1f(program, program.shininess, 3.0);
+\end{lstlisting}
+
+In general I try to stay away from mutating API objects in this way, but this seems like it's worth an exception.  See Listing~\ref{lst:GIZA:compileProgram3} to see how \code{compileProgram} is enhanced to automatically graft all uniform locations onto the program object.
+
+\begin{lstlisting}[
+    language=JavaScript,
+    caption={Grafting uniform locations onto the WebGL program object.},
+    label=lst:GIZA:compileProgram3]
+GIZA.compileProgram = function(vsIds, fsIds, attribs) {
+  ...
+  var numUniforms = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
+  for (var i = 0; i < numUniforms; i++) {
+    var name = gl.getActiveUniform(program, i).name;
+    program[name] = gl.getUniformLocation(program, name);
+  }
+  return program;
+};
+\end{lstlisting}
+
 \subsection{Giza's top-level \code{compile} utility}
+
 \notetoself{Describes a useful abstraction of the WebGL program object.}
 
 \section{Lines and Triangles}
