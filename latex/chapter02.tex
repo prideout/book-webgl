@@ -242,13 +242,13 @@ So far we've discussed several techniques for making shaders easier to deal with
     language=JavaScript,
     caption={How to use \code{GIZA.compile}.},
     label=lst:GIZA:compileUsage]
-// First, define semantic bindings:
+// First, define semantic bindings.
 var attribs = {
   POSITION: 0,
-  NORMAL: 1,
+  NORMAL: 1
 };
 
-// Construct a shader specification that generates two program objects:
+// Construct a shader specification that generates two program objects.
 var programs = GIZA.compile({
   solid: {
     vs: ['basic-vs'],
@@ -262,7 +262,7 @@ var programs = GIZA.compile({
     fs: ['lit-fs'],
     attribs: {
       Position: attribs.POSITION,
-      Normal: attribs.NORMAL,
+      Normal: attribs.NORMAL
     }
   }
 });
@@ -273,7 +273,7 @@ gl.useProgram(program);
 gl.uniform1f(program, program.shininess, 3.0);
 \end{lstlisting}
 
-The implementation of \code{GIZA.compile} is very simple; it simply iterates through the shader specification and delegates to \code{GIZA.compileProgram}; see Listing~\ref{lst:GIZA:compile}.
+The implementation of \code{GIZA.compile} simply iterates through the shader specification and delegates to \code{GIZA.compileProgram}; see Listing~\ref{lst:GIZA:compile}.
 
 \begin{lstlisting}[
     language=JavaScript,
@@ -292,7 +292,41 @@ GIZA.compile = function(shaderSpec) {
 \section{Typed Arrays and VBOs}
 \label{sec:VBOs}
 
-\notetoself{Shows how heterogeneous data (e.g., colors and positions) can be interleaved and submitted to WebGL.}
+%Shows how heterogeneous data (e.g., colors and positions) can be interleaved and submitted to WebGL.
+
+JavaScript's concept of a ``number'' is always a 64-bit float.  There are no signed or unsigned integers, no single-precision floats.  There are no single-byte characters either; everything's unicode and there's no distinction between strings and characters.
+
+For vertex attribute data however, we need anything \emph{but} 64-bit floats and unicode strings!  For efficient representation of data, WebGL only allows the following types:
+
+Time for a table.  Blanks, checkboxes, and one asterisk
+
+vertex attributes
+(vertexAttribPointer)
+
+vertex indices
+(drawElements)
+
+\begin{description}
+\item[\code{UNSIGNED_SHORT}] 16-bit unsigned integers, often used for DrawElements
+\item[\code{UNSIGNED_BYTE}] 8-bit unsigned integers, also allowed for DrawElements
+\item[\code{UNSIGNED_INT}] 32-bit unsigned integers, only allowed when \code{OES_element_index_uint} is available
+
+attribs can be:
+
+BYTE, UNSIGNED_BYTE, SHORT, UNSIGNED_SHORT,
+FIXED, and FLOAT
+
+\end{description}
+
+This list is actually much longer when considering texture formats (Chapter 3), but for now let's focus on vertex data.
+
+How can we reconcile this list of types with the fact that JavaScript (or, more precisely, ECMAScript) doesn't support any of them natively?  The Khronos group designed an API just for the purpose, known as \index{typed array} \term{typed arrays}.  The most authoratative place to read about it is the specification document:
+
+\url{http://www.khronos.org/registry/typedarray/specs/latest/}
+
+Although originally motivated by WebGL, usage of typed arrays has quickly spread to other HTML5 technologies, including \code{XMLHttpRequest} (which we'll learn about in \notetoself{CHAPTER}) and the \code{FileReader} API.
+
+\notetoself{Explain ArrayBuffer, Float32Buffer, and subarray.  Don't go too far in depth; explain just enough such that the BufferView implementation will be grokable.}
 
 \subsection{GIZA.BufferView}
 

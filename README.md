@@ -1,14 +1,14 @@
 
 # book
 
-- Ch 2 Verbiage from "Program Objects" downwards, skipping Lines and Triangles.
+- Ch 2 Verbiage from TypedArrays downwards, skipping Lines and Triangles.
 
 - ColorWheel Recipe
   - Get a screenshot in soon.
 
 - During the week:
 
-  - Digitize figure 2.1
+  - Digitize figure 2.1 and create a figure for interleaved data and/or typed views.
 
   - data-main and canvas are highlighted incorrectly in Listing 1.7
 
