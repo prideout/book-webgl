@@ -21,6 +21,10 @@
 
 # later
 
+- BUG ColorWheel and LineStipple disappear when resizing the window
+
+- Rewrite a portion (or all) of my Knot Browser with giza.
+
 - Turntable: Spin inertia with physical mouse doesn't work.
   I think we can implement something robust by computing an average velocity:
   Keep around a small history of (time,spin,tilt) samples, taken during the drawHook.
@@ -29,6 +33,8 @@
    with all GIZA contexts.  Perhaps this uses "GIZA.forEachGizaContext"
 
 - TunnelFlight is lit incorrectly on HP laptop
+
+- After open-sourcing Giza, figure out how to create a jsfiddle with it.
 
 - Combine Turtle and Path; use SVG Path.getPointAtLength
 
