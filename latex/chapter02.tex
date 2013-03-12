@@ -1,4 +1,5 @@
-\chapter{Vertices and Transforms}
+\chapter{Vertices and Transforms}%{Philip Rideout}
+\label{ch2}
 
 \begin{figure}[htb]\centering
   \includegraphics[width=70mm]{pipeline.jpg}
@@ -6,6 +7,7 @@
   \label{fig:AssemblyLine}
 \end{figure}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{WebGL at 10,000 feet}
 \summary{High-level overview of the WebGL rendering pipeline.}
 
@@ -36,15 +38,19 @@ gl.vertexAttribPointer(attribs.POSITION, 3, gl.FLOAT, false, 0, 0);
 gl.drawArrays(gl.TRIANGLES, 0, 6);
 \end{lstlisting}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Vector Algebra with JavaScript}
 \notetoself{This sections walks through giza's implementation of vector and matrix classes.  Rotation, translation, and scale are given a very brief treatment.}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{The Typical Life of a Vertex}
 \notetoself{Describes model, view, and projection transforms.}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Shading Language Basics}
 \notetoself{Explains uniforms, attributes, and varyings.  Walks through trivial \texttt{main} functions for vertex and fragment shaders.}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Program Objects}
 
 \subsection{Fetching and Compiling Shader Strings}
@@ -289,49 +295,135 @@ GIZA.compile = function(shaderSpec) {
 };
 \end{lstlisting}
 
-\section{Typed Arrays and VBOs}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Typed Arrays}
 \label{sec:VBOs}
 
 %Shows how heterogeneous data (e.g., colors and positions) can be interleaved and submitted to WebGL.
 
-JavaScript's concept of a ``number'' is always a 64-bit float.  There are no signed or unsigned integers, no single-precision floats.  There are no single-byte characters either; everything's unicode and there's no distinction between strings and characters.
+In JavaScript, numbers are always 64-bit floats.  There are no signed or unsigned integers, no single-precision floats.
 
-For vertex attribute data however, we need anything \emph{but} 64-bit floats and unicode strings!  For efficient representation of data, WebGL only allows the following types:
+For vertex attribute data however, we need anything \emph{but} 64-bit floats!  For efficient representation of vertex data, WebGL allows any of the types listed in Table~\ref{tab:AttribTypes}.  Vertex indices can be any of the types in Table~\ref{tab:IndexTypes}.
 
-Time for a table.  Blanks, checkboxes, and one asterisk
+\begin{table}[htb]\centering
+  \begin{tabular}{lll}
+    \hline
+    WebGL Constant & Typed Array & Description \\
+    \hline
+    \code{BYTE} & Int8Array & Signed 8-bit integer \\
+    \code{UNSIGNED\_BYTE} & Uint8Array & Unsigned 8-bit integer \\
+    \code{SHORT} & Int16Array & Signed 16-bit integer \\
+    \code{UNSIGNED\_SHORT} & Uint16Array & Unsigned 16-bit integer \\
+    \code{FIXED} & n/a & Signed 16.16 scaled integer  \\
+    \code{FLOAT} & Float32Array & Single-precision floating point \\
+    \hline
+  \end{tabular}
+  \caption{WebGL vertex attribute types.}
+  \label{tab:AttribTypes}
+\end{table}
 
+\begin{table}[htb]\centering
+  \begin{tabular}{lll}
+    \hline
+    WebGL Constant & Typed Array & Description \\
+    \hline
+    \code{UNSIGNED\_BYTE} & Uint8Array & Unsigned 8-bit integer \\ % Uint8ClampedArray
+    \code{UNSIGNED\_SHORT} & Uint16Array & Unsigned 16-bit integer \\
+    \code{UNSIGNED\_INT}
+    \footnote{only allowed when \code{OES\_element\_index\_uint} is available} & Uint32Array & Unsigned 32-bit integer \\
+    \hline
+  \end{tabular}
+  \caption{WebGL vertex index types.}
+  \label{tab:IndexTypes}
+\end{table}
+
+\begin{comment}
 vertex attributes
 (vertexAttribPointer)
-
 vertex indices
 (drawElements)
-
 \begin{description}
 \item[\code{UNSIGNED_SHORT}] 16-bit unsigned integers, often used for DrawElements
 \item[\code{UNSIGNED_BYTE}] 8-bit unsigned integers, also allowed for DrawElements
 \item[\code{UNSIGNED_INT}] 32-bit unsigned integers, only allowed when \code{OES_element_index_uint} is available
-
-attribs can be:
-
-BYTE, UNSIGNED_BYTE, SHORT, UNSIGNED_SHORT,
-FIXED, and FLOAT
-
 \end{description}
+\end{comment}
 
-This list is actually much longer when considering texture formats (Chapter 3), but for now let's focus on vertex data.
+How can we reconcile WebGL's various data types with the fact that JavaScript (or, more precisely, ECMAScript) doesn't support any of them natively?  The Khronos group designed an API just for the purpose, known as \index{typed array} \term{typed arrays}.
 
-How can we reconcile this list of types with the fact that JavaScript (or, more precisely, ECMAScript) doesn't support any of them natively?  The Khronos group designed an API just for the purpose, known as \index{typed array} \term{typed arrays}.  The most authoratative place to read about it is the specification document:
+\begin{comment}
+The most authoratative place to read about it is the specification document:
 
 \url{http://www.khronos.org/registry/typedarray/specs/latest/}
+\end{comment}
 
-Although originally motivated by WebGL, usage of typed arrays has quickly spread to other HTML5 technologies, including \code{XMLHttpRequest} (which we'll learn about in \notetoself{CHAPTER}) and the \code{FileReader} API.
+Although originally motivated by WebGL, typed arrays have quickly spread to other HTML5 technologies, including \code{XMLHttpRequest} (which we'll learn about in \notetoself{CHAPTER}) and the \code{FileReader} API.
 
-\notetoself{Explain ArrayBuffer, Float32Buffer, and subarray.  Don't go too far in depth; explain just enough such that the BufferView implementation will be grokable.}
+A great way to experiment with typed arrays is with the interactive node interpreter.  For example, a two-byte swath of memory can be allocated and inspected like this:
+
+\begin{Verbatim}[fontsize=\footnotesize,commandchars=\\\{\}]
+grasshopper:~ prideout$ \textbf{node}
+> arrayBuffer = new ArrayBuffer(2)
+> arrayBuffer
+\{ \textcolor{nodegreen}{'0'}: \textcolor{nodeyellow}{0},
+  \textcolor{nodegreen}{'1'}: \textcolor{nodeyellow}{0},
+  byteLength: \textcolor{nodeyellow}{2} \}
+\end{Verbatim}
+%$
+
+To manipulate the contents of an \code{ArrayBuffer} instance, you can create a \term{typed view}, such as \code{Float32Array} or \code{Uint8Array}.  Multiple views can share the same memory.  For example:
+
+\begin{Verbatim}[fontsize=\footnotesize,commandchars=\\\{\}]
+> arrayBuffer = new ArrayBuffer(4)
+> floatView = new Float32Array(arrayBuffer)
+> floatView.set(0, 1.0)
+> uintView = new Uint32Array(arrayBuffer)
+> uintView.get(0).toString(16)
+\textcolor{nodegreen}{'3f800000'}
+\end{Verbatim}
+
+You can also carve out regions of an \code{ArrayBuffer} by passing a byte offset into the view's contructor, or through the \code{subarray} method:
+
+\begin{Verbatim}[fontsize=\footnotesize,commandchars=\\\{\}]
+> arrayBuffer = new ArrayBuffer(6)
+> view = new Uint16Array(arrayBuffer, 2)
+> view.set(0, 0xffff)
+> view.subarray(1).set(0, 0x7f7f)
+> view.buffer
+\{ \textcolor{nodegreen}{'0'}: \textcolor{nodeyellow}{0},
+  \textcolor{nodegreen}{'1'}: \textcolor{nodeyellow}{0},
+  \textcolor{nodegreen}{'2'}: \textcolor{nodeyellow}{255},
+  \textcolor{nodegreen}{'3'}: \textcolor{nodeyellow}{255},
+  \textcolor{nodegreen}{'4'}: \textcolor{nodeyellow}{127},
+  \textcolor{nodegreen}{'5'}: \textcolor{nodeyellow}{127},
+  byteLength: \textcolor{nodeyellow}{6} \}
+\end{Verbatim}
+
+Often you won't need to explicitly create an instance of \code{ArrayBuffer} because the view constructor provides shortcuts that will create the underlying buffer for you:
+
+\begin{Verbatim}[fontsize=\footnotesize,commandchars=\\\{\}]
+> view1 = new Float32Array(2)
+> view1.buffer.byteLength
+\textcolor{nodeyellow}{8}
+> view2 = new Float32Array([1, 2, 3, 4])
+> view2.buffer.byteLength
+\textcolor{nodeyellow}{16}
+\end{Verbatim}
 
 \subsection{GIZA.BufferView}
 
+Gize provides a utility class called \code{BufferView} to make it easy to build arrays with hetergeneous types.
+
+...
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Vertex Buffer Objects}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Lines and Triangles}
 \notetoself{Explains the various primitive types (e.g., \texttt{LINES}), \texttt{drawArrays}, and \texttt{drawElements}.}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \rrecipe{Recipe 2: Color Wheel}
 \notetoself{Spinning wheel with various colors at each vertex.}
