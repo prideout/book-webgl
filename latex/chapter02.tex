@@ -412,12 +412,56 @@ Often you won't need to explicitly create an instance of \code{ArrayBuffer} beca
 
 \subsection{GIZA.BufferView}
 
-Gize provides a utility class called \code{BufferView} to make it easy to build arrays with hetergeneous types.
+With WebGL, you'll often want to populate a large swath of memory with interleaved data, according to the set of vertex attributes you need.
 
-...
+One example would be interleaving a \code{Position} attribute (three floats) with a \code{Color} attribute (four bytes).  In this situation, each vertex is 16 bytes.
+
+To populate such a buffer using the raw typed array classes, you might do something like this:
+
+\begin{lstlisting}
+// Compute vertex size.
+var vertexSize = 3 * 4 + 4;
+console.info("Vertex size is ", vertexSize);
+
+// Allocate memory.
+var numPoints = 64;
+var arrayBuffer = new ArrayBuffer(numPoints * vertexSize);
+
+// Populate buffer.
+for (var i = 0; i < numPoints; i++) {
+  var position = new Float32Array(arrayBuffer, vertexSize * i);
+  var color = new Uint8Array(arrayBuffer, 12 + vertexSize * i);
+  // set position and color here...
+}
+\end{lstlisting}
+
+This can be a bit cumbersome, so Giza provides a utility class called \code{BufferView} to make it easy to build these kinds of arrays.  The following listing is functionally equivalent to the previous listing, but uses the \code{BufferView} class for improved readability.
+
+\begin{lstlisting}
+// Describe vertex format.
+var bufferView = new GIZA.BufferView({
+  position: [Float32Array, 3],
+  color: [Uint8Array, 4],
+});
+console.info("Vertex size is ", bufferView.elementSize);
+
+// Allocate memory.
+var numPoints = 64;
+var arrayBuffer = bufferView.makeBuffer(numPoints);
+
+// Populate buffer.
+var iterator = bufferView.iterator();
+while (vertex = iterator.next()) {
+  // set vertex.position and vertex.color here...
+}
+\end{lstlisting}
+
+I won't go over the implementation of \code{BufferView} here since it's fairly straightforward.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Vertex Buffer Objects}
+
+\notetoself{Mention both interleaved and non-interleaved cases.}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%

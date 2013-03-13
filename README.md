@@ -6,12 +6,13 @@
 - ColorWheel Recipe
   - Get a screenshot in soon.
 
+- Avoid model / view / proj terminology in favor of objectToClip etc
+
 - During the week:
 
   - Digitize figure 2.1 and create a figure for interleaved data and/or typed views.
 
   - data-main and canvas are highlighted incorrectly in Listing 1.7
-    node REPL in ArrayBuffer isn't highlighted correctly
 
   - Research CMYK images.
 
@@ -22,7 +23,7 @@
 
 # later
 
-- BUG ColorWheel and LineStipple disappear when resizing the window
+- "good graphics programmer as you are, you will tell me to read from the zbuffer, transform back the point to eye space with the inverse of the projection matrix, and then do a division by w. "
 
 - Rewrite a portion (or all) of my Knot Browser with giza.
 
