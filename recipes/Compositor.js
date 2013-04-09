@@ -8,7 +8,6 @@ var main = function() {
 
   GIZA.init(null, {
     preserveDrawingBuffer: false,
-    antialias: true,
     alpha: true, // default
     premultipliedAlpha: pma,
   });

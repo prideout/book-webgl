@@ -4,8 +4,7 @@ var main = function() {
   COMMON.bindOptions(options, '#checks');
 
   GIZA.init(null, {
-    preserveDrawingBuffer: true,
-    antialias: true
+    preserveDrawingBuffer: true
   });
 
   var gl = GIZA.context;
