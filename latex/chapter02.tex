@@ -11,7 +11,7 @@
 \section{WebGL at 10,000 feet}
 \summary{High-level overview of the WebGL rendering pipeline.}
 
-Earlier we mentioned that only two WebGL functions that can actually render 3D geometry: \code{drawArrays} and \code{drawElements}.  Both of these simply push a set of \index{vertices} vertices into the WebGL pipeline.  The vertices become rasterized into \index{fragments} \term{fragments}, or pixel values in the canvas.  Every vertex is defined by a set of \term{vertex attributes}, one of which is usually an XYZ coordinate.  Vertices come together to form \term{primitives}, which include point sprites, lines, and triangles.
+Earlier we mentioned that only two WebGL functions can actually render 3D geometry: \code{drawArrays} and \code{drawElements}.  Both of these simply push a set of \index{vertices} vertices into the WebGL pipeline.  The vertices are rasterized into \index{fragments} \term{fragments}, or pixel values in the canvas.  Every vertex is defined by a set of \term{vertex attributes}, one of which is usually an XYZ coordinate.  Vertices come together to form \term{primitives}, which include point sprites, lines, and triangles.
 
 Vertices initially belong to a swath of memory called a \term{vertex buffer}, and WebGL provides a rich API that allows you to specify how heterogenous attributes can be packed into a vertex buffer.  Figure~\ref{fig:AssemblyLine} depicts how vertex data flows through the pipeline, starting off in vertex buffers, eventually transforming into pixels in the canvas.
 
@@ -193,7 +193,7 @@ GIZA.compileProgram = function(vsIds, fsIds, attribs) {
 \end{lstlisting}
 
 \begin{sidenote}%
-Notice in Listing~\ref{lst:GIZA:compileProgram2} that the \code{bindAttribLocation} call occurs after shader compilation but before program linking.  WebGL requires attrributes to be bound before linking; this is a common gotcha!
+Notice in Listing~\ref{lst:GIZA:compileProgram2} that the \code{bindAttribLocation} call occurs after shader compilation but before program linking.  WebGL requires attrributes to be bound before linking.
 \end{sidenote}%
 
 \subsection{Querying and Setting Uniforms}
