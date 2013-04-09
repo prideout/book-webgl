@@ -1,27 +1,22 @@
 
-# book
+# Current Tasks
 
-- Ch 2 Verbiage from TypedArrays downwards, skipping Lines and Triangles.
-
+- Ch 2 Verbiage from VBOs downwards, skipping Lines and Triangles.
 - ColorWheel Recipe
   - Get a screenshot in soon.
-
 - Avoid model / view / proj terminology in favor of objectToClip etc
-
-- During the week:
-
-  - Digitize figure 2.1 and create a figure for interleaved data and/or typed views.
-
-  - data-main and canvas are highlighted incorrectly in Listing 1.7
-
-  - Research CMYK images.
-
-- Ch 3 : Interaction (?)
+- Ch 3 : Jump to interaction
   - Pointer Lock and Fullscreen APIs
   - Verbiage for MultiContext
   - Enhance MultiContext demo with go-to-fullscreen
 
-# later
+# Later
+
+- Digitize figure 2.1 and create a figure for interleaved data and/or typed views.
+
+- data-main and canvas are highlighted incorrectly in Listing 1.7
+
+- Research CMYK images.
 
 - "good graphics programmer as you are, you will tell me to read from the zbuffer, transform back the point to eye space with the inverse of the projection matrix, and then do a division by w. "
 
@@ -35,8 +30,6 @@
    with all GIZA contexts.  Perhaps this uses "GIZA.forEachGizaContext"
 
 - TunnelFlight is lit incorrectly on HP laptop
-
-- After open-sourcing Giza, figure out how to create a jsfiddle with it.
 
 - Combine Turtle and Path; use SVG Path.getPointAtLength
 
@@ -80,7 +73,7 @@
     that I write some rst docs
     http://vimalkumar.in/sphinx-themes/solar/html/index.html
 
-# Notes
+# Notes to Self
 
 - Shadow Mapping -- http://t.co/rOHU6Tcp
 
