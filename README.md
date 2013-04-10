@@ -1,61 +1,45 @@
 
 # Current Tasks
 
-- Ch 2 Verbiage from VBOs downwards, skipping Lines and Triangles.
-- ColorWheel Recipe
-  - Get a screenshot in soon.
-- Avoid model / view / proj terminology in favor of objectToClip etc
+- Ch 2
+  - Verbiage from VBOs downwards, skipping Lines and Triangles.
+  - Verbiage for the ColorWheel sample
+  - Vector math -- make this as brief as possible
+  - Avoid model / view / proj terminology in favor of objectToClip etc
 - Ch 3 : Jump to interaction
   - Pointer Lock and Fullscreen APIs
   - Verbiage for MultiContext
   - Enhance MultiContext demo with go-to-fullscreen
+- Add a tools section to Outline (WebGL Inspector, WebGL Bench, WebGL Texture Utils)
 
 # Later
 
 - Digitize figure 2.1 and create a figure for interleaved data and/or typed views.
-
 - data-main and canvas are highlighted incorrectly in Listing 1.7
-
-- Research CMYK images.
-
 - "good graphics programmer as you are, you will tell me to read from the zbuffer, transform back the point to eye space with the inverse of the projection matrix, and then do a division by w. "
 
-- Rewrite a portion (or all) of my Knot Browser with giza.
+# Demo Stuff
 
+- Rewrite a portion (or all) of my Knot Browser with giza.
 - Turntable: Spin inertia with physical mouse doesn't work.
   I think we can implement something robust by computing an average velocity:
   Keep around a small history of (time,spin,tilt) samples, taken during the drawHook.
-
 - Fix refresh issue in ThumbTest when checks are visible: COMMON.bindOptions should call GIZA.refresh (when paused, equiv to resume + pause)
    with all GIZA contexts.  Perhaps this uses "GIZA.forEachGizaContext"
-
 - TunnelFlight is lit incorrectly on HP laptop
-
 - Combine Turtle and Path; use SVG Path.getPointAtLength
-
-  http://stackoverflow.com/questions/12253855/svg-path-getpointatlength-returning-wrong-values
-
+  - http://stackoverflow.com/questions/12253855/svg-path-getpointatlength-returning-wrong-values
 - Turntable
   - HomePosition
   - Pan / Zoom (similar to tdsview controls)
-
 - Jump into Chapter 3 demos (TexCoords, Ribbons and Tubes)
   Use a superellipsoid Mobius shape for demo purposes
-
-- http://webgl-bench.appspot.com/
-
 - manipulators, BEAUTIFUL docs (http://folyo.me/), fresnel/marble spiral horn
-
 - test & impl rotateAxis and scale in Matrix4
 
-- GIZA.Turtle2D.bezierCurveTo
-    https://github.com/bseth99/pathjs
-    http://bseth99.github.com/pathjs/demo/path-generators.html
-    https://github.com/phoboslab/Ejecta/blob/master/Source/Ejecta/EJCanvas/EJPath.mm
-    http://www.antigrain.com/research/adaptive_bezier/index.html
-    http://code.google.com/p/explorercanvas/source/browse/trunk/excanvas.js
+# Longer Term
 
-- GIZA.Turtle3D and GIZA.Tube for implementing Knots
+- 2D API to mimic KineticJS ?
 
 - PolygonTess
   - degenerate triangle
