@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 
+# tif to pdf
+# sips -s format pdf ColorWheel_cmyk.tif --out ColorWheel_cmyk.pdf
+
 import os, sys, shutil, argparse
 from termcolor import colored
 
 buildpath = '_build'
-#roottex = 'book'
 #roottex = 'akp7_5x9_25'
 roottex = 'akp6x9'
 
@@ -13,7 +15,6 @@ styfiles = '''
 '''.split()
 
 texfiles = '''
-book
 chapter01
 chapter02
 chapter03
