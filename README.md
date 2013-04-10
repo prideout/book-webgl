@@ -10,13 +10,13 @@
   - Pointer Lock and Fullscreen APIs
   - Verbiage for MultiContext
   - Enhance MultiContext demo with go-to-fullscreen
+  - Extract world space by reading from the zbuffer, transform back to eye space with the inverse of the projection matrix, and divide by w
 - Add a tools section to Outline (WebGL Inspector, WebGL Bench, WebGL Texture Utils)
 
 # Later
 
 - Digitize figure 2.1 and create a figure for interleaved data and/or typed views.
 - data-main and canvas are highlighted incorrectly in Listing 1.7
-- "good graphics programmer as you are, you will tell me to read from the zbuffer, transform back the point to eye space with the inverse of the projection matrix, and then do a division by w. "
 
 # Demo Stuff
 
@@ -38,6 +38,8 @@
 - test & impl rotateAxis and scale in Matrix4
 
 # Longer Term
+
+- Invite Inigo to contribute
 
 - 2D API to mimic KineticJS ?
 
