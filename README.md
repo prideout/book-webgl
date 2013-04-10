@@ -15,6 +15,7 @@
 
 # Later
 
+- Update giza.nodejitsu.com
 - Digitize figure 2.1 and create a figure for interleaved data and/or typed views.
 - data-main and canvas are highlighted incorrectly in Listing 1.7
 
