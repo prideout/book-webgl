@@ -3,6 +3,7 @@
 
 - Ch 1
   - Remove stuff about `GIZA = GIZA || {}`
+  - Use yepnope instead of requirejs
   - replace placeholder URL with [glcompanion.com](glcompanion.com) and giza repo
 
 - Ch 2
