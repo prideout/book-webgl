@@ -1,11 +1,16 @@
 
 # Current Tasks
 
+- Ch 1
+  - Remove stuff about `GIZA = GIZA || {}`
+  - replace placeholder URL with [glcompanion.com](glcompanion.com) and giza repo
+
 - Ch 2
   - Verbiage from VBOs downwards, skipping Lines and Triangles.
   - Verbiage for the ColorWheel sample
   - Vector math -- make this as brief as possible
   - Avoid model / view / proj terminology in favor of objectToClip etc
+  
 - Ch 3 : Jump to interaction
   - Pointer Lock and Fullscreen APIs
   - Verbiage for MultiContext
@@ -28,14 +33,13 @@
 - Fix refresh issue in ThumbTest when checks are visible: COMMON.bindOptions should call GIZA.refresh (when paused, equiv to resume + pause)
    with all GIZA contexts.  Perhaps this uses "GIZA.forEachGizaContext"
 - TunnelFlight is lit incorrectly on HP laptop
-- Combine Turtle and Path; use SVG Path.getPointAtLength
-  - http://stackoverflow.com/questions/12253855/svg-path-getpointatlength-returning-wrong-values
+- Combine Turtle and Path; use SVG [Path.getPointAtLength](http://stackoverflow.com/questions/12253855/svg-path-getpointatlength-returning-wrong-values)
 - Turntable
   - HomePosition
   - Pan / Zoom (similar to tdsview controls)
 - Jump into Chapter 3 demos (TexCoords, Ribbons and Tubes)
   Use a superellipsoid Mobius shape for demo purposes
-- manipulators, BEAUTIFUL docs (http://folyo.me/), fresnel/marble spiral horn
+- manipulators, BEAUTIFUL [docs](http://folyo.me/), fresnel/marble spiral horn
 - test & impl rotateAxis and scale in Matrix4
 
 # Longer Term
@@ -59,6 +63,9 @@
   > perhaps I should wait to do this, and do it at the same time
     that I write some rst docs
     http://vimalkumar.in/sphinx-themes/solar/html/index.html
+    
+- consider purchase of [this image](http://www.shutterstock.com/pic-89787958/stock-vector-egyptian-pyramids-with-camels-at-sunrise.html
+)
 
 # Notes to Self
 
