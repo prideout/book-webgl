@@ -21,52 +21,25 @@
 
 # Later
 
-- Update giza.nodejitsu.com
 - Digitize figure 2.1 and create a figure for interleaved data and/or typed views.
 - data-main and canvas are highlighted incorrectly in Listing 1.7
 
 # Demo Stuff
 
-- Rewrite a portion (or all) of my Knot Browser with giza.
-- Turntable: Spin inertia with physical mouse doesn't work.
-  I think we can implement something robust by computing an average velocity:
-  Keep around a small history of (time,spin,tilt) samples, taken during the drawHook.
 - Fix refresh issue in ThumbTest when checks are visible: COMMON.bindOptions should call GIZA.refresh (when paused, equiv to resume + pause)
    with all GIZA contexts.  Perhaps this uses "GIZA.forEachGizaContext"
 - TunnelFlight is lit incorrectly on HP laptop
-- Combine Turtle and Path; use SVG [Path.getPointAtLength](http://stackoverflow.com/questions/12253855/svg-path-getpointatlength-returning-wrong-values)
-- Turntable
-  - HomePosition
-  - Pan / Zoom (similar to tdsview controls)
 - Jump into Chapter 3 demos (TexCoords, Ribbons and Tubes)
   Use a superellipsoid Mobius shape for demo purposes
-- manipulators, BEAUTIFUL [docs](http://folyo.me/), fresnel/marble spiral horn
-- test & impl rotateAxis and scale in Matrix4
 
 # Longer Term
 
 - Invite Inigo to contribute
 
 - 2D API to mimic KineticJS ?
-
-- PolygonTess
-  - degenerate triangle
-  - Move eval into a worker?
   
 - My explanation of premultiplied alpha sucks.
   There's a twitter link to a NVIDIA post about this.
-
-- a build system that uses jslint and minification
-  > maybe this would just slow me down...
-    2 space indention
-    ' over "
-    functio expressions over declarations
-  > perhaps I should wait to do this, and do it at the same time
-    that I write some rst docs
-    http://vimalkumar.in/sphinx-themes/solar/html/index.html
-    
-- consider purchase of [this image](http://www.shutterstock.com/pic-89787958/stock-vector-egyptian-pyramids-with-camels-at-sunrise.html
-)
 
 # Notes to Self
 
